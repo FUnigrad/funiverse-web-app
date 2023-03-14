@@ -1,19 +1,14 @@
-import {
-  AccountCircle,
-  Mail as MailIcon,
-  Menu as MenuIcon,
-  Notifications as NotificationsIcon,
-} from '@mui/icons-material';
-import {
-  Badge,
-  Box,
-  IconButton,
-  AppBar as MuiAppBar,
-  AppBarProps as MuiAppBarProps,
-  Toolbar,
-  styled,
-} from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MailIcon from '@mui/icons-material/Mail';
+import MenuIcon from '@mui/icons-material/Menu';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 //TODO: Move this into constant
 const drawerWidth = 240;
 

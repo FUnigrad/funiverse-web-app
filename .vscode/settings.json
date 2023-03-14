@@ -11,6 +11,6 @@
   "editor.formatOnSave": true,
   "jest.autoRun": "off",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    "source.organizeImports": false
   }
 }
