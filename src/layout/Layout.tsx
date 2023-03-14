@@ -1,52 +1,56 @@
-import {
-  AccountCircle,
-  Mail as MailIcon,
-  Menu as MenuIcon,
-  Notifications as NotificationsIcon,
-  Search,
-} from '@mui/icons-material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MailIcon from '@mui/icons-material/Mail';
+import MenuIcon from '@mui/icons-material/Menu';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import {
-  Avatar,
-  AvatarGroup,
-  Badge,
-  Box,
-  Button,
-  CSSObject,
-  IconButton,
-  ListItemButton,
-  ListItemText,
-  Menu,
-  MenuItem,
-  AppBar as MuiAppBar,
-  AppBarProps as MuiAppBarProps,
-  Drawer as MuiDrawer,
-  Stack,
-  Tab,
-  Tabs,
-  Theme,
-  Toolbar,
-  styled,
-  useScrollTrigger,
-  useTheme,
-} from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Search from '@mui/icons-material/Search';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
+import MuiDrawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListSubheader from '@mui/material/ListSubheader';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import MuiLink from '@mui/material/Link';
+import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import React from 'react';
+import ActiveLink from 'components/ActiveLink';
+import { useRouter } from 'next/router';
+import Sidebar from './Sidebar';
+
 interface LayoutProps {
   children: React.ReactNode;
 }
+const SIDE_BAR_MENU = [
+  { label: 'Groups', href: '/groups' },
+  { label: 'Learning Path', href: '/learning-path' },
+  { label: 'Courses', href: '/courses' },
+  { label: 'Chats', href: '/chats' },
+];
 const drawerWidth = 240;
-const IMG_SRC =
-  'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
+
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -116,19 +120,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+const TabDrawer = styled(MuiDrawer)(() => ({}));
+
 //L-TODO: Refactor this component to Header and Sidebar
 function Layout({ children }: LayoutProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [value, setValue] = React.useState(0);
+  const { pathname } = useRouter();
   const trigger = useScrollTrigger({
     //Height: header + background + groundInfoheader = 64 + 400 + btw(188)
     threshold: 550,
   });
-  console.log(trigger);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+  const isRenderSubHeader = pathname.includes('groups') && trigger;
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -137,7 +139,7 @@ function Layout({ children }: LayoutProps) {
     setAnchorEl(null);
   };
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -172,7 +174,7 @@ function Layout({ children }: LayoutProps) {
     <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="fixed" open={open}>
+        {/* <AppBar position="fixed" open={open}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -215,141 +217,72 @@ function Layout({ children }: LayoutProps) {
             </Box>
           </Toolbar>
           {renderMenu}
-          {trigger ? (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: theme.mixins.toolbar.height,
-                left: open ? 0 : theme.spacing(8),
-                right: 0,
-                border: '1px solid red',
-                height: 60,
-                p: 2,
-                backgroundColor: 'inherit',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" flex={1}>
-                <Tabs value={value} onChange={handleChange}>
-                  <Tab component={Link} href="/#home" label="Home" />
-                  <Tab component={Link} href="/#featured" label="Featured" />
-                </Tabs>
-                <Box>
-                  <IconButton>
-                    <Search />
-                  </IconButton>
-                </Box>
-              </Stack>
-            </Box>
-          ) : null}
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {['Home', 'New Feed'].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['Group', 'Learning Path', 'Course'].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+        </AppBar> */}
+        {isRenderSubHeader ? (
+          <div>123</div>
+        ) : // <Box
+        //   sx={{
+        //     position: 'absolute',
+        //     top: theme.mixins.toolbar.height,
+        //     left: open ? 0 : theme.spacing(8),
+        //     right: 0,
+        //     border: '1px solid red',
+        //     height: 60,
+        //     // p: 2,
+        //     pl: 2,
+        //     pr: 2,
+        //     backgroundColor: 'inherit',
+        //     display: 'flex',
+        //     alignItems: 'center',
+        //     justifyContent: 'space-between',
+        //   }}
+        // >
+        //   <Stack
+        //     direction="row"
+        //     justifyContent="space-between"
+        //     alignItems="center"
+        //     flex={1}
+        //     sx={{ height: '100%' }}
+        //   >
+        //     {/* <Tabs value={value} onChange={handleChange}>
+        //         <Tab component={NextLink} href="/#home" label="Home" />
+        //         <Tab component={NextLink} href="/#featured" label="Featured" />
+        //       </Tabs> */}
+        //     <Typography
+        //       variant="subtitle1"
+        //       color="info"
+        //       sx={{
+        //         flexBasis: '70%',
+        //         textAlign: 'left',
+        //         userSelect: 'none',
+        //         cursor: 'pointer',
+        //         pl: 2,
+        //         transition: '.1s ease-in',
+        //         height: '100%',
+        //         display: 'flex',
+        //         alignItems: 'center',
+        //         ':hover': {
+        //           backgroundColor: '#ccc',
+        //         },
+        //       }}
+        //       onClick={() => {
+        //         window.scrollTo({ top: 0, behavior: 'smooth' });
+        //       }}
+        //     >
+        //       Group Name
+        //     </Typography>
+        //     <Box>
+        //       <IconButton>
+        //         <Search />
+        //       </IconButton>
+        //     </Box>
+        //   </Stack>
+        // </Box>
+        null}
+        <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, position: 'relative' }}>
           <DrawerHeader />
-          {/* TODO: Remove border */}
-          <Box sx={{ border: '1px solid #ccc' }}>
-            <Box sx={{ width: '100%', height: 400, position: 'relative' }}>
-              <Image
-                src={IMG_SRC}
-                alt="Background of group"
-                fill={true}
-                style={{ objectFit: 'cover', objectPosition: 'top' }}
-              />
-            </Box>
-          </Box>
-
-          <Box sx={{ border: '1px solid red' }}>
-            <Box sx={{ p: 2 }}>
-              <Typography variant="h5" fontWeight={600}>
-                Phòng ban 1
-              </Typography>
-              <Stack direction="row" justifyContent="space-between">
-                <AvatarGroup max={20}>
-                  <Avatar src={IMG_SRC} />
-                  <Avatar src={IMG_SRC} />
-                  <Avatar src={IMG_SRC} />
-                  <Avatar src={IMG_SRC} />
-                  <Avatar src={IMG_SRC} />
-                  <Avatar src={IMG_SRC} />
-                </AvatarGroup>
-                <Button variant="contained" size="small">
-                  + Invite
-                </Button>
-              </Stack>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Tabs value={value} onChange={handleChange}>
-                  <Tab component={Link} href="/#home" label="Home" />
-                  <Tab component={Link} href="/#featured" label="Featured" />
-                </Tabs>
-                <Box>
-                  <IconButton>
-                    <Search />
-                  </IconButton>
-                </Box>
-              </Stack>
-            </Box>
-          </Box>
-
-          <Box sx={{ p: 2 }}>{children}</Box>
+          {children}
         </Box>
       </Box>
     </>

@@ -1,7 +1,11 @@
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
-
-export default function Home() {
+import PostCard from '../components/PostCard';
+const DynamicPostCard = dynamic(() => import('../components/PostCard'), {
+  ssr: false,
+});
+export default function HomePage() {
   return (
     <>
       <Head>
@@ -10,17 +14,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box>Group Post</Box>
-      <Box sx={{ height: 500 }}>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur repudiandae ea neque
-        omnis sequi eligendi veniam minima tempore magni, sapiente molestias officiis blanditiis sit
-        laboriosam vel consectetur quos itaque ex.
-      </Box>
-      <Box sx={{ height: 500 }}>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur repudiandae ea neque
-        omnis sequi eligendi veniam minima tempore magni, sapiente molestias officiis blanditiis sit
-        laboriosam vel consectetur quos itaque ex.
-      </Box>
+      <DynamicPostCard />
+      <DynamicPostCard />
+      <DynamicPostCard />
+      <DynamicPostCard />
     </>
   );
 }
