@@ -6,7 +6,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 function SearchInput() {
   return (
     <TextField
-      sx={{ width: '100%', '.MuiInputBase-root': { borderRadius: '24px', height: '36px' } }}
+      sx={{
+        width: '100%',
+        '.MuiInputBase-root': { borderRadius: '24px', height: '36px' },
+        minHeight: 'unset',
+      }}
       size="small"
       variant="outlined"
       placeholder="Search workspace"

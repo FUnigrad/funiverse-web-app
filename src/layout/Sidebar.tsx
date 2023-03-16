@@ -44,6 +44,8 @@ import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined
 import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
 import SearchInput from 'components/SearchInput';
 import { IMG_SRC } from 'pages/groups/[gid]';
+import AddOutlined from '@mui/icons-material/AddOutlined';
+import { useModalContext } from 'contexts/ModalContext';
 
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
@@ -150,24 +152,37 @@ const TabDrawer = styled(MuiDrawer)(({ theme }) => ({
     alignItems: 'center',
     paddingTop: '16px',
     paddingBottom: '16px',
+    width: 90,
   },
 }));
-function Sidebar() {
-  const [open, setOpen] = React.useState(true);
+function Sidebar({ open, setOpen }: any) {
+  // const [open, setOpen] = React.useState(true);
   const [tabIndex, setTabIndex] = React.useState(1);
+  const { dispatch } = useModalContext();
   const theme = useTheme();
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
-  const handleDrawerToggle = () => {
+  function handleDrawerToggle() {
     setOpen(!open);
-  };
+  }
 
-  const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
+  function handleTabChange(event: React.SyntheticEvent, newTabIndex: number) {
     setTabIndex(newTabIndex);
-  };
+  }
+
+  function handleCreateGroupClick() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Create Group',
+        content: () => <div>test</div>,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -178,6 +193,8 @@ function Sidebar() {
               key={index}
               icon={icon}
               sx={{
+                width: 86,
+                height: 60,
                 ':hover': {
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',
                   transition: 'background-color .1s linear',
@@ -209,7 +226,10 @@ function Sidebar() {
         <List
           component="div"
           subheader={
-            <ListSubheader disableSticky sx={{ mb: 1 }}>
+            <ListSubheader
+              disableSticky
+              sx={{ mb: 1, fontSize: 20, fontWeight: 700, color: '#000' }}
+            >
               Home
             </ListSubheader>
           }
@@ -224,19 +244,9 @@ function Sidebar() {
               activeClassName="active-link"
             >
               <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
+                sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
+                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
                 <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
@@ -281,6 +291,36 @@ function Sidebar() {
               </ListItemButton>
             </ListItem>
           ))}
+          <ListItem
+            disablePadding
+            sx={{ display: 'block', color: theme.palette.primary.main }}
+            onClick={handleCreateGroupClick}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+                width: '100%',
+              }}
+              component={Button}
+              color="primary"
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <AddOutlined color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={'Create group'}
+                sx={{ opacity: open ? 1 : 0, color: 'inherit' }}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
     </Box>

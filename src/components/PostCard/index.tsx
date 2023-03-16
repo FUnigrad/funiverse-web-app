@@ -13,17 +13,17 @@ function PostCard() {
         <Box sx={{ display: 'flex', gap: '0 8px', alignItems: 'center' }}>
           <Avatar>N</Avatar>
           <Box>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography variant="h4" fontWeight={600}>
               Nguyen Tran
             </Typography>
-            <Typography variant="caption">February 9 at 10:46</Typography>
+            <Typography variant="body2">February 9 at 10:46</Typography>
           </Box>
         </Box>
-        <Box margin="12px 0">
+        <Typography variant="body1" margin="12px 0">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque magni laudantium autem,
           alias sit fugiat aut est, eaque, accusamus praesentium sint nostrum et explicabo atque
           quis veniam inventore dolorem officia.
-        </Box>
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <Typography variant="body2" marginLeft="auto">
             2 comments
@@ -50,7 +50,7 @@ function PostCard() {
         {/* Comment */}
         <Box marginTop={2}>
           <Box sx={{ display: 'flex', gap: '0 10px' }}>
-            <Avatar sx={{ width: 36, height: 36 }}>N</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>N</Avatar>
             <Box>
               <Paper
                 sx={{
@@ -61,10 +61,10 @@ function PostCard() {
                   borderRadius: 4,
                 }}
               >
-                <Typography variant="caption" fontWeight={600}>
+                <Typography variant="body1" fontWeight={600}>
                   Nguyen Tran
                 </Typography>
-                <Typography variant="caption" sx={{ wordBreak: 'break-word' }}>
+                <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab reprehenderit iste
                   ducimus commodi tempore veritatis corrupti sed molestiae cum provident asperiores
                   illo facilis autem ea, ipsum perferendis dolorum architecto delectus.
@@ -82,6 +82,8 @@ function PostCard() {
                     color: '#65676B',
                     fontWeight: 600,
                     width: 'fit-content',
+                    minWidth: 'unset',
+                    px: 0,
                   }}
                   disableTouchRipple
                 >
@@ -98,6 +100,8 @@ function PostCard() {
                     color: '#65676B',
                     fontWeight: 600,
                     width: 'fit-content',
+                    minWidth: 'unset',
+                    px: 0,
                   }}
                   disableTouchRipple
                 >
