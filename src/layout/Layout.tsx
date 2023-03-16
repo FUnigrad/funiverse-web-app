@@ -43,34 +43,29 @@ import Sidebar from './Sidebar';
 interface LayoutProps {
   children: React.ReactNode;
 }
-const SIDE_BAR_MENU = [
-  { label: 'Groups', href: '/groups' },
-  { label: 'Learning Path', href: '/learning-path' },
-  { label: 'Courses', href: '/courses' },
-  { label: 'Chats', href: '/chats' },
-];
-const drawerWidth = 240;
+const dontNeedAppBarPaths = ['groups'];
+const drawerWidth = 390;
+const appbarHeight = 64;
+// const openedMixin = (theme: Theme): CSSObject => ({
+//   width: drawerWidth,
+//   transition: theme.transitions.create('width', {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.enteringScreen,
+//   }),
+//   overflowX: 'hidden',
+// });
 
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
+// const closedMixin = (theme: Theme): CSSObject => ({
+//   transition: theme.transitions.create('width', {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   overflowX: 'hidden',
+//   width: `calc(${theme.spacing(7)} + 1px)`,
+//   [theme.breakpoints.up('sm')]: {
+//     width: `calc(${theme.spacing(8)} + 1px)`,
+//   },
+// });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -93,6 +88,12 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  width: `calc(100% - ${90}px)`,
+  minHeight: appbarHeight + 1,
+  boxShadow: 'rgba(34, 51, 84, 0.2) 0px 2px 8px -3px, rgba(34, 51, 84, 0.1) 0px 5px 22px -4px',
+  padding: '16px 16px 8px 16px',
+  justifyContent: 'center',
+  backgroundColor: '#fafbfc',
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -103,24 +104,24 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
-  }),
-);
+// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+//   ({ theme, open }) => ({
+//     width: drawerWidth,
+//     flexShrink: 0,
+//     whiteSpace: 'nowrap',
+//     boxSizing: 'border-box',
+//     ...(open && {
+//       ...openedMixin(theme),
+//       '& .MuiDrawer-paper': openedMixin(theme),
+//     }),
+//     ...(!open && {
+//       ...closedMixin(theme),
+//       '& .MuiDrawer-paper': closedMixin(theme),
+//     }),
+//   }),
+// );
 
-const TabDrawer = styled(MuiDrawer)(() => ({}));
+// const TabDrawer = styled(MuiDrawer)(() => ({}));
 
 //L-TODO: Refactor this component to Header and Sidebar
 function Layout({ children }: LayoutProps) {
@@ -140,42 +141,41 @@ function Layout({ children }: LayoutProps) {
   };
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const isRenderAppBar = dontNeedAppBarPaths.some((p) => !pathname.includes(p));
+  // const handleDrawerOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  // const handleDrawerClose = () => {
+  //   setOpen(false);
+  // };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const renderMenu = (
-    <Menu
-      sx={{ mt: '45px' }}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      // id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
+  // const renderMenu = (
+  //   <Menu
+  //     sx={{ mt: '45px' }}
+  //     anchorEl={anchorEl}
+  //     anchorOrigin={{
+  //       vertical: 'top',
+  //       horizontal: 'right',
+  //     }}
+  //     // id={menuId}
+  //     keepMounted
+  //     transformOrigin={{
+  //       vertical: 'top',
+  //       horizontal: 'right',
+  //     }}
+  //     open={isMenuOpen}
+  //     onClose={handleMenuClose}
+  //   >
+  //     <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+  //     <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+  //   </Menu>
+  // );
   return (
     <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        {/* <AppBar position="fixed" open={open}>
-          <Toolbar>
+        {/* <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -215,73 +215,71 @@ function Layout({ children }: LayoutProps) {
                 <AccountCircle />
               </IconButton>
             </Box>
-          </Toolbar>
-          {renderMenu}
-        </AppBar> */}
-        {isRenderSubHeader ? (
-          <div>123</div>
-        ) : // <Box
-        //   sx={{
-        //     position: 'absolute',
-        //     top: theme.mixins.toolbar.height,
-        //     left: open ? 0 : theme.spacing(8),
-        //     right: 0,
-        //     border: '1px solid red',
-        //     height: 60,
-        //     // p: 2,
-        //     pl: 2,
-        //     pr: 2,
-        //     backgroundColor: 'inherit',
-        //     display: 'flex',
-        //     alignItems: 'center',
-        //     justifyContent: 'space-between',
-        //   }}
-        // >
-        //   <Stack
-        //     direction="row"
-        //     justifyContent="space-between"
-        //     alignItems="center"
-        //     flex={1}
-        //     sx={{ height: '100%' }}
-        //   >
-        //     {/* <Tabs value={value} onChange={handleChange}>
-        //         <Tab component={NextLink} href="/#home" label="Home" />
-        //         <Tab component={NextLink} href="/#featured" label="Featured" />
-        //       </Tabs> */}
-        //     <Typography
-        //       variant="subtitle1"
-        //       color="info"
-        //       sx={{
-        //         flexBasis: '70%',
-        //         textAlign: 'left',
-        //         userSelect: 'none',
-        //         cursor: 'pointer',
-        //         pl: 2,
-        //         transition: '.1s ease-in',
-        //         height: '100%',
-        //         display: 'flex',
-        //         alignItems: 'center',
-        //         ':hover': {
-        //           backgroundColor: '#ccc',
-        //         },
-        //       }}
-        //       onClick={() => {
-        //         window.scrollTo({ top: 0, behavior: 'smooth' });
-        //       }}
-        //     >
-        //       Group Name
-        //     </Typography>
-        //     <Box>
-        //       <IconButton>
-        //         <Search />
-        //       </IconButton>
-        //     </Box>
-        //   </Stack>
-        // </Box>
-        null}
-        <Sidebar />
+          </Toolbar> */}
+        {/* {renderMenu} */}
+        {isRenderAppBar && (
+          <AppBar position="fixed" open={open}>
+            <Typography variant="h6" color="black">
+              FUniverse
+            </Typography>
+          </AppBar>
+        )}
+        {/* <Box
+          sx={{
+            position: 'absolute',
+            top: theme.mixins.toolbar.height,
+            left: open ? 0 : theme.spacing(8),
+            right: 0,
+            border: '1px solid red',
+            height: 60,
+            pl: 2,
+            pr: 2,
+            backgroundColor: 'inherit',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            flex={1}
+            sx={{ height: '100%' }}
+          >
+            <Typography
+              variant="subtitle1"
+              color="info"
+              sx={{
+                flexBasis: '70%',
+                textAlign: 'left',
+                userSelect: 'none',
+                cursor: 'pointer',
+                pl: 2,
+                transition: '.1s ease-in',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                ':hover': {
+                  backgroundColor: '#ccc',
+                },
+              }}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              Group Name
+            </Typography>
+            <Box>
+              <IconButton>
+                <Search />
+              </IconButton>
+            </Box>
+          </Stack>
+        </Box> */}
+        <Sidebar setOpen={setOpen} open={open} />
         <Box component="main" sx={{ flexGrow: 1, position: 'relative' }}>
-          <DrawerHeader />
+          {isRenderAppBar && <DrawerHeader />}
           {children}
         </Box>
       </Box>

@@ -67,10 +67,10 @@ function GroupDetail() {
 
       <Paper>
         <Box sx={{ p: 2 }}>
-          <Typography variant="h5" fontWeight={600}>
+          <Typography variant="h2" fontWeight={600} gutterBottom>
             Phòng ban {gid}
           </Typography>
-          <Stack direction="row" justifyContent="space-between">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <AvatarGroup max={20}>
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
@@ -79,10 +79,10 @@ function GroupDetail() {
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
             </AvatarGroup>
-            <Button variant="contained" size="small">
+            <Button variant="contained" size="medium">
               + Invite
             </Button>
-          </Stack>
+          </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Tabs value={tabIndex} onChange={handleChange}>

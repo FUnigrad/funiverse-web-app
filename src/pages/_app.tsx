@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { Roboto } from '@next/font/google';
 import 'assets/styles/global.scss';
+import Modal, { ModalProvider } from 'contexts/ModalContext';
 import { Layout } from 'layout';
 import type { AppProps } from 'next/app';
 import { theme } from 'theme';
@@ -14,9 +15,12 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}</style>
       <ThemeProvider theme={theme}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ModalProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+          <Modal />
+        </ModalProvider>
       </ThemeProvider>
     </>
   );
