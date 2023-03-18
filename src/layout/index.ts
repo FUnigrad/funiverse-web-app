@@ -1,1 +1,3 @@
-export { default as Layout } from './Layout';
+export * from './MainLayout';
+export { default as GroupDetailLayout } from './GroupDetailLayout';
+export * from './GroupDetailLayout';

@@ -1,0 +1,8 @@
+import { withGroupDetailLayout } from 'layout';
+import React from 'react';
+
+function MembersPage() {
+  return <div>MembersPage</div>;
+}
+
+export default withGroupDetailLayout(MembersPage);
