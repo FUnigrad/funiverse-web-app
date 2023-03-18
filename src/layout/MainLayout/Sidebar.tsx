@@ -43,9 +43,9 @@ import { useRouter } from 'next/router';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
 import SearchInput from 'components/SearchInput';
-import { IMG_SRC } from 'pages/groups/[gid]';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useModalContext } from 'contexts/ModalContext';
+import { IMG_SRC } from 'layout/GroupDetailLayout';
 
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },

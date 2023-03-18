@@ -88,7 +88,6 @@ function Modal() {
     confirmTitle,
     saveTitle,
   } = useContext(ModalContext);
-  console.log('🚀 ~ title:', title);
   function handleClose() {
     dispatch({ type: 'close' });
   }

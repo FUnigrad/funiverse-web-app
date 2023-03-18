@@ -50,7 +50,7 @@ function GroupsPage() {
   };
   return (
     <>
-      <Box sx={{ border: '1px solid #ccc' }}>
+      {/* <Box sx={{ border: '1px solid #ccc' }}>
         <Box sx={{ width: '100%', height: 400, position: 'relative' }}>
           <Image
             src={IMG_SRC}
@@ -92,11 +92,7 @@ function GroupsPage() {
             </Box>
           </Stack>
         </Box>
-      </Paper>
-      <DynamicPostCard />
-      <DynamicPostCard />
-      <DynamicPostCard />
-      <DynamicPostCard />
+      </Paper> */}
     </>
   );
 }

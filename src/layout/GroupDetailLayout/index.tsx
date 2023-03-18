@@ -39,12 +39,25 @@ import React from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
-import { Layout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
-const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
-  ssr: false,
-});
+import { Layout } from 'layout';
+import { NextPageWithLayout } from 'pages/_app';
+export const IMG_SRC =
+  'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
-function GroupDetail() {
+const GROUP_TABS = [
+  { href: '/groups/[gid]', label: 'Posts' },
+  { href: '/groups/[gid]/members', label: 'Member' },
+  { href: '/groups/[gid]/media', label: 'Media' },
+  { href: '/groups/[gid]/academic', label: 'Academic' },
+];
+export function getGroupDetailLayout(page: React.ReactElement) {
+  return <GroupDetailLayout>{page}</GroupDetailLayout>;
+}
+export function withGroupDetailLayout(Component: NextPageWithLayout) {
+  Component.getLayout = getGroupDetailLayout;
+  return Component;
+}
+function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { gid } = router.query;
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -53,7 +66,7 @@ function GroupDetail() {
   };
   return (
     <>
-      {/* <Box sx={{ border: '1px solid #ccc' }}>
+      <Box sx={{ border: '1px solid #ccc' }}>
         <Box sx={{ width: '100%', height: 400, position: 'relative' }}>
           <Image
             src={IMG_SRC}
@@ -101,15 +114,10 @@ function GroupDetail() {
             </Box>
           </Stack>
         </Box>
-      </Paper> */}
-      {/* <DynamicPostCard />
-      <DynamicPostCard />
-      <DynamicPostCard />
-      <DynamicPostCard /> */}
+      </Paper>
+      <Box>{children}</Box>
     </>
   );
 }
 
-export default GroupDetail;
-//WARN: withGroupDetailLayout not working @@
-GroupDetail.getLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
+export default GroupDetailLayout;
