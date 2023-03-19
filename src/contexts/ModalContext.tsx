@@ -100,6 +100,7 @@ function Modal() {
           {title}
         </Typography>
       </DialogTitle>
+      <Divider />
       {/* TODO: delay unmount <Content /> */}
       <DialogContent
         sx={{ width: 500 }}
