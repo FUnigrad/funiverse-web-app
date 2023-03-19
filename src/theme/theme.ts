@@ -837,10 +837,10 @@ const PureLightTheme = createTheme({
           overflow: 'visible',
         },
         indicator: {
-          height: 38,
-          minHeight: 38,
-          borderRadius: 6,
-          border: '1px solid ' + colors.primary.dark,
+          // height: 38,
+          // minHeight: 38,
+          // borderRadius: 6,
+          // border: '1px solid ' + colors.primary.dark,
           // boxShadow: '0px 2px 10px ' + colors.primary.light,
         },
         scrollableX: {
@@ -855,9 +855,8 @@ const PureLightTheme = createTheme({
           height: 38,
           minHeight: 38,
           borderRadius: 6,
-          transition: 'color .2s',
+          // transition: 'color .2s',
           textTransform: 'capitalize',
-
           '&.MuiButtonBase-root': {
             minWidth: 'auto',
             paddingLeft: 20,
@@ -865,7 +864,7 @@ const PureLightTheme = createTheme({
             marginRight: 4,
           },
           '&.Mui-selected, &.Mui-selected:hover': {
-            color: colors.alpha.white[100],
+            color: colors.primary.main,
             zIndex: 5,
             '& .MuiSvgIcon-root': {
               color: colors.primary.main,

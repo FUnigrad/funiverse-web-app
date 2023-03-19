@@ -39,6 +39,7 @@ import React from 'react';
 import ActiveLink from 'components/ActiveLink';
 import { useRouter } from 'next/router';
 import Sidebar from './Sidebar';
+import { useLayoutContext } from 'contexts';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -140,7 +141,7 @@ function Layout({ children }: LayoutProps) {
     setAnchorEl(null);
   };
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const { sidebarOpen } = useLayoutContext();
   const isRenderAppBar = dontNeedAppBarPaths.some((p) => !pathname.includes(p));
   // const handleDrawerOpen = () => {
   //   setOpen(true);
@@ -218,7 +219,7 @@ function Layout({ children }: LayoutProps) {
           </Toolbar> */}
         {/* {renderMenu} */}
         {isRenderAppBar && (
-          <AppBar position="fixed" open={open}>
+          <AppBar position="fixed" open={sidebarOpen}>
             <Typography variant="h6" color="black">
               FUniverse
             </Typography>
@@ -277,7 +278,7 @@ function Layout({ children }: LayoutProps) {
             </Box>
           </Stack>
         </Box> */}
-        <Sidebar setOpen={setOpen} open={open} />
+        <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, position: 'relative' }}>
           {isRenderAppBar && <DrawerHeader />}
           {children}
