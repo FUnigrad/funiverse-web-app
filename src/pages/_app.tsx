@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { Roboto } from '@next/font/google';
 import 'assets/styles/global.scss';
+import { LayoutProvider } from 'contexts';
 import Modal, { ModalProvider } from 'contexts/ModalContext';
 import { Layout } from 'layout';
 import { NextPage } from 'next';
@@ -25,7 +26,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       `}</style>
       <ThemeProvider theme={theme}>
         <ModalProvider>
-          <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+          <LayoutProvider>
+            <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+          </LayoutProvider>
           <Modal />
         </ModalProvider>
       </ThemeProvider>

@@ -39,3 +39,8 @@ export interface ModalContextValue {
   onCreateOrSave: Callback | null;
   submitLoading: boolean;
 }
+
+export interface LayoutContextValue {
+  setSidebarOpen: Dispatch<React.SetStateAction<boolean>>;
+  sidebarOpen: boolean;
+}

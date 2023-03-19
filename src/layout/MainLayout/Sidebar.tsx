@@ -46,6 +46,10 @@ import SearchInput from 'components/SearchInput';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useModalContext } from 'contexts/ModalContext';
 import { IMG_SRC } from 'layout/GroupDetailLayout';
+import HomeDrawerTab from './DrawerTab/HomeDrawerTab';
+import { useLayoutContext } from 'contexts';
+import NotificationsDrawerTab from './DrawerTab/NotificationsDrawerTab';
+import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
 
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
@@ -60,20 +64,26 @@ const SIDE_BAR_GROUPS = [
   { label: 'Group 4', href: '/groups/4' },
 ];
 
+enum TabDrawerIndexEnum {
+  Home,
+  Notifications,
+  Chats,
+}
+
 const TAB_MENU = [
   { icon: <HomeOutlined fontSize="large" /> },
   { icon: <NotificationsOutlined fontSize="large" /> },
   { icon: <ChatBubbleOutlined fontSize="large" /> },
 ];
 const drawerWidth = 300;
-const tabDrawerWidth = 90;
+const drawerTabWidth = 90;
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  left: `${tabDrawerWidth + 1}px`,
+  left: `${drawerTabWidth + 1}px`,
   overflowX: 'hidden',
 });
 
@@ -140,8 +150,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const TabDrawer = styled(MuiDrawer)(({ theme }) => ({
-  width: tabDrawerWidth,
+const DrawerTab = styled(MuiDrawer)(({ theme }) => ({
+  width: drawerTabWidth,
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
@@ -155,38 +165,21 @@ const TabDrawer = styled(MuiDrawer)(({ theme }) => ({
     width: 90,
   },
 }));
-function Sidebar({ open, setOpen }: any) {
-  // const [open, setOpen] = React.useState(true);
-  const [tabIndex, setTabIndex] = React.useState(1);
-  const { dispatch } = useModalContext();
-  const theme = useTheme();
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+function Sidebar() {
+  const [tabIndex, setTabIndex] = React.useState<TabDrawerIndexEnum>(TabDrawerIndexEnum.Home);
+  const { sidebarOpen, setSidebarOpen } = useLayoutContext();
 
   function handleDrawerToggle() {
-    setOpen(!open);
+    setSidebarOpen(!sidebarOpen);
   }
 
   function handleTabChange(event: React.SyntheticEvent, newTabIndex: number) {
     setTabIndex(newTabIndex);
   }
 
-  function handleCreateGroupClick() {
-    dispatch({
-      type: 'open',
-      payload: {
-        title: 'Create Group',
-        content: () => <div>test</div>,
-      },
-      onCreateOrSave: () => {},
-    });
-  }
-
   return (
     <Box sx={{ display: 'flex' }}>
-      <TabDrawer variant="permanent">
+      <DrawerTab variant="permanent">
         <Tabs orientation="vertical" value={tabIndex} onChange={handleTabChange} aria-label="">
           {TAB_MENU.map(({ icon }, index) => (
             <Tab
@@ -205,7 +198,7 @@ function Sidebar({ open, setOpen }: any) {
         </Tabs>
         <Box sx={{ mb: 4 }}>
           <IconButton onClick={handleDrawerToggle} sx={{ width: '40px', marginTop: 8 }}>
-            {open ? <ArrowCircleLeftOutlined /> : <ArrowCircleRightOutlined />}
+            {sidebarOpen ? <ArrowCircleLeftOutlined /> : <ArrowCircleRightOutlined />}
           </IconButton>
         </Box>
         <Box>
@@ -213,115 +206,16 @@ function Sidebar({ open, setOpen }: any) {
             <Avatar src={IMG_SRC} sx={{ width: 42, height: 42 }} />
           </IconButton>
         </Box>
-      </TabDrawer>
-      <Drawer variant="permanent" open={open}>
+      </DrawerTab>
+      <Drawer variant="permanent" open={sidebarOpen}>
         {/* <DrawerHeader>
       <IconButton onClick={handleDrawerClose}>
         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
       </IconButton>
     </DrawerHeader> */}
-        <Box sx={{ p: 2 }}>
-          <SearchInput />
-        </Box>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader
-              disableSticky
-              sx={{ mb: 1, fontSize: 20, fontWeight: 700, color: '#000' }}
-            >
-              Home
-            </ListSubheader>
-          }
-        >
-          {SIDE_BAR_MENU.map(({ label, href }, index) => (
-            <ListItem
-              key={label}
-              disablePadding
-              sx={{ display: 'block' }}
-              component={ActiveLink}
-              href={href}
-              activeClassName="active-link"
-            >
-              <ListItemButton
-                sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
-              >
-                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List
-          subheader={
-            <ListSubheader disableSticky sx={{ mb: 1, fontSize: '16px', fontWeight: 500 }}>
-              Groups
-            </ListSubheader>
-          }
-        >
-          {SIDE_BAR_GROUPS.map(({ label, href }, index) => (
-            <ListItem
-              key={label}
-              disablePadding
-              sx={{ display: 'block' }}
-              component={ActiveLink}
-              href={href}
-              activeClassName="active-link"
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-          <ListItem
-            disablePadding
-            sx={{ display: 'block', color: theme.palette.primary.main }}
-            onClick={handleCreateGroupClick}
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-                width: '100%',
-              }}
-              component={Button}
-              color="primary"
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <AddOutlined color="primary" />
-              </ListItemIcon>
-              <ListItemText
-                primary={'Create group'}
-                sx={{ opacity: open ? 1 : 0, color: 'inherit' }}
-              />
-            </ListItemButton>
-          </ListItem>
-        </List>
+        {tabIndex === TabDrawerIndexEnum.Home && <HomeDrawerTab />}
+        {tabIndex === TabDrawerIndexEnum.Notifications && <NotificationsDrawerTab />}
+        {tabIndex === TabDrawerIndexEnum.Chats && <ChatsDrawerTab />}
       </Drawer>
     </Box>
   );

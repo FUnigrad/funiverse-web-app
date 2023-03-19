@@ -102,10 +102,10 @@ function GroupDetail() {
           </Stack>
         </Box>
       </Paper> */}
-      {/* <DynamicPostCard />
       <DynamicPostCard />
       <DynamicPostCard />
-      <DynamicPostCard /> */}
+      <DynamicPostCard />
+      <DynamicPostCard />
     </>
   );
 }

@@ -1,11 +1,13 @@
 import { useRouter } from 'next/router';
-import Link, { LinkProps } from 'next/link';
+import NextLink, { LinkProps } from 'next/link';
 import React, { PropsWithChildren, useState, useEffect } from 'react';
 
 type ActiveLinkProps = LinkProps & {
   className?: string;
   activeClassName: string;
 };
+
+const HOME_PATH = '/';
 
 const ActiveLink = ({
   children,
@@ -26,8 +28,14 @@ const ActiveLink = ({
       // Using URL().pathname to get rid of query and hash
       const activePathname = new URL(asPath, location.href).pathname;
 
+      const isActiveSubPathname =
+        activePathname.includes(linkPathname) && linkPathname !== HOME_PATH;
+
+      const isActiveHomePathname = linkPathname === HOME_PATH && activePathname === HOME_PATH;
       const newClassName =
-        linkPathname === activePathname ? `${className} ${activeClassName}`.trim() : className;
+        isActiveSubPathname || isActiveHomePathname
+          ? `${className} ${activeClassName}`.trim()
+          : className;
 
       if (newClassName !== computedClassName) {
         setComputedClassName(newClassName);
@@ -36,9 +44,9 @@ const ActiveLink = ({
   }, [asPath, isReady, props.as, props.href, activeClassName, className, computedClassName]);
 
   return (
-    <Link className={computedClassName} {...props}>
+    <NextLink className={computedClassName} {...props}>
       {children}
-    </Link>
+    </NextLink>
   );
 };
 
