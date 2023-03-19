@@ -25,7 +25,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
@@ -37,7 +37,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import { useRouter } from 'next/router';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -47,6 +47,10 @@ import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useModalContext } from 'contexts/ModalContext';
 import { IMG_SRC } from 'layout/GroupDetailLayout';
 import { useLayoutContext } from 'contexts';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
   { label: 'Learning Path', href: '/learning-path' },
@@ -68,7 +72,7 @@ function HomeDrawerTab() {
       type: 'open',
       payload: {
         title: 'Create Group',
-        content: () => <div>test</div>,
+        content: () => <CreateGroupForm />,
       },
       onCreateOrSave: () => {},
     });
@@ -181,3 +185,116 @@ function HomeDrawerTab() {
 }
 
 export default HomeDrawerTab;
+
+interface CreateGroupFormProps {
+  defaultValues?: any;
+}
+const CreateGroupSchema = z.object({
+  name: z.string().min(1),
+});
+type GroupFormInputs = z.infer<typeof CreateGroupSchema>;
+type GroupFormBody = GroupFormInputs & { id?: number };
+function CreateGroupForm({ defaultValues }: CreateGroupFormProps) {
+  // const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  // const navigate = useNavigate();
+  // const queryClient = useQueryClient();
+
+  // const mutation = useMutation<Group, unknown, typeof defaultValues, unknown>({
+  //   mutationFn: (body) => (body.id ? groupApis.updateGroup(body) : groupApis.createGroup(body)),
+  //   onSuccess: () => {
+  //     toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Group successfully!`);
+  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Groups, 'slug'] });
+  //     if (!defaultValues?.id) {
+  //       queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
+  //     }
+  //     dispatch({ type: 'close' });
+  //   },
+  // });
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    unregister,
+    clearErrors,
+    formState: { errors },
+  } = useForm({
+    mode: 'all',
+    resolver: zodResolver(CreateGroupSchema),
+    defaultValues: {
+      ...defaultValues,
+    },
+  });
+  // useEffect(() => {
+  //   clearErrors();
+  //   return () => {
+  //     clearErrors();
+  //   };
+  // }, [clearErrors]);
+
+  function onSubmit(data: GroupFormInputs) {
+    console.log('data: ', defaultValues?.id, data);
+    const body: GroupFormBody = {
+      ...data,
+    };
+    if (defaultValues?.id) body.id = defaultValues.id;
+    console.log('🚀 ~ body:', body);
+
+    // mutation.mutate(body);
+  }
+
+  // useEffect(() => {
+  //   console.log(defaultValues?.id);
+  //   if(watchType === GroupType.Course && defaultValues?.id) {
+  //     unregister('class');
+  //   }
+  // }, [unregister, defaultValues?.id, watchType]);
+
+  // function promiseOptionFactory({
+  //   entity,
+  //   field = 'name',
+  //   parentValue,
+  //   operator = 'like',
+  // }: {
+  //   entity: string;
+  //   field?: string | string[];
+  //   parentValue?: string;
+  //   operator?: string | string[];
+  // }) {
+  //   return (input) =>
+  //     searchApis.search({
+  //       entity,
+  //       field,
+  //       value: [parentValue].concat(input),
+  //       operator,
+  //     });
+  // }
+  // console.log('🚀 ~ defaultValues', defaultValues);
+  console.log('🚀 ~ errors', errors);
+
+  return (
+    <>
+      <Box
+        onSubmit={handleSubmit(onSubmit)}
+        component="form"
+        id="entityForm"
+        autoComplete="off"
+        noValidate
+        sx={{
+          '& .MuiTextField-root': { m: 1, width: '100%' },
+          height: 400,
+        }}
+      >
+        {
+          <TextField
+            label="Name"
+            required
+            error={Boolean(errors.name)}
+            helperText={errors.name?.message as string}
+            {...register('name')}
+          />
+        }
+      </Box>
+    </>
+  );
+}
