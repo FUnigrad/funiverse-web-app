@@ -125,7 +125,7 @@ const AppBar = styled(MuiAppBar, {
 // const TabDrawer = styled(MuiDrawer)(() => ({}));
 
 //L-TODO: Refactor this component to Header and Sidebar
-function Layout({ children }: LayoutProps) {
+function AppLayout({ children }: LayoutProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { pathname } = useRouter();
   const trigger = useScrollTrigger({
@@ -288,4 +288,4 @@ function Layout({ children }: LayoutProps) {
   );
 }
 
-export default Layout;
+export default AppLayout;

@@ -39,7 +39,7 @@ import React from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
-import { Layout } from 'layout';
+import { AppLayout } from 'layout';
 import { NextPageWithLayout } from 'pages/_app';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
@@ -54,7 +54,7 @@ export function getGroupDetailLayout(page: React.ReactElement) {
   return <GroupDetailLayout>{page}</GroupDetailLayout>;
 }
 export function withGroupDetailLayout(Component: NextPageWithLayout) {
-  Component.getLayout = getGroupDetailLayout;
+  Component.getNestedLayout = getGroupDetailLayout;
   return Component;
 }
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
