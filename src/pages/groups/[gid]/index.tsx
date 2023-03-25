@@ -39,7 +39,7 @@ import React from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
-import { Layout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
+import { AppLayout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
 const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
   ssr: false,
 });
@@ -112,4 +112,4 @@ function GroupDetail() {
 
 export default GroupDetail;
 //WARN: withGroupDetailLayout not working @@
-GroupDetail.getLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
+GroupDetail.getNestedLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
