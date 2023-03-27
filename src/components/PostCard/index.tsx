@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 function PostCard() {
   return (
-    <Box sx={{ width: `calc((${window.screen.width}px - 240px) / 2)`, margin: '24px auto' }}>
+    <Box sx={{ width: `calc((${window.screen.width}px - 240px) / 2)`, mx: 'auto', mb: '32px' }}>
       <Paper sx={{ padding: 2 }}>
         <Box sx={{ display: 'flex', gap: '0 8px', alignItems: 'center' }}>
           <Avatar>N</Avatar>

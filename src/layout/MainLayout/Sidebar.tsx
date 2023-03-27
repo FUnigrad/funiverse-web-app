@@ -50,7 +50,8 @@ import HomeDrawerTab from './DrawerTab/HomeDrawerTab';
 import { useLayoutContext } from 'contexts';
 import NotificationsDrawerTab from './DrawerTab/NotificationsDrawerTab';
 import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
-
+import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
+import { AiOutlineHome } from 'react-icons/ai';
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
   { label: 'Learning Path', href: '/learning-path' },
@@ -71,9 +72,10 @@ enum TabDrawerIndexEnum {
 }
 
 const TAB_MENU = [
-  { icon: <HomeOutlined fontSize="large" /> },
-  { icon: <NotificationsOutlined fontSize="large" /> },
-  { icon: <ChatBubbleOutlined fontSize="large" /> },
+  // { icon: <HomeOutlined fontSize="large" /> },
+  { icon: <AiOutlineHome fontSize="35px" /> },
+  { icon: <IoNotificationsOutline fontSize="35px" /> },
+  { icon: <IoChatbubbleOutline fontSize="35px" /> },
 ];
 const drawerWidth = 300;
 const drawerTabWidth = 90;

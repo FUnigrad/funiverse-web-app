@@ -123,7 +123,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Stack>
         </Box>
       </Paper>
-      <Box>{children}</Box>
+      <Box sx={{ my: '24px' }}>{children}</Box>
     </>
   );
 }
