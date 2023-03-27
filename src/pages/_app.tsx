@@ -4,10 +4,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'assets/styles/global.scss';
 import { AuthProvider, LayoutProvider, ModalProvider } from 'contexts';
 import Modal from 'contexts/ModalContext';
+import { AuthGuard } from 'guards';
 import { AppLayout } from 'layout';
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 import { theme } from 'theme';
 const roboto = Roboto({ subsets: ['latin'], style: ['normal', 'italic'], weight: ['400', '700'] });
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -26,6 +28,24 @@ const queryClient = new QueryClient({
     },
   },
 });
+function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CookiesProvider>
+          <ModalProvider>
+            <LayoutProvider>
+              <AuthProvider>
+                <AuthGuard>{children}</AuthGuard>
+              </AuthProvider>
+            </LayoutProvider>
+            <Modal />
+          </ModalProvider>
+        </CookiesProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // useVerifySubdomain();
   const getNestedLayout = Component.getNestedLayout || ((page) => page);
@@ -40,18 +60,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           font-family: ${roboto.style.fontFamily};
         }
       `}</style>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <ModalProvider>
-            <LayoutProvider>
-              <AuthProvider>
-                <MainLayout>{getNestedLayout(<Component {...pageProps} />)}</MainLayout>
-              </AuthProvider>
-            </LayoutProvider>
-            <Modal />
-          </ModalProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <Providers>
+        <MainLayout>{getNestedLayout(<Component {...pageProps} />)}</MainLayout>
+      </Providers>
     </>
   );
 }
