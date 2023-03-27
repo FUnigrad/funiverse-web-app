@@ -61,8 +61,10 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { gid } = router.query;
   const [tabIndex, setTabIndex] = React.useState(0);
+  console.log('🚀 ~ tabIndex:', tabIndex);
   const handleChange = (event: React.SyntheticEvent, newTabIndex: number) => {
-    setTabIndex(newTabIndex);
+    // console.log('🚀 ~ newTabIndex:', newTabIndex);
+    // setTabIndex(newTabIndex);
   };
   return (
     <>
@@ -97,13 +99,14 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs value={tabIndex} onChange={handleChange}>
+            <Tabs onChange={handleChange}>
               {GROUP_TABS.map(({ label, href }) => (
                 <Tab
                   key={label}
-                  component={NextLink}
+                  component={ActiveLink}
                   href={{ pathname: href, query: { gid } }}
                   label={label}
+                  activeClassName=""
                 />
               ))}
             </Tabs>

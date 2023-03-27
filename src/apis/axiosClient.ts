@@ -7,6 +7,7 @@ const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
     withCredentials: true,
+    credentials: 'include',
   },
   baseURL: 'http://funiverse.world:30001',
   paramsSerializer: { serialize: (params) => qs.stringify(params) },
