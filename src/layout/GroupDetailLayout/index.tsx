@@ -35,7 +35,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
@@ -59,12 +59,18 @@ export function withGroupDetailLayout(Component: NextPageWithLayout) {
 }
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { gid } = router.query;
+  const {
+    query: { gid },
+    pathname,
+  } = router;
   const [tabIndex, setTabIndex] = React.useState(0);
-  console.log('🚀 ~ tabIndex:', tabIndex);
+  useLayoutEffect(() => {
+    const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
+    setTabIndex(initialTabIndex);
+  }, []);
   const handleChange = (event: React.SyntheticEvent, newTabIndex: number) => {
     // console.log('🚀 ~ newTabIndex:', newTabIndex);
-    // setTabIndex(newTabIndex);
+    setTabIndex(newTabIndex);
   };
   return (
     <>
@@ -99,14 +105,13 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs onChange={handleChange}>
+            <Tabs value={tabIndex} onChange={handleChange}>
               {GROUP_TABS.map(({ label, href }) => (
                 <Tab
                   key={label}
-                  component={ActiveLink}
+                  component={NextLink}
                   href={{ pathname: href, query: { gid } }}
                   label={label}
-                  activeClassName=""
                 />
               ))}
             </Tabs>
