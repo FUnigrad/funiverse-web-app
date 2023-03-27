@@ -1,9 +1,9 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import TextField from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-function SearchInput() {
+function SearchInput({ placeholder = 'Search workspace' }: TextFieldProps) {
   return (
     <TextField
       sx={{
@@ -13,7 +13,7 @@ function SearchInput() {
       }}
       size="small"
       variant="outlined"
-      placeholder="Search workspace"
+      placeholder={placeholder}
       // onChange={handleChange}
       InputProps={{
         startAdornment: (

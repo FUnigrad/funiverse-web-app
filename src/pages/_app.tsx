@@ -11,6 +11,9 @@ import type { AppProps } from 'next/app';
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 import { theme } from 'theme';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 const roboto = Roboto({ subsets: ['latin'], style: ['normal', 'italic'], weight: ['400', '700'] });
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getNestedLayout?: (page: React.ReactElement) => React.ReactNode;
