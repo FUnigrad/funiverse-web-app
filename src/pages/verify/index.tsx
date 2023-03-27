@@ -84,7 +84,7 @@ const VerifyPage: NextPageWithLayout = () => {
     // const oauth = await authApis.oauthLogin();
     // oauthQuery.refetch();
     const popup = window.open(
-      'http://funiverse.world:30001/oauth2/authorization/google?redirect_uri="http://localhost:3000/"',
+      `${process.env.NEXT_PUBLIC_GOOGLE_SIGNIN}`,
       'OAuth2',
       'popup',
     ) as Window;
