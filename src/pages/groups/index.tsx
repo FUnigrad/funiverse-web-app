@@ -48,53 +48,7 @@ function GroupsPage() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  return (
-    <>
-      {/* <Box sx={{ border: '1px solid #ccc' }}>
-        <Box sx={{ width: '100%', height: 400, position: 'relative' }}>
-          <Image
-            src={IMG_SRC}
-            alt="Background of group"
-            fill={true}
-            style={{ objectFit: 'cover', objectPosition: 'top' }}
-          />
-        </Box>
-      </Box>
-
-      <Paper>
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h5" fontWeight={600}>
-            Phòng ban 1
-          </Typography>
-          <Stack direction="row" justifyContent="space-between">
-            <AvatarGroup max={20}>
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-            </AvatarGroup>
-            <Button variant="contained" size="small">
-              + Invite
-            </Button>
-          </Stack>
-          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs value={value} onChange={handleChange}>
-              <Tab component={NextLink} href="#home" label="Home" />
-              <Tab component={NextLink} href="#featured" label="Featured" />
-            </Tabs>
-            <Box>
-              <IconButton>
-                <Search />
-              </IconButton>
-            </Box>
-          </Stack>
-        </Box>
-      </Paper> */}
-    </>
-  );
+  return <></>;
 }
 
 export default GroupsPage;

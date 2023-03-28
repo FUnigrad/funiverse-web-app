@@ -52,18 +52,6 @@ import NotificationsDrawerTab from './DrawerTab/NotificationsDrawerTab';
 import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
 import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { AiOutlineHome } from 'react-icons/ai';
-const SIDE_BAR_MENU = [
-  { label: 'Posts', href: '/' },
-  { label: 'Learning Path', href: '/learning-path' },
-  { label: 'Courses', href: '/courses' },
-  { label: 'Chats', href: '/chats' },
-];
-const SIDE_BAR_GROUPS = [
-  { label: 'Group 1', href: '/groups/1' },
-  { label: 'Group 2', href: '/groups/2' },
-  { label: 'Group 3', href: '/groups/3' },
-  { label: 'Group 4', href: '/groups/4' },
-];
 
 enum TabDrawerIndexEnum {
   Home,
@@ -73,9 +61,9 @@ enum TabDrawerIndexEnum {
 
 const TAB_MENU = [
   // { icon: <HomeOutlined fontSize="large" /> },
-  { icon: <AiOutlineHome fontSize="35px" /> },
-  { icon: <IoNotificationsOutline fontSize="35px" /> },
-  { icon: <IoChatbubbleOutline fontSize="35px" /> },
+  { icon: <AiOutlineHome fontSize="28px" /> },
+  { icon: <IoNotificationsOutline fontSize="28px" /> },
+  { icon: <IoChatbubbleOutline fontSize="28px" /> },
 ];
 const drawerWidth = 300;
 const drawerTabWidth = 90;

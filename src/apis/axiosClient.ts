@@ -1,7 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-
-let accessToken: string | null = null;
+import { appCookies } from 'utils';
 
 const axiosClient = axios.create({
   headers: {
@@ -9,21 +8,23 @@ const axiosClient = axios.create({
     withCredentials: true,
     credentials: 'include',
   },
-  baseURL: 'http://funiverse.world:30001',
+  baseURL: 'http://api.dev.funiverse.world/api',
   paramsSerializer: { serialize: (params) => qs.stringify(params) },
 });
+
 axiosClient.interceptors.request.use(
   async (config) => {
-    console.log('🚀 ~ config:', config);
+    const accessToken = appCookies.getAccessToken();
     if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
     return config;
   },
   (error) => {},
 );
+
 axiosClient.interceptors.response.use(
   (response) => {
-    console.log('🚀 ~ response:', response);
-    if (response.data?.accessToken) accessToken = response.data.accessToken;
+    // console.log('🚀 ~ response:', response);
+    // if (response.data?.accessToken) accessToken = response.data.accessToken;
     return response?.data;
   },
   (error) => {
