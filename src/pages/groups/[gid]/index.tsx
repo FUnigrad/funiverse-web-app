@@ -40,6 +40,7 @@ import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
+import { useUsersNotInGroupQuery } from 'queries';
 const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
   ssr: false,
 });
@@ -47,61 +48,10 @@ const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
 function GroupDetail() {
   const router = useRouter();
   const { gid } = router.query;
-  const [tabIndex, setTabIndex] = React.useState(0);
-  const handleChange = (event: React.SyntheticEvent, newTabIndex: number) => {
-    setTabIndex(newTabIndex);
-  };
+  const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
+
   return (
     <>
-      {/* <Box sx={{ border: '1px solid #ccc' }}>
-        <Box sx={{ width: '100%', height: 400, position: 'relative' }}>
-          <Image
-            src={IMG_SRC}
-            alt="Background of group"
-            fill={true}
-            style={{ objectFit: 'cover', objectPosition: 'top' }}
-          />
-        </Box>
-      </Box>
-
-      <Paper>
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h2" fontWeight={600} gutterBottom>
-            Phòng ban {gid}
-          </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <AvatarGroup max={20}>
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-            </AvatarGroup>
-            <Button variant="contained" size="medium">
-              + Invite
-            </Button>
-          </Box>
-          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs value={tabIndex} onChange={handleChange}>
-              {GROUP_TABS.map(({ label, href }) => (
-                <Tab
-                  key={label}
-                  component={NextLink}
-                  href={{ pathname: href, query: { gid } }}
-                  label={label}
-                />
-              ))}
-            </Tabs>
-            <Box>
-              <IconButton>
-                <Search />
-              </IconButton>
-            </Box>
-          </Stack>
-        </Box>
-      </Paper> */}
       <DynamicPostCard />
       <DynamicPostCard />
       <DynamicPostCard />

@@ -50,12 +50,13 @@ import { useLayoutContext } from 'contexts';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useCreateGroupMutation } from 'queries';
 
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
-  { label: 'Learning Path', href: '/learning-path' },
-  { label: 'Courses', href: '/courses' },
-  { label: 'Chats', href: '/chats' },
+  // { label: 'Learning Path', href: '/learning-path' },
+  // { label: 'Courses', href: '/courses' },
+  // { label: 'Chats', href: '/chats' },
 ];
 const SIDE_BAR_GROUPS = [
   { label: 'Group 1', href: '/groups/1' },
@@ -115,7 +116,10 @@ function HomeDrawerTab() {
       <Divider />
       <List
         subheader={
-          <ListSubheader disableSticky sx={{ mb: 1, fontSize: '16px', fontWeight: 500 }}>
+          <ListSubheader
+            disableSticky
+            sx={{ mb: 1, fontSize: '16px', fontWeight: 500, color: 'rgba(34, 51, 84)' }}
+          >
             Groups
           </ListSubheader>
         }
@@ -165,11 +169,7 @@ function HomeDrawerTab() {
             color="primary"
           >
             <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: sidebarOpen ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
+              sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
             >
               <AddOutlined color="primary" />
             </ListItemIcon>
@@ -225,12 +225,7 @@ function CreateGroupForm({ defaultValues }: CreateGroupFormProps) {
       ...defaultValues,
     },
   });
-  // useEffect(() => {
-  //   clearErrors();
-  //   return () => {
-  //     clearErrors();
-  //   };
-  // }, [clearErrors]);
+  const createGroupMutation = useCreateGroupMutation();
 
   function onSubmit(data: GroupFormInputs) {
     console.log('data: ', defaultValues?.id, data);
@@ -241,35 +236,8 @@ function CreateGroupForm({ defaultValues }: CreateGroupFormProps) {
     console.log('🚀 ~ body:', body);
 
     // mutation.mutate(body);
+    createGroupMutation.mutate(body);
   }
-
-  // useEffect(() => {
-  //   console.log(defaultValues?.id);
-  //   if(watchType === GroupType.Course && defaultValues?.id) {
-  //     unregister('class');
-  //   }
-  // }, [unregister, defaultValues?.id, watchType]);
-
-  // function promiseOptionFactory({
-  //   entity,
-  //   field = 'name',
-  //   parentValue,
-  //   operator = 'like',
-  // }: {
-  //   entity: string;
-  //   field?: string | string[];
-  //   parentValue?: string;
-  //   operator?: string | string[];
-  // }) {
-  //   return (input) =>
-  //     searchApis.search({
-  //       entity,
-  //       field,
-  //       value: [parentValue].concat(input),
-  //       operator,
-  //     });
-  // }
-  // console.log('🚀 ~ defaultValues', defaultValues);
   console.log('🚀 ~ errors', errors);
 
   return (
@@ -280,10 +248,7 @@ function CreateGroupForm({ defaultValues }: CreateGroupFormProps) {
         id="entityForm"
         autoComplete="off"
         noValidate
-        sx={{
-          '& .MuiTextField-root': { m: 1, width: '100%' },
-          height: 400,
-        }}
+        sx={{ '& .MuiTextField-root': { m: 1, width: '100%' }, height: 80 }}
       >
         {
           <TextField

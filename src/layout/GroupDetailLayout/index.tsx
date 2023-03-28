@@ -41,6 +41,7 @@ import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout } from 'layout';
 import { NextPageWithLayout } from 'pages/_app';
+import { useModalContext } from 'contexts';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -59,19 +60,35 @@ export function withGroupDetailLayout(Component: NextPageWithLayout) {
 }
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { dispatch } = useModalContext();
+
   const {
     query: { gid },
     pathname,
   } = router;
+
   const [tabIndex, setTabIndex] = React.useState(0);
+
   useLayoutEffect(() => {
     const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
     setTabIndex(initialTabIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleChange = (event: React.SyntheticEvent, newTabIndex: number) => {
-    // console.log('🚀 ~ newTabIndex:', newTabIndex);
+
+  function handleTabChange(event: React.SyntheticEvent, newTabIndex: number) {
     setTabIndex(newTabIndex);
-  };
+  }
+
+  function handleInviteClick() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Add members',
+        content: () => <div>add members</div>,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
   return (
     <>
       <Box sx={{ border: '1px solid #ccc' }}>
@@ -99,13 +116,13 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
             </AvatarGroup>
-            <Button variant="contained" size="medium">
+            <Button variant="contained" size="medium" onClick={handleInviteClick}>
               + Invite
             </Button>
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs value={tabIndex} onChange={handleChange}>
+            <Tabs value={tabIndex} onChange={handleTabChange}>
               {GROUP_TABS.map(({ label, href }) => (
                 <Tab
                   key={label}
