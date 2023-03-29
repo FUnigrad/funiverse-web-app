@@ -40,21 +40,28 @@ import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
-import { useCreatePostMutation, useUsersNotInGroupQuery } from 'queries';
+import {
+  useCreatePostMutation,
+  useGroupDetailQuery,
+  useGroupPostsQuery,
+  useUsersNotInGroupQuery,
+} from 'queries';
 import { useWindowValue } from 'hooks/useWindowValue';
 import { useModalContext } from 'contexts';
 import Editor from 'components/Editor';
-import { Callback } from '@types';
+import { Callback, CreatePostPayload } from '@types';
+import { useRefState } from 'hooks';
 const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
   ssr: false,
 });
 
 function GroupDetail() {
   const router = useRouter();
-  const { gid } = router.query;
+  const { gid } = router.query as { gid: string };
 
-  const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
-
+  const usersNotInGroupQuery = useUsersNotInGroupQuery(gid);
+  const groupDetailQuery = useGroupDetailQuery(gid);
+  const groupPostsQuery = useGroupPostsQuery(gid);
   return (
     <Box>
       <PostWrite />
@@ -74,15 +81,14 @@ function PostWrite() {
   const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 300 });
   const router = useRouter();
   const { dispatch } = useModalContext();
-  const [editorValue, setEditorValue] = useState('');
+  const [editorValueRef, setEditorValue] = useRefState('');
   const createPostMutation = useCreatePostMutation();
   const { gid } = router.query;
 
   function handleOnEditerChange(value: string) {
-    // console.log('🚀 ~ value:', value);
     setEditorValue(value);
   }
-  console.log('🚀 ~ editorValue:', editorValue);
+
   function handleWritePostClick() {
     dispatch({
       type: 'open',
@@ -91,12 +97,17 @@ function PostWrite() {
         saveTitle: 'Post',
         content: () => (
           <Box sx={{ height: 300 }}>
-            <Editor onChange={handleOnEditerChange} />
+            <Editor onChange={handleOnEditerChange} autoFocus />
           </Box>
         ),
       },
       onCreateOrSave: () => {
-        // createPostMutation.mutate()
+        const body: CreatePostPayload = {
+          content: editorValueRef.current,
+          groupId: gid as string,
+          ownerId: 'TODO: Implement userId here',
+        };
+        createPostMutation.mutate(body);
       },
     });
   }
@@ -109,7 +120,7 @@ function PostWrite() {
           sx={{
             cursor: 'pointer',
             borderRadius: '20px',
-            p: 1.5,
+            p: '12.5px',
             pl: 2,
             flexGrow: 1,
             backgroundColor: '#F0F2F5',
@@ -117,6 +128,7 @@ function PostWrite() {
             userSelect: 'none',
             '&:hover': { backgroundColor: 'rgba(228, 230, 232, 0.7)' },
             '&:active': { backgroundColor: 'rgb(228, 230, 232)' },
+            fontSize: 14,
           }}
         >
           Write something...

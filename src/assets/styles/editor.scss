@@ -85,3 +85,26 @@
     }
   }
 }
+
+.comment-quill-editor {
+  border-radius: inherit;
+  & .ql-container.ql-snow {
+    border: none;
+    font-size: 14px;
+    height: auto;
+    background-color: #f0f2f5;
+    border-radius: inherit;
+  }
+  & .ql-editor {
+    border-radius: inherit;
+    padding: 6px 15px;
+  }
+  & .ql-toolbar {
+    display: none;
+  }
+}
+
+.MuiTypography-root .mention {
+  padding-top: 0;
+  padding-bottom: 2px;
+}

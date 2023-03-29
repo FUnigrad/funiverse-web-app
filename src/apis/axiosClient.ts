@@ -5,10 +5,10 @@ import { appCookies } from 'utils';
 const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
-    withCredentials: true,
-    credentials: 'include',
+    // withCredentials: true,
+    // credentials: 'include',
   },
-  baseURL: 'http://api.dev.funiverse.world/api',
+  baseURL: process.env.NEXT_PUBLIC_BASE_API,
   paramsSerializer: { serialize: (params) => qs.stringify(params) },
 });
 
@@ -23,8 +23,6 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
   (response) => {
-    // console.log('🚀 ~ response:', response);
-    // if (response.data?.accessToken) accessToken = response.data.accessToken;
     return response?.data;
   },
   (error) => {

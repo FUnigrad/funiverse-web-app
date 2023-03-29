@@ -7,3 +7,4 @@ export * from './subject';
 export * from './curriculum';
 export * from './syllabus';
 export * from './combo';
+export * from './comment';
