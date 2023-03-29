@@ -11,8 +11,10 @@ import { AuthGuard } from 'guards';
 import { AppLayout } from 'layout';
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import React, { useCallback } from 'react';
+import 'quill-mention/dist/quill.mention.css';
+import React, { useCallback, useEffect } from 'react';
 import { CookiesProvider } from 'react-cookie';
+import 'react-quill/dist/quill.snow.css';
 import { theme } from 'theme';
 
 dayjs.extend(relativeTime);
@@ -54,13 +56,22 @@ function Providers({ children }: { children: React.ReactNode }) {
   );
 }
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  useEffect(() => {
+    async function loadQuillMentionModule() {
+      await import('quill-mention' as any);
+    }
+    loadQuillMentionModule();
+  }, []);
+
   const getNestedLayout = Component.getNestedLayout || ((page) => page);
+
   // WARN: useCallback to not re-render component tree
   const MainLayout = useCallback(function ({ children }: { children: React.ReactNode }) {
     const Layout = Component.MainLayout ? Component.MainLayout : AppLayout;
     return <Layout>{children}</Layout>;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <>
       <style jsx global>{`

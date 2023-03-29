@@ -21,5 +21,6 @@ export function useUsersNotInGroupQuery(groupId: string) {
   return useQuery({
     queryKey: [QueryKeys.Groups, QueryKeys.Slug, QueryKeys.UsersNotIn],
     queryFn: () => groupApis.getUsersNotInGroup(groupId),
+    enabled: Boolean(groupId),
   });
 }

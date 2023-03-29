@@ -3,13 +3,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-function SearchInput({ placeholder = 'Search workspace' }: TextFieldProps) {
+function SearchInput({ placeholder = 'Search workspace', sx, ...props }: TextFieldProps) {
   return (
     <TextField
       sx={{
         width: '100%',
         '.MuiInputBase-root': { borderRadius: '24px', height: '36px' },
         minHeight: 'unset',
+        ...sx,
       }}
       size="small"
       variant="outlined"
@@ -31,6 +32,7 @@ function SearchInput({ placeholder = 'Search workspace' }: TextFieldProps) {
         //   </InputAdornment>
         // )
       }}
+      {...props}
     />
   );
 }

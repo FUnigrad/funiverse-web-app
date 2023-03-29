@@ -72,7 +72,7 @@ function HomeDrawerTab() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Create Group',
+        title: 'Create group',
         content: () => <CreateGroupForm />,
       },
       onCreateOrSave: () => {},
@@ -147,7 +147,7 @@ function HomeDrawerTab() {
                   justifyContent: 'center',
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <MailIcon />
               </ListItemIcon>
               <ListItemText primary={label} sx={{ opacity: sidebarOpen ? 1 : 0 }} />
             </ListItemButton>
