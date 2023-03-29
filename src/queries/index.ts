@@ -5,3 +5,4 @@ export const QueryKeys = {
   Slug: 'slug',
 };
 export * from './groupQueries';
+export * from './postQueries';

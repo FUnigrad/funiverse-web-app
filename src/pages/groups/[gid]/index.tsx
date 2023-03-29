@@ -35,12 +35,16 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
-import { useUsersNotInGroupQuery } from 'queries';
+import { useCreatePostMutation, useUsersNotInGroupQuery } from 'queries';
+import { useWindowValue } from 'hooks/useWindowValue';
+import { useModalContext } from 'contexts';
+import Editor from 'components/Editor';
+import { Callback } from '@types';
 const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
   ssr: false,
 });
@@ -48,18 +52,77 @@ const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
 function GroupDetail() {
   const router = useRouter();
   const { gid } = router.query;
+
   const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
 
   return (
-    <>
+    <Box>
+      <PostWrite />
       <DynamicPostCard />
       <DynamicPostCard />
       <DynamicPostCard />
       <DynamicPostCard />
-    </>
+    </Box>
   );
 }
 
 export default GroupDetail;
 //WARN: withGroupDetailLayout not working @@
 GroupDetail.getNestedLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
+
+function PostWrite() {
+  const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 300 });
+  const router = useRouter();
+  const { dispatch } = useModalContext();
+  const [editorValue, setEditorValue] = useState('');
+  const createPostMutation = useCreatePostMutation();
+  const { gid } = router.query;
+
+  function handleOnEditerChange(value: string) {
+    // console.log('🚀 ~ value:', value);
+    setEditorValue(value);
+  }
+  console.log('🚀 ~ editorValue:', editorValue);
+  function handleWritePostClick() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Create post',
+        saveTitle: 'Post',
+        content: () => (
+          <Box sx={{ height: 300 }}>
+            <Editor onChange={handleOnEditerChange} />
+          </Box>
+        ),
+      },
+      onCreateOrSave: () => {
+        // createPostMutation.mutate()
+      },
+    });
+  }
+  return (
+    <Paper sx={{ mb: 3, width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', p: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}>
+        <Avatar>N</Avatar>
+        <Box
+          onClick={handleWritePostClick}
+          sx={{
+            cursor: 'pointer',
+            borderRadius: '20px',
+            p: 1.5,
+            pl: 2,
+            flexGrow: 1,
+            backgroundColor: '#F0F2F5',
+            color: '#1c1e21',
+            userSelect: 'none',
+            '&:hover': { backgroundColor: 'rgba(228, 230, 232, 0.7)' },
+            '&:active': { backgroundColor: 'rgb(228, 230, 232)' },
+          }}
+        >
+          Write something...
+        </Box>
+      </Box>
+      <Divider sx={{ my: 2 }} />
+    </Paper>
+  );
+}

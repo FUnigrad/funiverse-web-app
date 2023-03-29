@@ -94,16 +94,16 @@ function Modal() {
 
   function handleSubmit() {}
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} PaperProps={{ sx: { overflow: 'visible' } }}>
       <DialogTitle>
-        <Typography variant="h3" textAlign={'center'}>
+        <Typography variant="h4" textAlign={'center'} fontSize={20}>
           {title}
         </Typography>
       </DialogTitle>
       <Divider />
       {/* TODO: delay unmount <Content /> */}
       <DialogContent
-        sx={{ width: 500 }}
+        sx={{ width: 600, overflow: 'visible' }}
         // TODO: Not working if pass Content is GroupForm ?
         // onAnimationEnd={(e) => {
         //   e.stopPropagation();

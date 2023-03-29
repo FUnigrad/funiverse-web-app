@@ -112,7 +112,7 @@ function AppLayout({ children }: LayoutProps) {
         )}
         <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, position: 'relative' }}>
-          {isRenderAppBar && <DrawerHeader />}
+          {isRenderAppBar && <DrawerHeader sx={{ mb: 3 }} />}
           {children}
         </Box>
       </Box>

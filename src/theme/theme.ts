@@ -1184,7 +1184,8 @@ const PureLightTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 'max(0px, min(8px, calc((100vw - 4px - 100%) * 9999))) / 8px',
+    // borderRadius: 'max(0px, min(8px, calc((100vw - 4px - 100%) * 9999))) / 8px',
+    borderRadius: 4,
   },
   typography: {
     fontFamily:
