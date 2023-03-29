@@ -35,7 +35,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
@@ -69,7 +69,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
 
   const [tabIndex, setTabIndex] = React.useState(0);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
     setTabIndex(initialTabIndex);
     // eslint-disable-next-line react-hooks/exhaustive-deps
