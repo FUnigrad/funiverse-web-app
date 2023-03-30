@@ -1,10 +1,11 @@
 import { Curriculum } from './curriculum';
 
 export enum UserRole {
+  User = 'USER',
   Student = 'STUDENT',
   Teacher = 'TEACHER',
   SystemAdmin = 'SYSTEM_ADMIN',
-  DepartmentAdmin = 'DEPARTMENT_ADMIN',
+  DepartmentAdmin = 'OFFICER',
   WorkspaceAdmin = 'WORKSPACE_ADMIN',
 }
 
