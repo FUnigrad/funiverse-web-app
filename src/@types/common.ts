@@ -1,3 +1,5 @@
+import { NextPage } from 'next';
+import { AppProps } from 'next/app';
 import React, { Dispatch } from 'react';
 
 export type Callback = (...args: any[]) => void;
@@ -44,3 +46,11 @@ export interface LayoutContextValue {
   setSidebarOpen: Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
 }
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getNestedLayout?: (page: React.ReactElement) => React.ReactNode;
+  MainLayout?: React.FC<{ children: React.ReactNode }>;
+};
+export type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};

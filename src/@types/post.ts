@@ -1,7 +1,7 @@
 export interface CreatePostPayload {
   content: string;
-  ownerId: string | number;
-  groupId: string | number;
+  ownerId: number;
+  groupId: number;
 }
 
 export interface Post {

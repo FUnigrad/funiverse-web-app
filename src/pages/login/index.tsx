@@ -20,11 +20,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import NextLink from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import { authApis } from 'apis';
-import { LoginBody, LoginResponse } from '@types';
+import { LoginBody, LoginResponse, NextPageWithLayout } from '@types';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import { useIdentifier } from 'hooks';
-import { NextPageWithLayout } from 'pages/_app';
 import { AuthLayout } from 'layout';
 import { useAuthContext } from 'contexts';
 const LoginSchema = z.object({

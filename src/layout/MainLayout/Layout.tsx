@@ -41,7 +41,7 @@ import { useRouter } from 'next/router';
 import Sidebar from './Sidebar';
 import { useLayoutContext } from 'contexts';
 import { useQuery } from '@tanstack/react-query';
-import { QueryKeys, useGroupQuery } from 'queries';
+import { QueryKeys, useGroupsQuery, useUserMeQuery } from 'queries';
 import { groupApis } from 'apis';
 
 interface LayoutProps {
@@ -96,8 +96,8 @@ function AppLayout({ children }: LayoutProps) {
   // });
   const { sidebarOpen } = useLayoutContext();
   const isRenderAppBar = DONT_NEED_APPBAR_PATHS.some((p) => !pathname.includes(p));
-  const groupsQuery = useGroupQuery();
-  console.log(groupsQuery.data);
+  const groupsQuery = useGroupsQuery();
+  const userMe = useUserMeQuery();
 
   return (
     <>

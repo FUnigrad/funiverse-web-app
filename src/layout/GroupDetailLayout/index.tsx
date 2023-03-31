@@ -40,8 +40,9 @@ import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout } from 'layout';
-import { NextPageWithLayout } from 'pages/_app';
 import { useModalContext } from 'contexts';
+import { useGroupDetailQuery, useGroupPostsQuery } from 'queries';
+import { NextPageWithLayout } from '@types';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -61,11 +62,11 @@ export function withGroupDetailLayout(Component: NextPageWithLayout) {
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { dispatch } = useModalContext();
-
   const {
     query: { gid },
     pathname,
   } = router;
+  const groupDetailQuery = useGroupDetailQuery(gid as string);
 
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -105,7 +106,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
       <Paper>
         <Box sx={{ p: 2 }}>
           <Typography variant="h2" fontWeight={600} gutterBottom>
-            Phòng ban {gid}
+            {groupDetailQuery.data?.name}
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <AvatarGroup max={20}>

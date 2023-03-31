@@ -117,7 +117,6 @@ export const editorUtils = {
   },
   hideToolbar: () => {
     const toolbar = document.querySelector('.ql-toolbar') as HTMLDivElement;
-    console.log('🚀 ~ toolbar:', toolbar);
     if (toolbar) toolbar.style.display = 'none';
   },
   focus: () => {

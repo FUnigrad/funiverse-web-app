@@ -4,7 +4,7 @@ import { groupApis } from 'apis';
 import { useModalContext } from 'contexts';
 import { QueryKeys } from 'queries';
 
-export function useGroupQuery() {
+export function useGroupsQuery() {
   return useQuery({ queryKey: [QueryKeys.Groups], queryFn: groupApis.getUserGroups });
 }
 

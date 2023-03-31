@@ -1,3 +1,5 @@
+import { QueryClient } from '@tanstack/react-query';
+
 export const QueryKeys = {
   Groups: 'groups',
   Users: 'users',
@@ -8,3 +10,13 @@ export const QueryKeys = {
 };
 export * from './groupQueries';
 export * from './postQueries';
+export * from './userQueries';
+export * from './commentQueries';
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+  },
+});

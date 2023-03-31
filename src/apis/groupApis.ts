@@ -3,7 +3,7 @@ import axiosClient from './axiosClient';
 const posts: Post[] = [
   {
     content:
-      '<p><span class="mention" data-index="0" data-denotation-char="@" data-id="1" data-value="Fredrik Sundqvist">﻿<span contenteditable="false"><span class="ql-mention-denotation-char">@</span>Fredrik Sundqvist</span>﻿</span> test</p>',
+      '<p>Trong cuộc sống, chắc chắn ai cũng phải biết đến hương vị của tình yêu. Là một thứ gia vị của cuộc sống, vì thế, trải qua tình yêu là phải “nếm” cay đắng ngọt bùi, lúc vui, lúc buồn thì mới có thể tồn tại vĩnh cửu.</p>',
     ownerId: 1,
     groupId: 1,
   },

@@ -2,6 +2,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Roboto } from '@next/font/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { AppPropsWithLayout } from '@types';
 import 'assets/styles/global.scss';
 import { AuthProvider, LayoutProvider, ModalProvider } from 'contexts';
 import Modal from 'contexts/ModalContext';
@@ -11,6 +12,7 @@ import { AuthGuard } from 'guards';
 import { AppLayout } from 'layout';
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import { queryClient } from 'queries';
 import 'quill-mention/dist/quill.mention.css';
 import React, { useCallback, useEffect } from 'react';
 import { CookiesProvider } from 'react-cookie';
@@ -19,42 +21,7 @@ import { theme } from 'theme';
 
 dayjs.extend(relativeTime);
 const roboto = Roboto({ subsets: ['latin'], style: ['normal', 'italic'], weight: ['400', '700'] });
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getNestedLayout?: (page: React.ReactElement) => React.ReactNode;
-  MainLayout?: React.FC<{ children: React.ReactNode }>;
-};
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
-};
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 0,
-    },
-  },
-});
-function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CookiesProvider>
-          <ModalProvider>
-            <LayoutProvider>
-              <AuthProvider>
-                <AuthGuard>
-                  {children}
-                  <ReactQueryDevtools initialIsOpen={false} />
-                  <Modal />
-                </AuthGuard>
-              </AuthProvider>
-            </LayoutProvider>
-          </ModalProvider>
-        </CookiesProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  );
-}
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     async function loadQuillMentionModule() {
@@ -83,5 +50,26 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <MainLayout>{getNestedLayout(<Component {...pageProps} />)}</MainLayout>
       </Providers>
     </>
+  );
+}
+function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CookiesProvider>
+          <ModalProvider>
+            <LayoutProvider>
+              <AuthProvider>
+                <AuthGuard>
+                  {children}
+                  <ReactQueryDevtools initialIsOpen={false} />
+                  <Modal />
+                </AuthGuard>
+              </AuthProvider>
+            </LayoutProvider>
+          </ModalProvider>
+        </CookiesProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

@@ -13,9 +13,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // import { useAuthContext } from "contexts";
 import { authApis } from 'apis';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { VerifyEmailBody, VerifyEmailResponse } from '@types';
+import { NextPageWithLayout, VerifyEmailBody, VerifyEmailResponse } from '@types';
 // import FormHelperText from '@mui/material/FormHelperText';
-import { NextPageWithLayout } from 'pages/_app';
 import { FcGoogle } from 'react-icons/fc';
 import { AuthLayout } from 'layout';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -46,7 +45,6 @@ const VerifyPage: NextPageWithLayout = () => {
   } = useMutation<VerifyEmailResponse, string, VerifyEmailBody, unknown>({
     mutationFn: (body) => authApis.verifyEmail(body),
   });
-  console.log('🚀 ~ error:', error);
 
   function handleVerifyEmail() {
     //TODO: call API verify email
@@ -55,7 +53,6 @@ const VerifyPage: NextPageWithLayout = () => {
     const body = { email: data.email };
     verifyMutate(body, {
       onSuccess: (response) => {
-        console.log('🚀 ~ response:', response);
         router.push({ pathname: '/login', query: { identifier: data.email } });
       },
     });
