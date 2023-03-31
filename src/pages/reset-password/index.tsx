@@ -11,8 +11,8 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthContext } from 'contexts';
-import { NextPageWithLayout } from 'pages/_app';
 import { AuthLayout } from 'layout';
+import { NextPageWithLayout } from '@types';
 const ResetPasswordSchema = z.object({
   email: z.string().email(),
 });
@@ -20,7 +20,6 @@ type VerifyFormInputs = z.infer<typeof ResetPasswordSchema>;
 const ResetPasswordPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { verifiedEmail } = useAuthContext();
-  console.log('🚀 ~ verifiedEmail:', verifiedEmail);
 
   const {
     register,

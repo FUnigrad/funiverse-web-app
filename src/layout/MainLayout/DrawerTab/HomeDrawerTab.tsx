@@ -50,7 +50,8 @@ import { useLayoutContext } from 'contexts';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useCreateGroupMutation } from 'queries';
+import { useCreateGroupMutation, useGroupsQuery } from 'queries';
+import CircularProgress from 'components/CircularProgress';
 
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
@@ -68,16 +69,19 @@ function HomeDrawerTab() {
   const theme = useTheme();
   const { dispatch } = useModalContext();
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
+  const groupsQuery = useGroupsQuery();
   function handleCreateGroupClick() {
     dispatch({
       type: 'open',
       payload: {
         title: 'Create group',
+        saveTitle: 'Create',
         content: () => <CreateGroupForm />,
       },
       onCreateOrSave: () => {},
     });
   }
+  if (groupsQuery.isLoading) return <CircularProgress />;
   return (
     <>
       <Box sx={{ p: 2 }}>
@@ -124,32 +128,24 @@ function HomeDrawerTab() {
           </ListSubheader>
         }
       >
-        {SIDE_BAR_GROUPS.map(({ label, href }, index) => (
+        {groupsQuery.data?.map(({ name, id }, index) => (
           <ListItem
-            key={label}
+            key={id}
             disablePadding
             sx={{ display: 'block' }}
             component={ActiveLink}
-            href={href}
+            href={`/groups/${id}`}
             activeClassName="active-link"
           >
             <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: sidebarOpen ? 'initial' : 'center',
-                px: 2.5,
-              }}
+              sx={{ minHeight: 48, justifyContent: sidebarOpen ? 'initial' : 'center', px: 2.5 }}
             >
               <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: sidebarOpen ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
+                sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
               >
                 <MailIcon />
               </ListItemIcon>
-              <ListItemText primary={label} sx={{ opacity: sidebarOpen ? 1 : 0 }} />
+              <ListItemText primary={name} sx={{ opacity: sidebarOpen ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -228,17 +224,14 @@ function CreateGroupForm({ defaultValues }: CreateGroupFormProps) {
   const createGroupMutation = useCreateGroupMutation();
 
   function onSubmit(data: GroupFormInputs) {
-    console.log('data: ', defaultValues?.id, data);
     const body: GroupFormBody = {
       ...data,
     };
     if (defaultValues?.id) body.id = defaultValues.id;
-    console.log('🚀 ~ body:', body);
 
     // mutation.mutate(body);
     createGroupMutation.mutate(body);
   }
-  console.log('🚀 ~ errors', errors);
 
   return (
     <>

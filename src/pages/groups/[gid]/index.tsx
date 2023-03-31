@@ -35,7 +35,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
@@ -44,6 +44,7 @@ import {
   useCreatePostMutation,
   useGroupDetailQuery,
   useGroupPostsQuery,
+  useUserMeQuery,
   useUsersNotInGroupQuery,
 } from 'queries';
 import { useWindowValue } from 'hooks/useWindowValue';
@@ -51,9 +52,7 @@ import { useModalContext } from 'contexts';
 import Editor from 'components/Editor';
 import { Callback, CreatePostPayload } from '@types';
 import { useRefState } from 'hooks';
-const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), {
-  ssr: false,
-});
+// const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), { ssr: false });
 
 function GroupDetail() {
   const router = useRouter();
@@ -65,10 +64,9 @@ function GroupDetail() {
   return (
     <Box>
       <PostWrite />
-      <DynamicPostCard />
-      <DynamicPostCard />
-      <DynamicPostCard />
-      <DynamicPostCard />
+      {groupPostsQuery.data?.map((post, index) => (
+        <PostCard key={index} data={post} />
+      ))}
     </Box>
   );
 }
@@ -78,12 +76,14 @@ export default GroupDetail;
 GroupDetail.getNestedLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
 
 function PostWrite() {
-  const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 300 });
   const router = useRouter();
-  const { dispatch } = useModalContext();
-  const [editorValueRef, setEditorValue] = useRefState('');
-  const createPostMutation = useCreatePostMutation();
   const { gid } = router.query;
+  const { dispatch } = useModalContext();
+  const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 1200 });
+  const [editorValueRef, setEditorValue] = useRefState('');
+
+  const userMeQuery = useUserMeQuery();
+  const createPostMutation = useCreatePostMutation();
 
   function handleOnEditerChange(value: string) {
     setEditorValue(value);
@@ -104,8 +104,8 @@ function PostWrite() {
       onCreateOrSave: () => {
         const body: CreatePostPayload = {
           content: editorValueRef.current,
-          groupId: gid as string,
-          ownerId: 'TODO: Implement userId here',
+          groupId: +(gid as string),
+          ownerId: userMeQuery.data!.id,
         };
         createPostMutation.mutate(body);
       },

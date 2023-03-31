@@ -61,7 +61,7 @@ enum TabDrawerIndexEnum {
 
 const TAB_MENU = [
   // { icon: <HomeOutlined fontSize="large" /> },
-  { icon: <AiOutlineHome fontSize="28px" /> },
+  { icon: <AiOutlineHome fontSize="28px" />, href: '/' },
   { icon: <IoNotificationsOutline fontSize="28px" /> },
   { icon: <IoChatbubbleOutline fontSize="28px" /> },
 ];
@@ -147,6 +147,7 @@ const DrawerTab = styled(MuiDrawer)(({ theme }) => ({
   boxSizing: 'border-box',
   zIndex: 10,
   '& .MuiDrawer-paper': {
+    overflowX: 'hidden',
     zIndex: 10,
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -158,7 +159,7 @@ const DrawerTab = styled(MuiDrawer)(({ theme }) => ({
 function Sidebar() {
   const [tabIndex, setTabIndex] = React.useState<TabDrawerIndexEnum>(TabDrawerIndexEnum.Home);
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
-
+  const router = useRouter();
   function handleDrawerToggle() {
     setSidebarOpen(!sidebarOpen);
   }
@@ -171,10 +172,11 @@ function Sidebar() {
     <Box sx={{ display: 'flex' }}>
       <DrawerTab variant="permanent">
         <Tabs orientation="vertical" value={tabIndex} onChange={handleTabChange} aria-label="">
-          {TAB_MENU.map(({ icon }, index) => (
+          {TAB_MENU.map(({ icon, href }, index) => (
             <Tab
               key={index}
               icon={icon}
+              onClick={() => href && router.push(href)}
               sx={{
                 width: 86,
                 height: 60,
@@ -192,7 +194,7 @@ function Sidebar() {
           </IconButton>
         </Box>
         <Box>
-          <IconButton size="medium">
+          <IconButton size="medium" onClick={() => router.push('/me')}>
             <Avatar src={IMG_SRC} sx={{ width: 42, height: 42 }} />
           </IconButton>
         </Box>

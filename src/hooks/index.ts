@@ -4,3 +4,4 @@ export * from './useIdentifier';
 export * from './useAppCookies';
 export * from './useWindowValue';
 export * from './useRefState';
+export * from './useCompostRefs';

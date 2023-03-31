@@ -23,3 +23,28 @@ export interface User {
   active: boolean;
   identifyNumber: string;
 }
+export interface UserMe {
+  id: number;
+  name: string;
+  code: string;
+  identifyNumber: string;
+  role: string;
+  schoolYear: string;
+  personalMail: string;
+  eduMail: string;
+  avatar: string;
+  phoneNumber: string;
+  curriculum: Curriculum;
+  active: boolean;
+  enabled: boolean;
+  password: null;
+  accountNonExpired: boolean;
+  credentialsNonExpired: boolean;
+  accountNonLocked: boolean;
+  authorities: Authority[];
+  username: string;
+}
+
+export interface Authority {
+  authority: string;
+}
