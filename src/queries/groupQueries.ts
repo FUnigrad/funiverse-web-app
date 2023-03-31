@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CreateGroupPayload } from '@types';
+import { CreateGroupPayload, CreateGroupPostPayload } from '@types';
 import { groupApis } from 'apis';
 import { useModalContext } from 'contexts';
 import { QueryKeys } from 'queries';
@@ -36,10 +36,25 @@ export function useGroupDetailQuery(groupId: string) {
   });
 }
 
+// Post
+
 export function useGroupPostsQuery(groupId: string) {
   return useQuery({
     queryKey: [QueryKeys.Groups, groupId, QueryKeys.Posts],
     queryFn: () => groupApis.getGroupPosts(groupId),
     enabled: Boolean(groupId),
+  });
+}
+
+export function useCreateGroupPostMutation(groupId: string) {
+  const { dispatch } = useModalContext();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: CreateGroupPostPayload) => groupApis.createGroupPost(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, groupId, QueryKeys.Posts] });
+      dispatch({ type: 'close' });
+    },
   });
 }

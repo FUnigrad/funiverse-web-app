@@ -56,3 +56,10 @@ export interface GroupUser {
 export interface CreateGroupPayload {
   name: string;
 }
+
+//Post
+export interface CreateGroupPostPayload {
+  content: string;
+  ownerId: number;
+  groupId: number;
+}

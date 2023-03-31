@@ -9,20 +9,23 @@ import Modal from 'contexts/ModalContext';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { AuthGuard } from 'guards';
+import { useTalk } from 'hooks';
 import { AppLayout } from 'layout';
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { queryClient } from 'queries';
+import { queryClient, useGroupsQuery, useUserMeQuery } from 'queries';
 import 'quill-mention/dist/quill.mention.css';
 import React, { useCallback, useEffect } from 'react';
 import { CookiesProvider } from 'react-cookie';
 import 'react-quill/dist/quill.snow.css';
+import { TalkService } from 'services';
 import { theme } from 'theme';
 
 dayjs.extend(relativeTime);
 const roboto = Roboto({ subsets: ['latin'], style: ['normal', 'italic'], weight: ['400', '700'] });
-
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  useTalk();
+
   useEffect(() => {
     async function loadQuillMentionModule() {
       await import('quill-mention' as any);
