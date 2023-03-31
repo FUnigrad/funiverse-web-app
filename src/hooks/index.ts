@@ -5,3 +5,5 @@ export * from './useAppCookies';
 export * from './useWindowValue';
 export * from './useRefState';
 export * from './useCompostRefs';
+export * from './useTalk';
+export * from './useLazyQuery';

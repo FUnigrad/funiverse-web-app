@@ -54,3 +54,11 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 export type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
+
+export interface BaseInfo {
+  id: number;
+  name: string;
+  code: null;
+  active: boolean;
+}
+export interface Owner extends BaseInfo {}

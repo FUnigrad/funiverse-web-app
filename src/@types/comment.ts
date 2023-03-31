@@ -1,10 +1,13 @@
-export interface CreateCommentPayload {
+import { Owner } from './common';
+
+export interface CreatePostCommentPayload {
   content: string;
   ownerId: string | number;
   postId: string | number;
 }
 export interface Comment {
+  id: number;
   content: string;
-  ownerId: number;
-  postId: number;
+  owner: Owner;
+  createdDateTime: Date;
 }

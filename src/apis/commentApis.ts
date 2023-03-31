@@ -1,6 +1,6 @@
-import { CreateCommentPayload, CreateGroupPayload, CreatePostPayload, Group, User } from '@types';
+import { CreatePostCommentPayload, CreateGroupPayload, Group, User } from '@types';
 import axiosClient from './axiosClient';
 
 export const commentApis = {
-  createComment: (body: CreateCommentPayload) => axiosClient.post('/comment', body),
+  createComment: (body: CreatePostCommentPayload) => axiosClient.post('/comment', body),
 };

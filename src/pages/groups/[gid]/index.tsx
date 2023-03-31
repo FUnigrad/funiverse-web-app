@@ -41,7 +41,7 @@ import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout, getGroupDetailLayout, withGroupDetailLayout } from 'layout';
 import {
-  useCreatePostMutation,
+  useCreateGroupPostMutation,
   useGroupDetailQuery,
   useGroupPostsQuery,
   useUserMeQuery,
@@ -50,7 +50,7 @@ import {
 import { useWindowValue } from 'hooks/useWindowValue';
 import { useModalContext } from 'contexts';
 import Editor from 'components/Editor';
-import { Callback, CreatePostPayload } from '@types';
+import { Callback, CreateGroupPostPayload } from '@types';
 import { useRefState } from 'hooks';
 // const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), { ssr: false });
 
@@ -61,11 +61,12 @@ function GroupDetail() {
   const usersNotInGroupQuery = useUsersNotInGroupQuery(gid);
   const groupDetailQuery = useGroupDetailQuery(gid);
   const groupPostsQuery = useGroupPostsQuery(gid);
+
   return (
     <Box>
       <PostWrite />
       {groupPostsQuery.data?.map((post, index) => (
-        <PostCard key={index} data={post} />
+        <PostCard key={post.id} data={post} />
       ))}
     </Box>
   );
@@ -82,8 +83,8 @@ function PostWrite() {
   const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 1200 });
   const [editorValueRef, setEditorValue] = useRefState('');
 
-  const userMeQuery = useUserMeQuery();
-  const createPostMutation = useCreatePostMutation();
+  const createPostMutation = useCreateGroupPostMutation(gid as string);
+  const userMeQuery = useUserMeQuery({ enabled: false });
 
   function handleOnEditerChange(value: string) {
     setEditorValue(value);
@@ -102,7 +103,7 @@ function PostWrite() {
         ),
       },
       onCreateOrSave: () => {
-        const body: CreatePostPayload = {
+        const body: CreateGroupPostPayload = {
           content: editorValueRef.current,
           groupId: +(gid as string),
           ownerId: userMeQuery.data!.id,

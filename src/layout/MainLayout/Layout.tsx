@@ -97,7 +97,7 @@ function AppLayout({ children }: LayoutProps) {
   const { sidebarOpen } = useLayoutContext();
   const isRenderAppBar = DONT_NEED_APPBAR_PATHS.some((p) => !pathname.includes(p));
   const groupsQuery = useGroupsQuery();
-  const userMe = useUserMeQuery();
+  const userMeQuery = useUserMeQuery();
 
   return (
     <>
