@@ -10,3 +10,10 @@ export function useUserMeQuery({ enabled = true }: { enabled?: boolean } = {}) {
     enabled,
   });
 }
+
+export function useUsersQuery() {
+  return useQuery({
+    queryKey: [QueryKeys.Users, QueryKeys.Posts],
+    queryFn: userApis.getUsers,
+  });
+}

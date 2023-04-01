@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CreateGroupPayload, CreateGroupPostPayload } from '@types';
 import { groupApis } from 'apis';
 import { useModalContext } from 'contexts';
+import { useRouter } from 'next/router';
 import { QueryKeys } from 'queries';
 
 export function useGroupsQuery() {
@@ -11,11 +12,13 @@ export function useGroupsQuery() {
 export function useCreateGroupMutation() {
   const queryClient = useQueryClient();
   const { dispatch } = useModalContext();
-  return useMutation({
-    mutationFn: (body: CreateGroupPayload) => groupApis.createUserGroup(body),
-    onSuccess: () => {
+  const router = useRouter();
+  return useMutation<number, unknown, CreateGroupPayload, unknown>({
+    mutationFn: (body) => groupApis.createUserGroup(body),
+    onSuccess: (groupId) => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups] });
       dispatch({ type: 'close' });
+      router.push(`groups/${groupId}`);
     },
   });
 }
@@ -54,6 +57,33 @@ export function useCreateGroupPostMutation(groupId: string) {
     mutationFn: (body: CreateGroupPostPayload) => groupApis.createGroupPost(body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, groupId, QueryKeys.Posts] });
+      dispatch({ type: 'close' });
+    },
+  });
+}
+
+// User
+
+export function useGroupUsersQuery(groupId: string) {
+  return useQuery({
+    queryKey: [QueryKeys.Groups, groupId, QueryKeys.Users],
+    queryFn: () => groupApis.getGroupUsers(groupId),
+    enabled: Boolean(groupId),
+  });
+}
+
+export function useAddGroupUsersMutation(groupId: string) {
+  const { dispatch } = useModalContext();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ groupId, userIds }: { groupId: string; userIds: number[] }) =>
+      groupApis.addGroupUsers(groupId, userIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, groupId, QueryKeys.Users] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Groups, groupId, QueryKeys.UsersNotIn],
+      });
       dispatch({ type: 'close' });
     },
   });

@@ -41,7 +41,7 @@ export default function PostComment({ data }: { data: Comment }) {
   return (
     <Box sx={{ marginTop: 2 }}>
       <Box sx={{ display: 'flex', gap: '0 8px' }}>
-        <UserAvatar sx={{ width: 32, height: 32 }} />
+        <Avatar sx={{ width: 32, height: 32 }}>{name.charAt(0)}</Avatar>
         <Box>
           <Paper
             sx={{

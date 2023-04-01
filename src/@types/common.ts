@@ -62,3 +62,13 @@ export interface BaseInfo {
   active: boolean;
 }
 export interface Owner extends BaseInfo {}
+export interface SelectProps {
+  fieldName: string;
+  options: any;
+  error?: boolean;
+  required?: boolean;
+  isDisabled?: boolean;
+  onChange?: Callback;
+  value?: any;
+  placeholder?: string;
+}

@@ -58,8 +58,6 @@ function GroupDetail() {
   const router = useRouter();
   const { gid } = router.query as { gid: string };
 
-  const usersNotInGroupQuery = useUsersNotInGroupQuery(gid);
-  const groupDetailQuery = useGroupDetailQuery(gid);
   const groupPostsQuery = useGroupPostsQuery(gid);
 
   return (

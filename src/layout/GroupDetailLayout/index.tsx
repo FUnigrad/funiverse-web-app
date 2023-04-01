@@ -35,14 +35,23 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
 import { AppLayout } from 'layout';
 import { useModalContext } from 'contexts';
-import { useGroupDetailQuery, useGroupPostsQuery } from 'queries';
-import { NextPageWithLayout } from '@types';
+import {
+  useAddGroupUsersMutation,
+  useGroupDetailQuery,
+  useGroupPostsQuery,
+  useGroupUsersQuery,
+  useUsersNotInGroupQuery,
+} from 'queries';
+import { GroupUser, NextPageWithLayout, User } from '@types';
+import PersonAdd from '@mui/icons-material/PersonAdd';
+import Select from 'components/Select';
+import MemberCard from 'components/MemberCard';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -67,6 +76,8 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
     pathname,
   } = router;
   const groupDetailQuery = useGroupDetailQuery(gid as string);
+  const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
+  const groupUsersQuery = useGroupUsersQuery(gid as string);
 
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -80,12 +91,12 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
     setTabIndex(newTabIndex);
   }
 
-  function handleInviteClick() {
+  function handleAddPeopleClick() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Add members',
-        content: () => <div>add members</div>,
+        title: 'Add people',
+        content: () => <AddPeoplePopup groupId={gid as string} />,
       },
       onCreateOrSave: () => {},
     });
@@ -109,16 +120,26 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
             {groupDetailQuery.data?.name}
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <AvatarGroup max={20}>
+            <AvatarGroup max={6} total={groupUsersQuery.data?.length}>
+              {/* <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
-              <Avatar src={IMG_SRC} />
+              <Avatar src={IMG_SRC} /> */}
+              {groupUsersQuery.data?.map((user) => (
+                <Avatar key={user.id} sx={{ width: 40, height: 40 }}>
+                  {user.name.charAt(0)}
+                </Avatar>
+              ))}
             </AvatarGroup>
-            <Button variant="contained" size="medium" onClick={handleInviteClick}>
-              + Invite
+            <Button
+              startIcon={<PersonAdd />}
+              variant="contained"
+              size="medium"
+              onClick={handleAddPeopleClick}
+            >
+              Add people
             </Button>
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
@@ -147,3 +168,45 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
 }
 
 export default GroupDetailLayout;
+
+function AddPeoplePopup({ groupId }: { groupId: string }) {
+  const addGroupUsersMutation = useAddGroupUsersMutation(groupId);
+  const { data } = useUsersNotInGroupQuery(groupId) as { data: GroupUser[] };
+
+  const [selectedOptions, setSelectedOptions] = useState<GroupUser[]>([]);
+  const selectedIds = selectedOptions.map((sO) => sO.id);
+  const options = data
+    .filter((user) => Boolean(user.name))
+    .filter((user) => !selectedIds.includes(user.id))
+    .map((user) => ({ ...user, label: user.name, value: user.id }));
+
+  function handleSelectChange(option: GroupUser & { label: string; value: any }) {
+    const { label, value, ...user } = option;
+    setSelectedOptions([user, ...selectedOptions]);
+  }
+
+  function handleCloseClick(option: GroupUser) {
+    setSelectedOptions(selectedOptions.filter((user) => user.id !== option.id));
+  }
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    addGroupUsersMutation.mutate({ groupId, userIds: selectedIds });
+  }
+  return (
+    <Box>
+      <Box id="entityForm" component={'form'} onSubmit={handleSubmit} />
+      <Select
+        placeholder="Add people"
+        options={options}
+        fieldName="people"
+        onChange={handleSelectChange}
+        value={''}
+      />
+      <Box>
+        {selectedOptions.map((user) => (
+          <MemberCard key={user.id} data={user} onCloseClick={handleCloseClick} />
+        ))}
+      </Box>
+    </Box>
+  );
+}

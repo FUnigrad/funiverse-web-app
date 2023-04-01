@@ -21,7 +21,7 @@ export default function PostCardHeader({ data }: { data: Post }) {
   const formatCreatedDateTime = dayjs(createdDateTime).format('MMMM D [at] HH:mm');
   return (
     <Box sx={{ display: 'flex', gap: '0 8px', alignItems: 'center' }}>
-      <UserAvatar />
+      <Avatar>{name.charAt(0)}</Avatar>
       <Box>
         <Typography variant="h4" fontWeight={600}>
           {name}

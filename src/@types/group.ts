@@ -50,8 +50,11 @@ export interface Teacher {
 
 export interface GroupUser {
   id: number;
-  code: string;
   name: string;
+  code: string;
+  eduMail: string;
+  groupAdmin: boolean;
+  active: boolean;
 }
 export interface CreateGroupPayload {
   name: string;
