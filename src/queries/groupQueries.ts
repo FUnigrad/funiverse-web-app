@@ -31,11 +31,11 @@ export function useUsersNotInGroupQuery(groupId: string) {
   });
 }
 
-export function useGroupDetailQuery(groupId: string) {
+export function useGroupDetailQuery(groupId: string, { enabled }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: [QueryKeys.Groups, groupId],
     queryFn: () => groupApis.getGroupDetail(groupId),
-    enabled: Boolean(groupId),
+    enabled: enabled ?? Boolean(groupId),
   });
 }
 
@@ -86,5 +86,21 @@ export function useAddGroupUsersMutation(groupId: string) {
       });
       dispatch({ type: 'close' });
     },
+  });
+}
+
+//Academic
+export function useGroupAcademicQuery(groupId: string) {
+  return useQuery({
+    queryKey: [QueryKeys.Groups, groupId, QueryKeys.Academic],
+    queryFn: () => groupApis.getGroupAcademic(groupId),
+    enabled: Boolean(groupId),
+  });
+}
+export function useGroupAcademicSyllabusQuery(curriculumId: string) {
+  return useQuery({
+    queryKey: [QueryKeys.Groups, curriculumId, QueryKeys.Academic, QueryKeys.Syllabus],
+    queryFn: () => groupApis.getGroupAcademicSyllabus(curriculumId),
+    enabled: Boolean(curriculumId),
   });
 }

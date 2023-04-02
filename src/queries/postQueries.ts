@@ -34,3 +34,10 @@ export function usePostCommentsQuery({
     initialData,
   });
 }
+
+export function useNewFeedQuery() {
+  return useQuery({
+    queryKey: [QueryKeys.Posts],
+    queryFn: () => postApis.getNewFeed(),
+  });
+}

@@ -1,4 +1,11 @@
-import { CreatePostCommentPayload, CreateGroupPayload, Group, User, Comment } from '@types';
+import {
+  CreatePostCommentPayload,
+  CreateGroupPayload,
+  Group,
+  User,
+  Comment,
+  NewFeedPost,
+} from '@types';
 import axiosClient from './axiosClient';
 
 export const postApis = {
@@ -7,4 +14,5 @@ export const postApis = {
   createPostComment: ({ postId, ...body }: CreatePostCommentPayload) =>
     axiosClient.post<Comment>(`/post/${postId}/comment`, body),
   getPostComments: (postId: string) => axiosClient.get<Comment[]>(`/post/${postId}/comment`),
+  getNewFeed: () => axiosClient.get<NewFeedPost>('/workspace/post'),
 };

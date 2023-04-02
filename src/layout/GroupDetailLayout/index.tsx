@@ -48,7 +48,7 @@ import {
   useGroupUsersQuery,
   useUsersNotInGroupQuery,
 } from 'queries';
-import { GroupUser, NextPageWithLayout, User } from '@types';
+import { GroupType, GroupUser, NextPageWithLayout, User } from '@types';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Select from 'components/Select';
 import MemberCard from 'components/MemberCard';
@@ -59,7 +59,11 @@ const GROUP_TABS = [
   { href: '/groups/[gid]', label: 'Posts' },
   { href: '/groups/[gid]/members', label: 'Member' },
   { href: '/groups/[gid]/media', label: 'Media' },
-  { href: '/groups/[gid]/academic', label: 'Academic' },
+  {
+    href: '/groups/[gid]/academic',
+    label: 'Academic',
+    renderIf: [GroupType.Class, GroupType.Course],
+  },
 ];
 export function getGroupDetailLayout(page: React.ReactElement) {
   return <GroupDetailLayout>{page}</GroupDetailLayout>;
@@ -78,14 +82,31 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const groupDetailQuery = useGroupDetailQuery(gid as string);
   const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
   const groupUsersQuery = useGroupUsersQuery(gid as string);
-
+  const GROUP_TABS = [GroupType.Class, GroupType.Course].includes(
+    groupDetailQuery.data?.type as GroupType,
+  )
+    ? [
+        { href: '/groups/[gid]', label: 'Posts' },
+        { href: '/groups/[gid]/members', label: 'Member' },
+        { href: '/groups/[gid]/media', label: 'Media' },
+        { href: '/groups/[gid]/academic', label: 'Academic' },
+      ]
+    : [
+        { href: '/groups/[gid]', label: 'Posts' },
+        { href: '/groups/[gid]/members', label: 'Member' },
+        { href: '/groups/[gid]/media', label: 'Media' },
+      ];
   const [tabIndex, setTabIndex] = React.useState(0);
+
+  // useEffect(() => {
+  //   if (/.+groups\/d+$/.test(router.asPath)) setTabIndex(0);
+  // }, [router.asPath]);
 
   useEffect(() => {
     const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
     setTabIndex(initialTabIndex);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pathname]);
 
   function handleTabChange(event: React.SyntheticEvent, newTabIndex: number) {
     setTabIndex(newTabIndex);
@@ -144,7 +165,10 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs value={tabIndex} onChange={handleTabChange}>
+            <Tabs
+              value={tabIndex > GROUP_TABS.length - 1 ? 0 : tabIndex}
+              onChange={handleTabChange}
+            >
               {GROUP_TABS.map(({ label, href }) => (
                 <Tab
                   key={label}

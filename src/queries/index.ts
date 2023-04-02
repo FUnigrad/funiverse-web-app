@@ -6,7 +6,9 @@ export const QueryKeys = {
   UsersNotIn: 'users-not-in',
   Slug: 'slug',
   Posts: 'posts',
+  Academic: 'academic',
   Comments: 'comments',
+  Syllabus: 'syllabus',
 };
 export * from './groupQueries';
 export * from './postQueries';

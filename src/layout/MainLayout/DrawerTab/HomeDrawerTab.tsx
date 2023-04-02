@@ -52,6 +52,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateGroupMutation, useGroupsQuery } from 'queries';
 import CircularProgress from 'components/CircularProgress';
+import { BsPostcard } from 'react-icons/bs';
+import { MdOutlineGroups } from 'react-icons/md';
 
 const SIDE_BAR_MENU = [
   { label: 'Posts', href: '/' },
@@ -110,9 +112,17 @@ function HomeDrawerTab() {
               <ListItemIcon
                 sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <BsPostcard fontSize={24} color="#5569ff" />
               </ListItemIcon>
-              <ListItemText primary={label} sx={{ opacity: sidebarOpen ? 1 : 0 }} />
+              <ListItemText
+                primary={label}
+                sx={{
+                  opacity: sidebarOpen ? 1 : 0,
+                  '& .MuiTypography-root': {
+                    fontWeight: '600',
+                  },
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
@@ -143,9 +153,17 @@ function HomeDrawerTab() {
               <ListItemIcon
                 sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
               >
-                <MailIcon />
+                <MdOutlineGroups fontSize={24} color="#009198" />
               </ListItemIcon>
-              <ListItemText primary={name} sx={{ opacity: sidebarOpen ? 1 : 0 }} />
+              <ListItemText
+                primary={name}
+                sx={{
+                  opacity: sidebarOpen ? 1 : 0,
+                  '& .MuiTypography-root': {
+                    fontWeight: '600',
+                  },
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}

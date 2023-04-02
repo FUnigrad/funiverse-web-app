@@ -28,11 +28,27 @@ export interface Curriculum {
   major: Major;
   specialization: Specialization;
   startedTerm: {
-    season: string;
+    season: Season;
     year: string;
   };
   noSemester: number;
   currentSemester: number;
+  active: boolean;
+}
+export interface CurriculumSyllabus {
+  syllabus: {
+    id: number;
+    name: string;
+    code: null;
+  };
+  semester: number;
+}
+export interface Season {
+  id: number;
+  name: string;
+  ordinalNumber: number;
+  startMonth: number;
+  endMonth: number;
   active: boolean;
 }
 

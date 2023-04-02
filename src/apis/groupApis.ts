@@ -1,6 +1,8 @@
 import {
   CreateGroupPayload,
   CreateGroupPostPayload,
+  Curriculum,
+  CurriculumSyllabus,
   Group,
   GroupType,
   GroupUser,
@@ -25,4 +27,9 @@ export const groupApis = {
   getGroupUsers: (groupId: string) => axiosClient.get<GroupUser[]>(`/group/${groupId}/users`),
   addGroupUsers: (groupId: string, userIds: number[]) =>
     axiosClient.post(`/group/${groupId}/members`, userIds),
+
+  // Academic
+  getGroupAcademic: (groupId: string) => axiosClient.get<Curriculum>(`/group/${groupId}/academic`),
+  getGroupAcademicSyllabus: (curriculumId: string) =>
+    axiosClient.get<CurriculumSyllabus>(`/curriculum/${curriculumId}/syllabus`),
 };
