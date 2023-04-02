@@ -35,19 +35,21 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import { useRouter } from 'next/router';
 import Sidebar from './Sidebar';
-import { useLayoutContext } from 'contexts';
+import { useLayoutContext, useTalkContext } from 'contexts';
 import { useQuery } from '@tanstack/react-query';
 import { QueryKeys, useGroupsQuery, useUserMeQuery } from 'queries';
 import { groupApis } from 'apis';
+import { talkInstance } from 'services';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 const DONT_NEED_APPBAR_PATHS = ['groups'];
+const DONT_NEED_MARGIN_BOTTOM_PATHS = ['chat'];
 const drawerWidth = 390;
 const appbarHeight = 64;
 
@@ -96,8 +98,28 @@ function AppLayout({ children }: LayoutProps) {
   // });
   const { sidebarOpen } = useLayoutContext();
   const isRenderAppBar = DONT_NEED_APPBAR_PATHS.some((p) => !pathname.includes(p));
+  const isMarginBottomMainLayout = DONT_NEED_MARGIN_BOTTOM_PATHS.some((p) => !pathname.includes(p));
   const groupsQuery = useGroupsQuery();
   const userMeQuery = useUserMeQuery();
+  const { dispatchTalk } = useTalkContext();
+  useEffect(() => {
+    if (!userMeQuery.data) return;
+    const { id, name, personalMail, avatar, role } = userMeQuery.data;
+
+    const currentUser = talkInstance.createUser({
+      id: id,
+      name,
+      email: personalMail,
+      // photoUrl: '',
+      // welcomeMessage: 'Hello!',
+      // role
+    });
+    // dispatchTalk({ type: 'CREATE_SESSION', payload: currentUser });
+
+    return () => {
+      // dispatchTalk({ type: 'DESTROY_SESSION' });
+    };
+  }, [dispatchTalk, userMeQuery.data]);
 
   return (
     <>
@@ -112,7 +134,7 @@ function AppLayout({ children }: LayoutProps) {
         )}
         <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, position: 'relative' }}>
-          {isRenderAppBar && <DrawerHeader sx={{ mb: 3 }} />}
+          {isRenderAppBar && <DrawerHeader sx={{ mb: isMarginBottomMainLayout ? 3 : 0 }} />}
           {children}
         </Box>
       </Box>

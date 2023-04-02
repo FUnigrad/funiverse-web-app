@@ -15,6 +15,7 @@ import { useGroupUsersQuery, useUserMeQuery, useUsersQuery } from 'queries';
 import CircularProgress from 'components/CircularProgress';
 import { GroupUser } from '@types';
 import MemberCard from 'components/MemberCard';
+import Head from 'next/head';
 function MembersPage() {
   const {
     query: { gid },
@@ -28,51 +29,56 @@ function MembersPage() {
   const admins = data.filter((user) => user.groupAdmin);
 
   return (
-    <Paper sx={{ width: 568, mx: 'auto', p: 2 }}>
-      <SectionHeader
-        amount={data.length}
-        subContent="View and find new and existing members of the group."
-      >
-        Members
-      </SectionHeader>
-      <SearchInput
-        placeholder="Find a member"
-        value={searchValue}
-        onChange={(event) => setSearchValue(event.target.value)}
-      />
-      <Divider sx={{ my: 3 }} />
-      {searchValue ? (
-        <Box>
-          <SectionHeader>Search result</SectionHeader>
-          {data
-            .filter((mem) => mem.name.toLowerCase().includes(searchValue.toLowerCase()))
-            .map((mem) => (
-              <MemberCard key={mem.id} data={mem} />
+    <>
+      <Head>
+        <title>Member | Group | FUniverse</title>
+      </Head>
+      <Paper sx={{ width: 568, mx: 'auto', p: 2 }}>
+        <SectionHeader
+          amount={data.length}
+          subContent="View and find new and existing members of the group."
+        >
+          Members
+        </SectionHeader>
+        <SearchInput
+          placeholder="Find a member"
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.target.value)}
+        />
+        <Divider sx={{ my: 3 }} />
+        {searchValue ? (
+          <Box>
+            <SectionHeader>Search result</SectionHeader>
+            {data
+              .filter((mem) => mem.name.toLowerCase().includes(searchValue.toLowerCase()))
+              .map((mem) => (
+                <MemberCard key={mem.id} data={mem} />
+              ))}
+          </Box>
+        ) : (
+          <Box>
+            <SectionHeader amount={admins.length}>Admins & moderators</SectionHeader>
+            {admins.map((ad) => (
+              <MemberCard key={ad.id} data={ad} />
             ))}
-        </Box>
-      ) : (
-        <Box>
-          <SectionHeader amount={admins.length}>Admins & moderators</SectionHeader>
-          {admins.map((ad) => (
-            <MemberCard key={ad.id} data={ad} />
-          ))}
-          <SectionHeader>
-            Recently added
-            <Typography variant="body2" fontSize={13}>
-              Newest members of the group appear first. This list also includes people who have been
-              invited and who are previewing the group.
-            </Typography>
-          </SectionHeader>
-          {data.map((mem) => (
-            <MemberCard
-              key={mem.id}
-              data={mem}
-              subContent={`Joined about ${dayjs().subtract(32, 'day').fromNow()}`}
-            />
-          ))}
-        </Box>
-      )}
-    </Paper>
+            <SectionHeader>
+              Recently added
+              <Typography variant="body2" fontSize={13}>
+                Newest members of the group appear first. This list also includes people who have
+                been invited and who are previewing the group.
+              </Typography>
+            </SectionHeader>
+            {data.map((mem) => (
+              <MemberCard
+                key={mem.id}
+                data={mem}
+                subContent={`Joined about ${dayjs().subtract(32, 'day').fromNow()}`}
+              />
+            ))}
+          </Box>
+        )}
+      </Paper>
+    </>
   );
 }
 

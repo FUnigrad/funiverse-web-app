@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppPropsWithLayout } from '@types';
 import 'assets/styles/global.scss';
-import { AuthProvider, LayoutProvider, ModalProvider } from 'contexts';
+import { AuthProvider, LayoutProvider, ModalProvider, TalkProvider } from 'contexts';
 import Modal from 'contexts/ModalContext';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -64,9 +64,11 @@ function Providers({ children }: { children: React.ReactNode }) {
             <LayoutProvider>
               <AuthProvider>
                 <AuthGuard>
-                  {children}
-                  <ReactQueryDevtools initialIsOpen={false} />
-                  <Modal />
+                  <TalkProvider>
+                    {children}
+                    <ReactQueryDevtools initialIsOpen={false} />
+                    <Modal />
+                  </TalkProvider>
                 </AuthGuard>
               </AuthProvider>
             </LayoutProvider>

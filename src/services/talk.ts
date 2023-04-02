@@ -4,6 +4,7 @@ import { User, UserOptions } from 'talkjs/all';
 export default class TalkService {
   private static _instance: TalkService = new TalkService();
   private _isTalkReady: boolean = false;
+  private appId: string = process.env.NEXT_PUBLIC_TALK_APP_ID;
   constructor() {
     if (TalkService._instance) {
       throw new Error('Error: Instantiation failed: Use Instance() instead of new.');
@@ -33,13 +34,23 @@ export default class TalkService {
 
   public createSession(user: User) {
     return new Talk.Session({
-      appId: process.env.NEXT_PUBLIC_TALK_APP_ID,
+      appId: this.appId,
       me: user,
     });
   }
 
-  public createConversation({ currentUser, otherUser }: { currentUser: User; otherUser: User }) {
+  public createOneOnOneConversation({
+    currentUser,
+    otherUser,
+  }: {
+    currentUser: User;
+    otherUser: User;
+  }) {
     return Talk.oneOnOneId(currentUser, otherUser);
+  }
+
+  public history() {
+    return Talk.getAppMetadata(this.appId);
   }
 }
 export const talkInstance = TalkService.Instance;

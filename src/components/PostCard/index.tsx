@@ -75,7 +75,7 @@ function PostCard({ data }: PostCardProps) {
         />
         <Box sx={{ display: 'flex' }}>
           <Typography variant="body2" marginLeft="auto">
-            {data.comments.length} comments
+            {postCommentsQuery.data?.length} comments
           </Typography>
         </Box>
         <Divider sx={{ margin: '4px 0' }} />

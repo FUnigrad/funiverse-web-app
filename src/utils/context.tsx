@@ -3,20 +3,21 @@ type ContextProvider<T> = React.FC<React.PropsWithChildren<T>>;
 export function createContext<ContextValueType extends object | null>(
   rootComponentName: string,
   defaultContext?: ContextValueType,
-): [ContextProvider<ContextValueType>, (callerComponentName: string) => ContextValueType] {
+): [ContextProvider<ContextValueType>, (callerComponentName?: string) => ContextValueType] {
   const Ctx = React.createContext<ContextValueType | undefined>(defaultContext);
 
   function Provider(props: React.PropsWithChildren<ContextValueType>) {
     const { children, ...context } = props;
-    const value = React.useMemo(
-      () => context,
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      Object.values(context),
-    ) as ContextValueType;
+    // const value = React.useMemo(
+    //   () => context,
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   Object.values(context),
+    // ) as ContextValueType;
+    const value = context as ContextValueType;
     return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
   }
 
-  function useContext(callerComponentName: string) {
+  function useContext(callerComponentName: string = 'Component') {
     const context = React.useContext(Ctx);
     if (context) {
       return context;

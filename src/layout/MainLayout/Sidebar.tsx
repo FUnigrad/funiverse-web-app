@@ -52,6 +52,7 @@ import NotificationsDrawerTab from './DrawerTab/NotificationsDrawerTab';
 import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
 import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { AiOutlineHome } from 'react-icons/ai';
+import UserAvatar from 'components/UserAvatar';
 
 enum TabDrawerIndexEnum {
   Home,
@@ -195,7 +196,8 @@ function Sidebar() {
         </Box>
         <Box>
           <IconButton size="medium" onClick={() => router.push('/me')}>
-            <Avatar src={IMG_SRC} sx={{ width: 42, height: 42 }} />
+            {/* <Avatar src={IMG_SRC} sx={{ width: 42, height: 42 }} /> */}
+            <UserAvatar sx={{ width: 42, height: 42 }} />
           </IconButton>
         </Box>
       </DrawerTab>

@@ -52,6 +52,7 @@ import { useModalContext } from 'contexts';
 import Editor from 'components/Editor';
 import { Callback, CreateGroupPostPayload } from '@types';
 import { useRefState } from 'hooks';
+import Head from 'next/head';
 // const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), { ssr: false });
 
 function GroupDetail() {
@@ -61,12 +62,17 @@ function GroupDetail() {
   const groupPostsQuery = useGroupPostsQuery(gid);
 
   return (
-    <Box>
-      <PostWrite />
-      {groupPostsQuery.data?.map((post, index) => (
-        <PostCard key={post.id} data={post} />
-      ))}
-    </Box>
+    <>
+      <Head>
+        <title>Group | FUniverse</title>
+      </Head>
+      <Box>
+        <PostWrite />
+        {groupPostsQuery.data?.map((post, index) => (
+          <PostCard key={post.id} data={post} />
+        ))}
+      </Box>
+    </>
   );
 }
 
