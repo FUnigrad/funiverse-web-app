@@ -36,7 +36,6 @@ export const editorConfig = {
       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
       [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
       ['link', 'image'],
-      // ['clean'],
     ],
     mention: {
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
@@ -65,31 +64,6 @@ export const editorConfig = {
         },
       },
     },
-    // clipboard: {
-    //   matchers: [['BR', lineBreakMatcher]],
-    //   matchVisual: false,
-    // },
-    // keyboard: {
-    //   bindings: {
-    //     linebreak: {
-    //       key: 13,
-    //       shiftKey: true,
-    //       handler: (range: any) => {
-    //         const that = this as any;
-    //         const currentLeaf = that.quill.getLeaf(range.index)[0];
-    //         const nextLeaf = that.quill.getLeaf(range.index + 1)[0];
-    //         that.quill.insertEmbed(range.index, 'break', true, 'user');
-    //         // Insert a second break if:
-    //         // At the end of the editor, OR next leaf has a different parent (<p>)
-    //         if (nextLeaf === null || currentLeaf.parent !== nextLeaf.parent) {
-    //           that.quill.insertEmbed(range.index, 'break', true, 'user');
-    //         }
-    //         // Now that we've inserted a line break, move the cursor forward
-    //         that.quill.setSelection(range.index + 1, 'silent');
-    //       },
-    //     },
-    //   },
-    // },
   },
   formats: [
     'header',

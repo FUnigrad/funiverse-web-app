@@ -30,13 +30,15 @@ export default function HomePage() {
         </Typography>
       </Stack>
       {newfeedQuery.data!.content.map((post) => (
-        <PostCard key={post.id} data={post} />
+        <PostCard key={post.id} data={post} visibleGroup />
       ))}
     </>
   );
 }
 
 function PostSkeleton() {
+  const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 1200 });
+
   return (
     <>
       {Array(3)
@@ -46,13 +48,16 @@ function PostSkeleton() {
             key={index}
             sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', my: 5 }}
           >
-            <Stack spacing={1} sx={{ width: 400 }}>
+            <Stack spacing={1} sx={{ width: `calc((${screenWidth}px - 240px) / 2)`, height: 400 }}>
               <Box sx={{ display: 'flex', gap: '0 10px' }}>
                 <Skeleton variant="circular" width={40} height={40} />
                 <Skeleton variant="text" sx={{ fontSize: '1rem', flex: 1 }} />
               </Box>
-              {/* <Skeleton variant="rectangular" width={210} height={60} /> */}
-              <Skeleton variant="rounded" width={400} height={100} />
+              <Skeleton
+                variant="rounded"
+                width={`calc((${screenWidth}px - 240px) / 2)`}
+                height={100}
+              />
               <Skeleton variant="text" sx={{ fontSize: '2rem', flex: 1 }} />
             </Stack>
           </Box>

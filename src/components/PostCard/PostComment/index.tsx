@@ -60,7 +60,7 @@ export default function PostComment({ data }: { data: Comment }) {
             <Typography
               variant="body1"
               sx={{ wordBreak: 'break-word' }}
-              dangerouslySetInnerHTML={{ __html: content ?? '' }}
+              dangerouslySetInnerHTML={{ __html: content.replaceAll('&nbsp;', ' ') ?? '' }}
             />
           </Paper>
           <ButtonGroup>

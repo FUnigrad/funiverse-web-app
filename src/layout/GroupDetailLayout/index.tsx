@@ -35,7 +35,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useTransition } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
@@ -75,6 +75,7 @@ export function withGroupDetailLayout(Component: NextPageWithLayout) {
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { dispatch } = useModalContext();
+  const [isPending, startTransition] = useTransition();
   const {
     query: { gid },
     pathname,
@@ -109,7 +110,9 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   function handleTabChange(event: React.SyntheticEvent, newTabIndex: number) {
-    setTabIndex(newTabIndex);
+    startTransition(() => {
+      setTabIndex(newTabIndex);
+    });
   }
 
   function handleAddPeopleClick() {

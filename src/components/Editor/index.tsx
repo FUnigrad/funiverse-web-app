@@ -28,7 +28,11 @@ interface EditorProps extends ReactQuillProps {
 }
 // eslint-disable-next-line react/display-name
 const Editor = React.forwardRef<BaseReactQuill, EditorProps>(
-  ({ onChange, autoFocus = false, disableNewLineByEnter = false, ...props }, forwardedRef) => {
+  (
+    { onChange, autoFocus = false, disableNewLineByEnter = false, onKeyDown, ...props },
+    forwardedRef,
+  ) => {
+    const isMentionOpenRef = useRef<boolean>(false);
     const editorRef = useRef<BaseReactQuill>(null);
     const composedRefs = useComposedRefs(editorRef, forwardedRef);
     useEffect(() => {
@@ -40,12 +44,40 @@ const Editor = React.forwardRef<BaseReactQuill, EditorProps>(
     }, [autoFocus]);
 
     const modules = useMemo(() => {
+      const moduleConfig = {
+        ...editorConfig.modules,
+        mention: {
+          ...editorConfig.modules.mention,
+          onOpen: () => {
+            isMentionOpenRef.current = true;
+          },
+          onClose: () => {
+            if (isMentionOpenRef.current) {
+              setTimeout(() => {
+                isMentionOpenRef.current = false;
+              }, 0);
+            }
+          },
+          onSelect: (item: any, insertItem: any) => {
+            isMentionOpenRef.current = true;
+            insertItem(item);
+          },
+        },
+      };
+
       if (disableNewLineByEnter) {
-        return editorConfig.modules;
+        return moduleConfig;
       }
-      const { keyboard, ...result } = editorConfig.modules;
+      const { keyboard, ...result } = moduleConfig;
       return result;
     }, [disableNewLineByEnter]);
+
+    function handleKeyDown(event: any) {
+      if (!event.shiftKey && event.key === 'Enter' && !isMentionOpenRef.current) {
+        event.preventDefault();
+        if (onKeyDown) onKeyDown(event);
+      }
+    }
 
     return (
       <ReactQuill
@@ -57,6 +89,7 @@ const Editor = React.forwardRef<BaseReactQuill, EditorProps>(
         className="quill-editor"
         bounds=".quill-editor"
         onChange={onChange}
+        onKeyDown={handleKeyDown}
         {...props}
       />
     );

@@ -25,8 +25,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 interface PostCardProps {
   data: Post;
+  visibleGroup?: boolean;
 }
-function PostCard({ data }: PostCardProps) {
+function PostCard({ data, visibleGroup }: PostCardProps) {
   const [commentData, setCommentData] = useState('');
   const commentEditorRef = useRef<BaseReactQuill>(null);
 
@@ -43,34 +44,31 @@ function PostCard({ data }: PostCardProps) {
 
   function handleKeyDown(event: KeyboardEvent) {
     if (!commentEditorRef.current) return;
-
-    if (!event.shiftKey && event.key === 'Enter') {
-      const commentBody: CreatePostCommentPayload = {
-        content: commentData,
-        ownerId: userMeQuery.data!.id,
-        postId: data.id,
-      };
-      createCommentMutation.mutate(commentBody, {
-        onSuccess: (response) => {
-          triggerPostCommentsQuery();
-          setCommentData('');
-          queryClient.invalidateQueries({
-            queryKey: [QueryKeys.Posts, `${commentBody.postId}`, QueryKeys.Comments],
-          });
-        },
-      });
-    }
+    const commentBody: CreatePostCommentPayload = {
+      content: commentData,
+      ownerId: userMeQuery.data!.id,
+      postId: data.id,
+    };
+    createCommentMutation.mutate(commentBody, {
+      onSuccess: (response) => {
+        triggerPostCommentsQuery();
+        setCommentData('');
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeys.Posts, `${commentBody.postId}`, QueryKeys.Comments],
+        });
+      },
+    });
   }
 
   return (
     <Box sx={{ width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', mb: '32px' }}>
       <Paper sx={{ padding: 2 }}>
-        <PostCardHeader data={data} />
+        <PostCardHeader data={data} visibleGroup={visibleGroup} />
         <Typography
           variant="body1"
           margin="12px 0"
           fontSize={16}
-          dangerouslySetInnerHTML={{ __html: `${data?.content ?? ''}` }}
+          dangerouslySetInnerHTML={{ __html: `${data?.content.replaceAll('&nbsp;', ' ') ?? ''}` }}
           sx={{ wordBreak: 'break-word' }}
         />
         <Box sx={{ display: 'flex' }}>
