@@ -41,7 +41,7 @@ import { useRouter } from 'next/router';
 import Sidebar from './Sidebar';
 import { useLayoutContext, useTalkContext } from 'contexts';
 import { useQuery } from '@tanstack/react-query';
-import { QueryKeys, useGroupsQuery, useUserMeQuery } from 'queries';
+import { QueryKeys, useGroupsQuery, useUserEventsQuery, useUserMeQuery } from 'queries';
 import { groupApis } from 'apis';
 import { talkInstance } from 'services';
 
@@ -101,6 +101,7 @@ function AppLayout({ children }: LayoutProps) {
   const isMarginBottomMainLayout = DONT_NEED_MARGIN_BOTTOM_PATHS.some((p) => !pathname.includes(p));
   const groupsQuery = useGroupsQuery();
   const userMeQuery = useUserMeQuery();
+  useUserEventsQuery();
   const { dispatchTalk } = useTalkContext();
   useEffect(() => {
     if (!userMeQuery.data) return;

@@ -8,3 +8,4 @@ export * from './curriculum';
 export * from './syllabus';
 export * from './combo';
 export * from './comment';
+export * from './event';

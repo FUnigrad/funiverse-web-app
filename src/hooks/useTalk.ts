@@ -15,6 +15,7 @@ export function useTalk({ fn }: UseTalkProps = {}, deps: DependencyList = []) {
     });
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const savedFnCallback = useCallback(() => fn, []);
 
   useEffect(() => {
@@ -50,7 +51,6 @@ export function useTalkSession() {
     });
 
     const session = talkInstance.createSession(currentUser);
-    console.log('🚀 ~ session:', session);
     setTalkSession(session);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => session.destroy();

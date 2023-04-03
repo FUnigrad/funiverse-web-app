@@ -53,17 +53,24 @@ import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
 import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { AiOutlineHome } from 'react-icons/ai';
 import UserAvatar from 'components/UserAvatar';
+import { useUserEventsQuery } from 'queries';
 
 enum TabDrawerIndexEnum {
   Home,
   Notifications,
   Chats,
 }
-
 const TAB_MENU = [
   // { icon: <HomeOutlined fontSize="large" /> },
   { icon: <AiOutlineHome fontSize="28px" />, href: '/' },
-  { icon: <IoNotificationsOutline fontSize="28px" /> },
+  {
+    icon: ({ badgeContent }: { badgeContent: React.ReactNode }) => (
+      <Badge badgeContent={badgeContent} color="error">
+        <IoNotificationsOutline fontSize="28px" />
+      </Badge>
+    ),
+    badge: true,
+  },
   { icon: <IoChatbubbleOutline fontSize="28px" /> },
 ];
 const drawerWidth = 300;
@@ -161,6 +168,8 @@ function Sidebar() {
   const [tabIndex, setTabIndex] = React.useState<TabDrawerIndexEnum>(TabDrawerIndexEnum.Home);
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
   const router = useRouter();
+  const userEventsQuery = useUserEventsQuery({ enabled: false });
+
   function handleDrawerToggle() {
     setSidebarOpen(!sidebarOpen);
   }
@@ -173,10 +182,16 @@ function Sidebar() {
     <Box sx={{ display: 'flex' }}>
       <DrawerTab variant="permanent">
         <Tabs orientation="vertical" value={tabIndex} onChange={handleTabChange} aria-label="">
-          {TAB_MENU.map(({ icon, href }, index) => (
+          {TAB_MENU.map(({ icon: Icon, href, badge }, index) => (
             <Tab
               key={index}
-              icon={icon}
+              icon={
+                typeof Icon === 'function' ? (
+                  <Icon badgeContent={userEventsQuery.data?.filter((e) => !e.read).length} />
+                ) : (
+                  Icon
+                )
+              }
               onClick={() => href && router.push(href)}
               sx={{
                 width: 86,
