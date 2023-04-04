@@ -83,25 +83,21 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
   const groupDetailQuery = useGroupDetailQuery(gid as string);
   const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
   const groupUsersQuery = useGroupUsersQuery(gid as string);
-  const GROUP_TABS = [GroupType.Class, GroupType.Course].includes(
-    groupDetailQuery.data?.type as GroupType,
-  )
-    ? [
-        { href: '/groups/[gid]', label: 'Posts' },
-        { href: '/groups/[gid]/members', label: 'Member' },
-        { href: '/groups/[gid]/media', label: 'Media' },
-        { href: '/groups/[gid]/academic', label: 'Academic' },
-      ]
-    : [
-        { href: '/groups/[gid]', label: 'Posts' },
-        { href: '/groups/[gid]/members', label: 'Member' },
-        { href: '/groups/[gid]/media', label: 'Media' },
-      ];
+  const GROUP_TABS =
+    [GroupType.Class, GroupType.Course].includes(groupDetailQuery.data?.type as GroupType) ||
+    !groupDetailQuery.data?.type
+      ? [
+          { href: '/groups/[gid]', label: 'Posts' },
+          { href: '/groups/[gid]/members', label: 'Member' },
+          { href: '/groups/[gid]/media', label: 'Media' },
+          { href: '/groups/[gid]/academic', label: 'Academic' },
+        ]
+      : [
+          { href: '/groups/[gid]', label: 'Posts' },
+          { href: '/groups/[gid]/members', label: 'Member' },
+          { href: '/groups/[gid]/media', label: 'Media' },
+        ];
   const [tabIndex, setTabIndex] = React.useState(0);
-
-  // useEffect(() => {
-  //   if (/.+groups\/d+$/.test(router.asPath)) setTabIndex(0);
-  // }, [router.asPath]);
 
   useEffect(() => {
     const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));

@@ -76,6 +76,7 @@ function Table({
             display: 'flex',
             alignItems: 'center',
           },
+          minHeight: 500,
         },
       }}
       muiTopToolbarProps={{
