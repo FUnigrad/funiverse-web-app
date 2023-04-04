@@ -8,8 +8,7 @@ function UserAvatar({ ...props }: AvatarProps) {
   const userMeQuery = useUserMeQuery({ enabled: false });
   if (userMeQuery.isLoading) return <CircularProgress />;
 
-  const { name } = userMeQuery.data as UserMe;
-  return <Avatar {...props}>{name.charAt(0)}</Avatar>;
+  return <Avatar {...props}>{userMeQuery.data?.name.charAt(0)}</Avatar>;
 }
 
 export default UserAvatar;

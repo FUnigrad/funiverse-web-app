@@ -1,5 +1,7 @@
 import { UseQueryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { User } from '@types';
 import { userApis } from 'apis';
+import { useModalContext } from 'contexts';
 import { QueryKeys } from 'queries';
 
 export function useUserMeQuery({ enabled = true }: { enabled?: boolean } = {}) {
@@ -18,6 +20,24 @@ export function useUsersQuery() {
   });
 }
 
+export function useUserQuery(userId: string) {
+  return useQuery({
+    queryKey: [QueryKeys.Users, userId],
+    queryFn: () => userApis.getuser(userId),
+    enabled: Boolean(userId),
+  });
+}
+export function useUpdateUserMutation() {
+  const queryClient = useQueryClient();
+  const { dispatch } = useModalContext();
+  return useMutation({
+    mutationFn: ({ body }: { body: any }) => userApis.updateUser(body.id, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Users, 'me'] });
+      dispatch({ type: 'close' });
+    },
+  });
+}
 //Events
 export function useUserEventsQuery({
   enabled = true,

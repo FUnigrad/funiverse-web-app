@@ -1,4 +1,6 @@
-import { FormControl, FormHelperText, FormLabel } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormLabel from '@mui/material/FormLabel';
 import { Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
 import { SelectProps } from '@types';

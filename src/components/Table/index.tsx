@@ -1,7 +1,8 @@
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import GroupAddOutlined from '@mui/icons-material/GroupAddOutlined';
-import { Box, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import type { MRT_ColumnDef } from 'material-react-table';
 import MaterialReactTable, { MRT_Row, MaterialReactTableProps } from 'material-react-table';
 interface TableProps {

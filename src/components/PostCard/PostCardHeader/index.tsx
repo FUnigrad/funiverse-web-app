@@ -13,6 +13,7 @@ import UserAvatar from 'components/UserAvatar';
 import dayjs from 'dayjs';
 import { useWindowValue } from 'hooks';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCreatePostCommentMutation, useUserMeQuery } from 'queries';
 import { useEffect, useRef, useState } from 'react';
 import { FaCaretRight } from 'react-icons/fa';
@@ -24,17 +25,32 @@ export default function PostCardHeader({
   visibleGroup?: boolean;
 }) {
   const {
-    owner: { name },
+    owner: { name, id: ownerId },
     createdDateTime,
     group,
   } = data;
+  const router = useRouter();
+  const userMeQuery = useUserMeQuery({ enabled: false });
+
   const formatCreatedDateTime = dayjs(createdDateTime).format('MMMM D [at] HH:mm');
+
+  const currentUserId = userMeQuery.data?.id;
+  const nameLinkHref = currentUserId === ownerId ? '/me' : `/user/${ownerId}`;
+
   return (
     <Box sx={{ display: 'flex', gap: '0 8px', alignItems: 'center' }}>
-      <Avatar>{name.charAt(0)}</Avatar>
+      <Avatar sx={{ cursor: 'pointer' }} onClick={() => router.push(nameLinkHref)}>
+        {name.charAt(0)}
+      </Avatar>
       <Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h4" fontWeight={600}>
+          <Typography
+            variant="h4"
+            fontWeight={600}
+            component={Link}
+            href={nameLinkHref}
+            sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+          >
             {name}
           </Typography>
           {visibleGroup && (

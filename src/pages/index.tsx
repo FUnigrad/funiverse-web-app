@@ -29,7 +29,7 @@ export default function HomePage() {
           Discover posts from across your organization
         </Typography>
       </Stack>
-      {newfeedQuery.data!.content.map((post) => (
+      {newfeedQuery.data?.content.map((post) => (
         <PostCard key={post.id} data={post} visibleGroup />
       ))}
     </>

@@ -1,9 +1,11 @@
-import { Event, UserMe } from '@types';
+import { Event, GroupUser, User, UserMe } from '@types';
 import axiosClient from './axiosClient';
 
 export const userApis = {
   getMe: () => axiosClient.get<UserMe>('/user/me'),
-  getUsers: () => axiosClient.get('/workspace/user'),
+  getuser: (userId: string | number) => axiosClient.get<User>(`/user/${userId}`),
+  updateUser: (userId: string, body: any) => axiosClient.put(`/user/${userId}`, body),
+  getUsers: () => axiosClient.get<GroupUser[]>('/workspace/user'),
   getUserEvents: (params: { unread?: boolean } = {}) =>
     axiosClient.get<Event[]>('/user/event', { params }),
   // Event

@@ -1,9 +1,13 @@
 import { useUserMeQuery } from 'queries';
-import React, { useState } from 'react';
+import React, { startTransition, useState } from 'react';
 import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import UserInfo from 'components/UserInfo';
+import { User } from '@types';
+import Head from 'next/head';
 enum UserTabs {
   Profile,
   Timetable,
@@ -15,14 +19,33 @@ const userTabs = Object.keys(UserTabs)
 function UserMePage() {
   const userMeQuery = useUserMeQuery();
   const [tabIndex, setTabIndex] = useState(UserTabs.Profile);
+  function handleTabChange(event: unknown, value: number) {
+    startTransition(() => {
+      setTabIndex(value);
+    });
+  }
+  if (userMeQuery.isLoading)
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Skeleton variant="rounded" width={806} height={500} />
+      </Box>
+    );
+
   return (
-    <Box sx={{ px: 2 }}>
-      <Tabs onChange={(_, value) => setTabIndex(value)} value={tabIndex}>
-        {userTabs.map(({ label }) => (
-          <Tab key={label} label={label} />
-        ))}
-      </Tabs>
-    </Box>
+    <>
+      <Head>
+        <title>User | FUniverse</title>
+      </Head>
+      <Box sx={{ px: 2 }}>
+        <Tabs onChange={handleTabChange} value={tabIndex}>
+          {userTabs.map(({ label }) => (
+            <Tab key={label} label={label} />
+          ))}
+        </Tabs>
+        {tabIndex === UserTabs.Profile && <UserInfo data={userMeQuery.data as User} />}
+        {tabIndex === UserTabs.Timetable && <Box>Timetable</Box>}
+      </Box>
+    </>
   );
 }
 

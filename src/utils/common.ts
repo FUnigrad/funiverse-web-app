@@ -9,6 +9,7 @@ export function getValueByPath(obj: Object, path: string) {
   return res;
 }
 export function capitalizeAndOmitUnderscore(str: string) {
+  if (!str) return '';
   return str
     .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
