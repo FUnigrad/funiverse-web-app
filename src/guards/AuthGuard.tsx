@@ -1,12 +1,9 @@
+import Box from '@mui/material/Box';
 import { UserRole } from '@types';
 import { useAppCookies } from 'hooks';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { DecodedToken, __DEV__, appCookies } from 'utils';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import { DecodedToken, __DEV__, appCookies } from 'utils';
 import funiversePng from '../../public/favicon-192x192.png';
 function redirect() {
   window.location.href = __DEV__
@@ -28,6 +25,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     if (accessToken) {
       const user = appCookies.getDecodedAccessToken() as DecodedToken;
       if (!VALID_ROLES.includes(user.role)) {
+        appCookies.clearAll();
         redirect();
         return;
       }

@@ -16,7 +16,8 @@ export interface DecodedToken {
 export const appCookies = (function () {
   const cookies = new Cookies();
   return {
-    getAccessToken: () => cookies.get(CookieNames.AccessToken),
+    setAccessToken: (token: string) => cookies.set(CookieNames.AccessToken, token),
+    getAccessToken: (): string | null => cookies.get(CookieNames.AccessToken),
     getRefreshToken: () => cookies.get(CookieNames.RefreshToken),
     getDecodedAccessToken: (): DecodedToken | null => {
       const token = cookies.get(CookieNames.AccessToken);

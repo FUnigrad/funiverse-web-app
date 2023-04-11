@@ -48,7 +48,6 @@ function ChatsDrawerTab() {
     const inbox = talkSession.createInbox({
       selected: null,
     });
-    console.log('🚀 ~ inbox:', inbox);
     inbox.onSelectConversation((event) => {
       event.preventDefault();
       router.push(`/chat/${event.conversation.id}`);
