@@ -10,6 +10,7 @@ export const QueryKeys = {
   Comments: 'comments',
   Syllabus: 'syllabus',
   Events: 'events',
+  Timetables: 'timetables',
 };
 export * from './groupQueries';
 export * from './postQueries';

@@ -48,3 +48,27 @@ export interface UserMe {
 export interface Authority {
   authority: string;
 }
+
+export interface Timetable {
+  id: number;
+  title: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  location: string;
+  description: string;
+  slot: TimetableSlot;
+}
+
+export interface TimetableSlot {
+  id: number;
+  no: number;
+  order: number;
+  group: {
+    id: number;
+    name: string;
+    code: null;
+    active: boolean;
+  };
+  room: string;
+  date: Date;
+}

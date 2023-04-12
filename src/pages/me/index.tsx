@@ -8,10 +8,13 @@ import Skeleton from '@mui/material/Skeleton';
 import UserInfo from 'components/UserInfo';
 import { User } from '@types';
 import Head from 'next/head';
+import Timetable from 'components/Timetable';
+import dynamic from 'next/dynamic';
 enum UserTabs {
   Profile,
   Timetable,
 }
+const DynamicTimetable = dynamic(() => import('components/Timetable'), { ssr: false });
 const userTabs = Object.keys(UserTabs)
   //@ts-ignore
   .filter((uT) => isNaN(uT))
@@ -43,7 +46,11 @@ function UserMePage() {
           ))}
         </Tabs>
         {tabIndex === UserTabs.Profile && <UserInfo data={userMeQuery.data as User} />}
-        {tabIndex === UserTabs.Timetable && <Box>Timetable</Box>}
+        {tabIndex === UserTabs.Timetable && (
+          <Box sx={{ height: 580, overflowY: 'auto', mt: 2 }}>
+            <DynamicTimetable />
+          </Box>
+        )}
       </Box>
     </>
   );

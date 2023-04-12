@@ -3,6 +3,7 @@ import { User } from '@types';
 import { userApis } from 'apis';
 import { useModalContext } from 'contexts';
 import { QueryKeys } from 'queries';
+import { useState } from 'react';
 
 export function useUserMeQuery({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
@@ -61,5 +62,12 @@ export function useUpdateEventMutation() {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Users, QueryKeys.Events] });
     },
+  });
+}
+
+export function useUserTimetableQuery() {
+  return useQuery({
+    queryKey: [QueryKeys.Users, 'me', QueryKeys.Timetables],
+    queryFn: userApis.getTimetable,
   });
 }

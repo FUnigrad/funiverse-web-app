@@ -1,4 +1,4 @@
-import { Event, GroupUser, User, UserMe } from '@types';
+import { Event, GroupUser, Timetable, User, UserMe } from '@types';
 import axiosClient from './axiosClient';
 
 export const userApis = {
@@ -11,4 +11,6 @@ export const userApis = {
   // Event
   updateEvent: (eventId: string | number, body: { read: boolean }) =>
     axiosClient.put(`/event/${eventId}`, body),
+
+  getTimetable: () => axiosClient.get<Timetable[]>('/user/timetable'),
 };
