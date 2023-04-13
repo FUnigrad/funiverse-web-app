@@ -11,6 +11,7 @@ export const QueryKeys = {
   Syllabus: 'syllabus',
   Events: 'events',
   Timetables: 'timetables',
+  Slots: 'slots',
 };
 export * from './groupQueries';
 export * from './postQueries';

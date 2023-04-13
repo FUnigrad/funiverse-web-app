@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import { useRef, useState } from 'react';
 import { QueryKeys, useUpdateEventMutation, useUserEventsQuery } from 'queries';
 import dayjs from 'dayjs';
-import { Event, EventType } from '@types';
+import { Event, EventType, UserRole } from '@types';
 import { useRouter } from 'next/router';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -136,7 +136,16 @@ function NotificationItem({ data }: { data: Event }) {
               lineHeight: 'inherit',
             }}
           >
-            <strong>{actor.name}</strong> {actionMessage[data.type]} <strong>{group.name}</strong>
+            {data.type === EventType.ADD_TO_GROUP && actor.role === UserRole.WorkspaceAdmin ? (
+              <>
+                You have been added into <strong>{group.name}</strong>
+              </>
+            ) : (
+              <>
+                <strong>{actor.name}</strong> {actionMessage[data.type]}{' '}
+                <strong>{group.name}</strong>
+              </>
+            )}
           </Typography>
           <Typography sx={{ lineHeight: 'inherit' }} variant="body2" fontSize="inherit">
             {formatCreatedDateTime}

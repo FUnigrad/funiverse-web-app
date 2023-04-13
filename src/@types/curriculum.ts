@@ -36,6 +36,7 @@ export interface Curriculum {
   active: boolean;
 }
 export interface CurriculumSyllabus {
+  groupId: number;
   syllabus: {
     id: number;
     name: string;
@@ -52,14 +53,6 @@ export interface Season {
   active: boolean;
 }
 
-export interface CurriculumSyllabus {
-  syllabus: {
-    id: number;
-    name: string;
-    code: null;
-  };
-  semester: number;
-}
 export interface CurriculumUser {
   id: number;
   code: string;

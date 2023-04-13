@@ -97,10 +97,17 @@ export function useGroupAcademicQuery(groupId: string) {
     enabled: Boolean(groupId),
   });
 }
-export function useGroupAcademicSyllabusQuery(curriculumId: string) {
+export function useGroupAcademicSyllabusQuery(groupId: string) {
   return useQuery({
-    queryKey: [QueryKeys.Groups, curriculumId, QueryKeys.Academic, QueryKeys.Syllabus],
-    queryFn: () => groupApis.getGroupAcademicSyllabus(curriculumId),
-    enabled: Boolean(curriculumId),
+    queryKey: [QueryKeys.Groups, groupId, QueryKeys.Academic, QueryKeys.Syllabus],
+    queryFn: () => groupApis.getGroupAcademicPlan(groupId),
+    enabled: Boolean(groupId),
+  });
+}
+export function useCourseGroupSlotsQuery(groupId: string) {
+  return useQuery({
+    queryKey: [QueryKeys.Groups, groupId, QueryKeys.Slots],
+    queryFn: () => groupApis.getCourseGroupSlots(groupId),
+    enabled: Boolean(groupId),
   });
 }

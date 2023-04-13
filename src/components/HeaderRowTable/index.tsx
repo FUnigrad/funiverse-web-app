@@ -9,7 +9,7 @@ interface HeaderRowTableProps {
   data: {
     [key: string]: {
       label: string;
-      value: string | boolean | number;
+      value: any;
     };
   };
 }

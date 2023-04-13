@@ -14,7 +14,7 @@ const defaultViewConfig: WeekProps = {
   endHour: 17,
   weekStartOn: 1,
   weekDays: [0, 1, 2, 3, 4, 5, 6],
-  step: 30,
+  step: 60,
   cellRenderer: (props) => {
     return <Button sx={{ height: '100%' }} {...props} onClick={() => {}}></Button>;
   },

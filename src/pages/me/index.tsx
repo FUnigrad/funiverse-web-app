@@ -47,7 +47,7 @@ function UserMePage() {
         </Tabs>
         {tabIndex === UserTabs.Profile && <UserInfo data={userMeQuery.data as User} />}
         {tabIndex === UserTabs.Timetable && (
-          <Box sx={{ height: 580, overflowY: 'auto', mt: 2 }}>
+          <Box sx={{ height: 'calc(100vh - 170px)', overflowY: 'auto', mt: 2 }}>
             <DynamicTimetable />
           </Box>
         )}

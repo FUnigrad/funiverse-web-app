@@ -66,3 +66,10 @@ export interface CreateGroupPostPayload {
   ownerId: number;
   groupId: number;
 }
+export interface GroupSlot {
+  id: number;
+  no: number;
+  order: number;
+  room: string;
+  date: null;
+}

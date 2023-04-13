@@ -4,6 +4,7 @@ import {
   Curriculum,
   CurriculumSyllabus,
   Group,
+  GroupSlot,
   GroupType,
   GroupUser,
   Post,
@@ -30,6 +31,7 @@ export const groupApis = {
 
   // Academic
   getGroupAcademic: (groupId: string) => axiosClient.get<Curriculum>(`/group/${groupId}/academic`),
-  getGroupAcademicSyllabus: (curriculumId: string) =>
-    axiosClient.get<CurriculumSyllabus>(`/curriculum/${curriculumId}/syllabus`),
+  getGroupAcademicPlan: (groupId: string) =>
+    axiosClient.get<CurriculumSyllabus>(`/group/${groupId}/academic/plan`),
+  getCourseGroupSlots: (groupId: string) => axiosClient.get<GroupSlot[]>(`/group/${groupId}/slot`),
 };

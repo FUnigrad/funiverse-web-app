@@ -23,7 +23,7 @@ function Table({
   data,
   state,
   getRowId,
-  initialState = {},
+  initialState = { density: 'compact' },
 }: TableProps) {
   const tableProps: Partial<MaterialReactTableProps> = {};
   const applyRowActions = Boolean(onEditEntity) || Boolean(onDeleteEntity);
@@ -95,6 +95,7 @@ function Table({
       positionActionsColumn="last"
       enableRowActions={applyRowActions}
       enableFullScreenToggle={false}
+      initialState={initialState}
     />
   );
 }
