@@ -46,14 +46,14 @@ import SearchInput from 'components/SearchInput';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useModalContext } from 'contexts/ModalContext';
 import { IMG_SRC } from 'layout/GroupDetailLayout';
-import HomeDrawerTab from './DrawerTab/HomeDrawerTab';
 import { useLayoutContext } from 'contexts';
-import NotificationsDrawerTab from './DrawerTab/NotificationsDrawerTab';
-import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
 import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { AiOutlineHome } from 'react-icons/ai';
 import UserAvatar from 'components/UserAvatar';
 import { useUserEventsQuery, useUserMeQuery } from 'queries';
+import HomeDrawerTab from '../DrawerTab/HomeDrawerTab';
+import NotificationsDrawerTab from '../DrawerTab/NotificationsDrawerTab';
+import ChatsDrawerTab from '../DrawerTab/ChatsDrawerTab';
 
 enum TabDrawerIndexEnum {
   Home,

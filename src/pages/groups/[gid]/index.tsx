@@ -148,7 +148,7 @@ function PostWrite({ onPostWriteClick }: { onPostWriteClick: Callback }) {
     onPostWriteClick();
   }
   return (
-    <Paper>
+    <Paper sx={{ p: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}>
         <UserAvatar user={userMeQuery.data} />
         <Box

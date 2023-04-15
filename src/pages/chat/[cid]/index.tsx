@@ -9,7 +9,7 @@ function ChatsPage() {
   // const { session: talkSession } = useTalkContext();
   const chatboxRef = useRef<HTMLElement | null>(null);
   const { cid } = router.query as { cid: string };
-  const talkSession = useTalkSession();
+  const [talkSession] = useTalkSession();
 
   useEffect(() => {
     if (!cid || !talkSession) return;

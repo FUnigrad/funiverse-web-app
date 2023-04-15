@@ -2,7 +2,7 @@ import { Callback } from '@types';
 import { useUserMeQuery } from 'queries';
 import { DependencyList, useCallback, useEffect, useState } from 'react';
 import { talkInstance } from 'services';
-import { Session } from 'talkjs/all';
+import { Session, User } from 'talkjs/all';
 interface UseTalkProps {
   fn?: Callback;
 }
@@ -29,14 +29,10 @@ export function useTalk({ fn }: UseTalkProps = {}, deps: DependencyList = []) {
   return isTalkLoaded;
 }
 
-/**
- *
- * @deprecated useTalkContext instead.
- */
-export function useTalkSession() {
+export function useTalkSession(): [Session | undefined, User | undefined] {
   const userMeQuery = useUserMeQuery({ enabled: false });
-  const [talkSession, setTalkSession] = useState<Session | null>(null);
-
+  const [talkSession, setTalkSession] = useState<Session>();
+  const [currentUser, setCurrentUser] = useState<User>();
   useEffect(() => {
     if (!userMeQuery.data) return;
 
@@ -52,9 +48,10 @@ export function useTalkSession() {
 
     const session = talkInstance.createSession(currentUser);
     setTalkSession(session);
+    setCurrentUser(currentUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => session.destroy();
   }, [userMeQuery.data]);
 
-  return talkSession;
+  return [talkSession, currentUser];
 }

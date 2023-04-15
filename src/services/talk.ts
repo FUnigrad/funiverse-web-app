@@ -1,6 +1,6 @@
 import { Callback } from '@types';
 import Talk from 'talkjs';
-import { User, UserOptions } from 'talkjs/all';
+import { Session, User, UserOptions } from 'talkjs/all';
 export default class TalkService {
   private static _instance: TalkService = new TalkService();
   private _isTalkReady: boolean = false;
@@ -42,11 +42,19 @@ export default class TalkService {
   public createOneOnOneConversation({
     currentUser,
     otherUser,
+    talkSession,
   }: {
     currentUser: User;
     otherUser: User;
+    talkSession: Session;
   }) {
-    return Talk.oneOnOneId(currentUser, otherUser);
+    const conversationId = Talk.oneOnOneId(currentUser, otherUser);
+    const conversation = talkSession.getOrCreateConversation(conversationId);
+    conversation.setParticipant(currentUser);
+    conversation.setParticipant(otherUser);
+    const chatbox = talkSession.createChatbox();
+    chatbox.select(conversation);
+    return { chatbox, conversationId };
   }
 
   public history() {

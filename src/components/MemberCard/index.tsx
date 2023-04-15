@@ -19,6 +19,9 @@ import CircularProgress from 'components/CircularProgress';
 import { Callback, GroupUser } from '@types';
 import UserAvatar from 'components/UserAvatar';
 import Link from 'next/link';
+import { talkInstance } from 'services';
+import { useTalkSession } from 'hooks';
+import Talk from 'talkjs';
 
 interface MemberCardProps {
   data: GroupUser;
@@ -28,7 +31,24 @@ interface MemberCardProps {
 function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
   const userMeQuery = useUserMeQuery({ enabled: false });
   const nameLinkHref = userMeQuery.data?.id === data.id ? '/me' : `/user/${data.id}`;
-
+  const router = useRouter();
+  const [talkSession, currentUser] = useTalkSession();
+  const chatboxEle = useRef(null);
+  function handleMessageClick() {
+    if (!talkSession || !currentUser) return;
+    const otherUser = talkInstance.createUser({
+      id: data.id,
+      name: data.name,
+    });
+    const { chatbox, conversationId } = talkInstance.createOneOnOneConversation({
+      currentUser,
+      otherUser,
+      talkSession,
+    });
+    // WARN: do a trick to make TalkJS work
+    chatbox.mount(chatboxEle.current);
+    router.push(`/chat/${conversationId}`);
+  }
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px', mb: 3 }}>
       <UserAvatar sx={{ width: 56, height: 56, fontSize: 24 }} user={data} />
@@ -50,7 +70,12 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
       </Box>
       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: '0 8px' }}>
         {!Boolean(onCloseClick) && userMeQuery.data!.id !== data.id && (
-          <Button startIcon={<IoChatbubbleSharp />} variant="contained" color="inherit">
+          <Button
+            startIcon={<IoChatbubbleSharp />}
+            variant="contained"
+            color="inherit"
+            onClick={handleMessageClick}
+          >
             Message
           </Button>
         )}
@@ -68,6 +93,7 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
           </IconButton>
         )}
       </Box>
+      <Box ref={chatboxEle} sx={{ display: 'none' }}></Box>
     </Box>
   );
 }

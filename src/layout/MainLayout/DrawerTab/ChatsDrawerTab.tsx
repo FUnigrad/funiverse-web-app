@@ -11,40 +11,13 @@ import { useRouter } from 'next/router';
 import { useTalkContext } from 'contexts';
 
 function ChatsDrawerTab() {
-  const userMeQuery = useUserMeQuery({ enabled: false });
-  const isTalkLoaded = useTalk();
+  // const isTalkLoaded = useTalk();
   const inboxEle = useRef<HTMLElement>(null);
-  // const { session: talkSession, dispatchTalk } = useTalkContext();
-  const talkSession = useTalkSession();
+  const [talkSession] = useTalkSession();
   const router = useRouter();
 
   useEffect(() => {
     if (!talkSession) return;
-    const { id, name, personalMail, avatar, role } = userMeQuery.data!;
-
-    const currentUser = talkInstance.createUser({
-      id: id,
-      name,
-      email: personalMail,
-      // photoUrl: '',
-      // welcomeMessage: 'Hello!',
-      // role,
-    });
-    //TODO: Refactor this
-    const otherUser = talkInstance.createUser({
-      id: 5,
-      name: 'Kien Ho',
-      email: 'jessicawells@example.com',
-      // photoUrl: 'jessica.jpeg',
-      // welcomeMessage: 'Hello!',
-      // role,
-    });
-
-    // const talkSession = talkInstance.createSession(currentUser);
-    // const conversationId = talkInstance.createOneOnOneConversation({ currentUser, otherUser });
-    // const conversation = talkSession.getOrCreateConversation(conversationId);
-    // conversation.setParticipant(currentUser);
-    // conversation.setParticipant(otherUser);
     const inbox = talkSession.createInbox({
       selected: null,
     });
