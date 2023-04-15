@@ -31,17 +31,13 @@ const defaultButtonStyle: ButtonProps = {
   disableTouchRipple: true,
 };
 export default function PostComment({ data }: { data: Comment }) {
-  const {
-    owner: { name },
-    content,
-    createdDateTime,
-  } = data;
+  const { owner, content, createdDateTime } = data;
   const formatCreatedDate = dayjs(createdDateTime).fromNow();
 
   return (
     <Box sx={{ marginTop: 2 }}>
       <Box sx={{ display: 'flex', gap: '0 8px' }}>
-        <Avatar sx={{ width: 32, height: 32 }}>{name.charAt(0)}</Avatar>
+        <UserAvatar sx={{ width: 32, height: 32 }} user={owner} />
         <Box>
           <Paper
             sx={{
@@ -55,7 +51,7 @@ export default function PostComment({ data }: { data: Comment }) {
             }}
           >
             <Typography variant="body1" fontWeight={600}>
-              {name}
+              {owner.name}
             </Typography>
             <Typography
               variant="body1"

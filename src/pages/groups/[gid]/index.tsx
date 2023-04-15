@@ -53,42 +53,27 @@ import Editor from 'components/Editor';
 import { Callback, CreateGroupPostPayload } from '@types';
 import { useRefState } from 'hooks';
 import Head from 'next/head';
+import UserAvatar from 'components/UserAvatar';
+
 // const DynamicPostCard = dynamic(() => import('../../../components/PostCard'), { ssr: false });
 
 function GroupDetail() {
+  const [editorValueRef, setEditorValue] = useRefState('');
+  const editorValue = editorValueRef.current;
+
   const router = useRouter();
   const { gid } = router.query as { gid: string };
-
-  const groupPostsQuery = useGroupPostsQuery(gid);
-
-  return (
-    <>
-      <Head>
-        <title>Group | FUniverse</title>
-      </Head>
-      <Box>
-        <PostWrite />
-        {groupPostsQuery.data?.map((post, index) => (
-          <PostCard key={post.id} data={post} />
-        ))}
-      </Box>
-    </>
-  );
-}
-
-export default GroupDetail;
-//WARN: withGroupDetailLayout not working @@
-GroupDetail.getNestedLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
-
-function PostWrite() {
-  const router = useRouter();
-  const { gid } = router.query;
-  const { dispatch } = useModalContext();
   const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 1200 });
-  const [editorValueRef, setEditorValue] = useRefState('');
+  const { dispatch } = useModalContext();
 
-  const createPostMutation = useCreateGroupPostMutation(gid as string);
   const userMeQuery = useUserMeQuery({ enabled: false });
+  const groupPostsQuery = useGroupPostsQuery(gid);
+  const createPostMutation = useCreateGroupPostMutation(gid as string);
+
+  useEffect(() => {
+    const isEmptyContent = !editorValue.replaceAll(/<\/*(p|br)>/g, '').trim();
+    dispatch({ type: 'disable_action', payload: isEmptyContent });
+  }, [dispatch, editorValue]);
 
   function handleOnEditerChange(value: string) {
     setEditorValue(value);
@@ -116,10 +101,56 @@ function PostWrite() {
       },
     });
   }
+
   return (
-    <Paper sx={{ mb: 3, width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', p: 2 }}>
+    <>
+      <Head>
+        <title>Group | FUniverse</title>
+      </Head>
+      <Box sx={{ mb: 3, width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', p: 2, pb: 8 }}>
+        <PostWrite onPostWriteClick={handleWritePostClick} />
+        {groupPostsQuery.data?.map((post, index) => (
+          <PostCard key={post.id} data={post} />
+        ))}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexFlow: 'column',
+            justifyContent: 'center',
+            mt: 6,
+          }}
+        >
+          <Typography variant="h4" fontSize={20} color="initial">
+            Create a post for your group
+          </Typography>
+          <Typography variant="body1" fontSize={17} color="initial" textAlign={'center'}>
+            Get the conversation started with a welcome post. Anyone who joins will be able to see
+            it and comment.
+          </Typography>
+          <Button sx={{ mt: 2 }} variant="contained" color="primary" onClick={handleWritePostClick}>
+            Create post
+          </Button>
+        </Box>
+      </Box>
+    </>
+  );
+}
+
+export default GroupDetail;
+//WARN: withGroupDetailLayout not working @@
+GroupDetail.getNestedLayout = (page: React.ReactElement) => getGroupDetailLayout(page);
+
+function PostWrite({ onPostWriteClick }: { onPostWriteClick: Callback }) {
+  const userMeQuery = useUserMeQuery({ enabled: false });
+
+  function handleWritePostClick() {
+    onPostWriteClick();
+  }
+  return (
+    <Paper>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}>
-        <Avatar>N</Avatar>
+        <UserAvatar user={userMeQuery.data} />
         <Box
           onClick={handleWritePostClick}
           sx={{

@@ -50,6 +50,11 @@ function reducer(
         onCreateOrSave: null,
         confirmTitle: action.payload.confirmTitle ?? 'Deactivate',
       };
+    case 'disable_action':
+      return {
+        ...state,
+        disabledAction: action.payload,
+      };
     default:
       return state;
   }
@@ -67,11 +72,16 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       onConfirm: null,
       onCreateOrSave: null,
       submitLoading: false,
+      disabledAction: false,
     },
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const value = useMemo(() => ({ ...state, open: state.open, dispatch }), [state.open, dispatch]);
+  const value = useMemo(
+    () => ({ ...state, open: state.open, dispatch }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [...Object.values(state), dispatch],
+  );
 
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 }
@@ -87,7 +97,8 @@ function Modal() {
     submitLoading,
     confirmTitle,
     saveTitle,
-  } = useContext(ModalContext);
+    disabledAction = false,
+  } = useModalContext();
   function handleClose() {
     dispatch({ type: 'close' });
   }
@@ -141,6 +152,7 @@ function Modal() {
             variant="contained"
             loading={submitLoading}
             // loadingPosition="start"
+            disabled={disabledAction && title === 'Create post'}
             onClick={() => {
               onCreateOrSave && onCreateOrSave();
             }}

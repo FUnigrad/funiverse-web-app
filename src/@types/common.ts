@@ -28,6 +28,10 @@ export type ModalAction =
         confirmTitle?: string;
       };
       onConfirm: Callback;
+    }
+  | {
+      type: 'disable_action';
+      payload: boolean;
     };
 
 export interface ModalContextValue {
@@ -40,6 +44,7 @@ export interface ModalContextValue {
   onConfirm: Callback | null;
   onCreateOrSave: Callback | null;
   submitLoading: boolean;
+  disabledAction: boolean;
 }
 
 export interface LayoutContextValue {

@@ -17,6 +17,8 @@ import { useRouter } from 'next/router';
 import { useGroupUsersQuery, useUserMeQuery, useUsersQuery } from 'queries';
 import CircularProgress from 'components/CircularProgress';
 import { Callback, GroupUser } from '@types';
+import UserAvatar from 'components/UserAvatar';
+import Link from 'next/link';
 
 interface MemberCardProps {
   data: GroupUser;
@@ -25,11 +27,19 @@ interface MemberCardProps {
 }
 function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
   const userMeQuery = useUserMeQuery({ enabled: false });
+  const nameLinkHref = userMeQuery.data?.id === data.id ? '/me' : `/user/${data.id}`;
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px', mb: 3 }}>
-      <Avatar sx={{ width: 56, height: 56, fontSize: 24 }}>{data.name.charAt(0)}</Avatar>
+      <UserAvatar sx={{ width: 56, height: 56, fontSize: 24 }} user={data} />
       <Box>
-        <Typography variant="h6" color="initial">
+        <Typography
+          variant="h6"
+          color="initial"
+          component={Link}
+          href={nameLinkHref}
+          sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+        >
           {data.name}
         </Typography>
         {subContent && (

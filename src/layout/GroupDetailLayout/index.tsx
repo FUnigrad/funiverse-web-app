@@ -52,6 +52,7 @@ import { GroupType, GroupUser, NextPageWithLayout, User } from '@types';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Select from 'components/Select';
 import MemberCard from 'components/MemberCard';
+import UserAvatar from 'components/UserAvatar';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -148,9 +149,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
               <Avatar src={IMG_SRC} />
               <Avatar src={IMG_SRC} /> */}
               {groupUsersQuery.data?.map((user) => (
-                <Avatar key={user.id} sx={{ width: 40, height: 40 }}>
-                  {user.name.charAt(0)}
-                </Avatar>
+                <UserAvatar key={user.id} sx={{ width: 40, height: 40 }} user={user} />
               ))}
             </AvatarGroup>
             <Button

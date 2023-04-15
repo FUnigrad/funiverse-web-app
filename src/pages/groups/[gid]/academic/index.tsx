@@ -22,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Rows from 'components/Rows';
+import dayjs from 'dayjs';
 
 function AcademicPage() {
   const router = useRouter();
@@ -62,8 +63,13 @@ const slotColumns: MRT_ColumnDef<GroupSlot>[] = [
     accessorKey: 'room',
   },
   {
-    header: 'Time',
+    header: 'Date',
     accessorKey: 'date',
+    Cell: ({ cell, row }) => (
+      <span>
+        ({dayjs(cell.getValue<string>()).format('ddd')}) - {cell.getValue<string>()}
+      </span>
+    ),
   },
 ];
 

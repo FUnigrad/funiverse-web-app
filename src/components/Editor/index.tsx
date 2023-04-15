@@ -72,7 +72,7 @@ const Editor = React.forwardRef<BaseReactQuill, EditorProps>(
       return result;
     }, [disableNewLineByEnter]);
 
-    function handleKeyDown(event: any) {
+    function handleKeyDown(event: React.KeyboardEvent) {
       if (!event.shiftKey && event.key === 'Enter' && !isMentionOpenRef.current) {
         event.preventDefault();
         if (onKeyDown) onKeyDown(event);

@@ -18,7 +18,7 @@ export function useCreateGroupMutation() {
     onSuccess: (groupId) => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups] });
       dispatch({ type: 'close' });
-      router.push(`groups/${groupId}`);
+      router.push(`${groupId}`);
     },
   });
 }

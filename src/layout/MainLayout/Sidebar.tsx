@@ -53,7 +53,7 @@ import ChatsDrawerTab from './DrawerTab/ChatsDrawerTab';
 import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { AiOutlineHome } from 'react-icons/ai';
 import UserAvatar from 'components/UserAvatar';
-import { useUserEventsQuery } from 'queries';
+import { useUserEventsQuery, useUserMeQuery } from 'queries';
 
 enum TabDrawerIndexEnum {
   Home,
@@ -169,7 +169,7 @@ function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
   const router = useRouter();
   const userEventsQuery = useUserEventsQuery({ enabled: false });
-
+  const userMeQuery = useUserMeQuery({ enabled: false });
   function handleDrawerToggle() {
     setSidebarOpen(!sidebarOpen);
   }
@@ -212,7 +212,7 @@ function Sidebar() {
         <Box>
           <IconButton size="medium" onClick={() => router.push('/me')}>
             {/* <Avatar src={IMG_SRC} sx={{ width: 42, height: 42 }} /> */}
-            <UserAvatar sx={{ width: 42, height: 42 }} />
+            <UserAvatar sx={{ width: 42, height: 42 }} user={userMeQuery.data} />
           </IconButton>
         </Box>
       </DrawerTab>

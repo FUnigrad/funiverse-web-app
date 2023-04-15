@@ -91,7 +91,6 @@ const VerifyPage: NextPageWithLayout = () => {
     //   window.console.log('🚀 ~ pre:', pre);
     // });
     // console.log('🚀 ~ popup:', popup);
-    // console.log('🚀 ~ popup:', popup);
   }
   return (
     <Box

@@ -24,24 +24,17 @@ export default function PostCardHeader({
   data: Post;
   visibleGroup?: boolean;
 }) {
-  const {
-    owner: { name, id: ownerId },
-    createdDateTime,
-    group,
-  } = data;
-  const router = useRouter();
+  const { owner, createdDateTime, group } = data;
   const userMeQuery = useUserMeQuery({ enabled: false });
 
   const formatCreatedDateTime = dayjs(createdDateTime).format('MMMM D [at] HH:mm');
 
   const currentUserId = userMeQuery.data?.id;
-  const nameLinkHref = currentUserId === ownerId ? '/me' : `/user/${ownerId}`;
+  const nameLinkHref = currentUserId === owner.id ? '/me' : `/user/${owner.id}`;
 
   return (
     <Box sx={{ display: 'flex', gap: '0 8px', alignItems: 'center' }}>
-      <Avatar sx={{ cursor: 'pointer' }} onClick={() => router.push(nameLinkHref)}>
-        {name.charAt(0)}
-      </Avatar>
+      <UserAvatar user={owner} />
       <Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography
@@ -51,7 +44,7 @@ export default function PostCardHeader({
             href={nameLinkHref}
             sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
           >
-            {name}
+            {owner.name}
           </Typography>
           {visibleGroup && (
             <>

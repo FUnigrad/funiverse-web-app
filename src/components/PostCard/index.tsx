@@ -43,7 +43,8 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
   });
 
   function handleKeyDown(event: KeyboardEvent) {
-    if (!commentEditorRef.current) return;
+    const isEmptyContent = !commentData.replaceAll(/<\/*(p|br)>/g, '').trim();
+    if (!commentEditorRef.current || isEmptyContent) return;
     const commentBody: CreatePostCommentPayload = {
       content: commentData,
       ownerId: userMeQuery.data!.id,
@@ -97,7 +98,10 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
         {/* Comment */}
         <PostCommentList data={postCommentsQuery.data as Comment[]} />
         <Box sx={{ display: 'flex', alignItems: 'flex-start', mt: 2 }}>
-          <UserAvatar sx={{ width: 32, height: 32, display: 'inline-flex', mr: '8px' }} />
+          <UserAvatar
+            user={userMeQuery.data}
+            sx={{ width: 32, height: 32, display: 'inline-flex', mr: '8px' }}
+          />
           <Box sx={{ width: '100%' }}>
             <Box sx={{ borderRadius: 5, width: '100%', display: 'inline-block' }}>
               <Editor
