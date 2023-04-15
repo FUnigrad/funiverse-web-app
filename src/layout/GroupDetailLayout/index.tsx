@@ -35,7 +35,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useEffect, useLayoutEffect, useState, useTransition } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import PostCard from 'components/PostCard';
 import dynamic from 'next/dynamic';
@@ -53,6 +53,10 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Select from 'components/Select';
 import MemberCard from 'components/MemberCard';
 import UserAvatar from 'components/UserAvatar';
+import { IoChatbubbleSharp } from 'react-icons/io5';
+import { useTalkSession } from 'hooks';
+import { User as TalkUser } from 'talkjs/all';
+import { talkInstance } from 'services';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -81,9 +85,12 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
     query: { gid },
     pathname,
   } = router;
+  const chatboxEleRef = useRef(null);
+
   const groupDetailQuery = useGroupDetailQuery(gid as string);
   const usersNotInGroupQuery = useUsersNotInGroupQuery(gid as string);
   const groupUsersQuery = useGroupUsersQuery(gid as string);
+
   const GROUP_TABS =
     [GroupType.Class, GroupType.Course].includes(groupDetailQuery.data?.type as GroupType) ||
     !groupDetailQuery.data?.type
@@ -105,6 +112,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
     setTabIndex(initialTabIndex);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+  const [talkSession, currentUser] = useTalkSession();
 
   function handleTabChange(event: React.SyntheticEvent, newTabIndex: number) {
     startTransition(() => {
@@ -121,6 +129,21 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
       },
       onCreateOrSave: () => {},
     });
+  }
+
+  function handleGroupMessageClick() {
+    if (!groupUsersQuery.data || !currentUser || !talkSession || !groupDetailQuery.data) return;
+
+    const users: TalkUser[] = groupUsersQuery.data
+      .map((u) => talkInstance.createUser({ id: u.id, name: u.name }))
+      .concat(currentUser);
+    const { chatbox, conversationId } = talkInstance.createGroupConversation({
+      users,
+      talkSession,
+      groupDetail: groupDetailQuery.data,
+    });
+    chatbox.mount(chatboxEleRef.current);
+    router.push(`/chat/${conversationId}`);
   }
   return (
     <>
@@ -152,14 +175,24 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
                 <UserAvatar key={user.id} sx={{ width: 40, height: 40 }} user={user} />
               ))}
             </AvatarGroup>
-            <Button
-              startIcon={<PersonAdd />}
-              variant="contained"
-              size="medium"
-              onClick={handleAddPeopleClick}
-            >
-              Add people
-            </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}>
+              <Button
+                startIcon={<PersonAdd />}
+                variant="contained"
+                size="small"
+                onClick={handleAddPeopleClick}
+              >
+                Add people
+              </Button>
+              <Button
+                startIcon={<IoChatbubbleSharp />}
+                variant="contained"
+                size="small"
+                onClick={handleGroupMessageClick}
+              >
+                Group Message
+              </Button>
+            </Box>
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -184,7 +217,10 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Stack>
         </Box>
       </Paper>
-      <Box sx={{ my: '24px' }}>{children}</Box>
+      <Box sx={{ my: '24px' }}>
+        {children}
+        <Box ref={chatboxEleRef} sx={{ display: 'none', width: '100%', height: '100%' }}></Box>
+      </Box>
     </>
   );
 }

@@ -33,7 +33,7 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
   const nameLinkHref = userMeQuery.data?.id === data.id ? '/me' : `/user/${data.id}`;
   const router = useRouter();
   const [talkSession, currentUser] = useTalkSession();
-  const chatboxEle = useRef(null);
+  const chatboxEleRef = useRef(null);
   function handleMessageClick() {
     if (!talkSession || !currentUser) return;
     const otherUser = talkInstance.createUser({
@@ -46,7 +46,7 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
       talkSession,
     });
     // WARN: do a trick to make TalkJS work
-    chatbox.mount(chatboxEle.current);
+    chatbox.mount(chatboxEleRef.current);
     router.push(`/chat/${conversationId}`);
   }
   return (
@@ -93,7 +93,7 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
           </IconButton>
         )}
       </Box>
-      <Box ref={chatboxEle} sx={{ display: 'none' }}></Box>
+      <Box ref={chatboxEleRef} sx={{ display: 'none' }}></Box>
     </Box>
   );
 }

@@ -68,7 +68,7 @@ function GroupDetail() {
 
   const userMeQuery = useUserMeQuery({ enabled: false });
   const groupPostsQuery = useGroupPostsQuery(gid);
-  const createPostMutation = useCreateGroupPostMutation(gid as string);
+  const createPostMutation = useCreateGroupPostMutation(gid);
 
   useEffect(() => {
     const isEmptyContent = !editorValue.replaceAll(/<\/*(p|br)>/g, '').trim();

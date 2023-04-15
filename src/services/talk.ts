@@ -1,4 +1,4 @@
-import { Callback } from '@types';
+import { Callback, Group } from '@types';
 import Talk from 'talkjs';
 import { Session, User, UserOptions } from 'talkjs/all';
 export default class TalkService {
@@ -52,6 +52,26 @@ export default class TalkService {
     const conversation = talkSession.getOrCreateConversation(conversationId);
     conversation.setParticipant(currentUser);
     conversation.setParticipant(otherUser);
+    const chatbox = talkSession.createChatbox();
+    chatbox.select(conversation);
+    return { chatbox, conversationId };
+  }
+
+  public createGroupConversation({
+    users,
+    groupDetail,
+    talkSession,
+  }: {
+    users: User[];
+    groupDetail: Group;
+    talkSession: Session;
+  }) {
+    const conversationId = groupDetail.id;
+    const conversation = talkSession.getOrCreateConversation(`${conversationId}`);
+    users.forEach((u) => {
+      conversation.setParticipant(u);
+    });
+    conversation.setAttributes({ subject: groupDetail.name });
     const chatbox = talkSession.createChatbox();
     chatbox.select(conversation);
     return { chatbox, conversationId };
