@@ -19,6 +19,7 @@ export const QueryKeys = {
   Slots: 'slots',
   Search: 'search',
   Workspace: 'workspace',
+  Chats: 'chats',
 };
 
 export const queryClient = new QueryClient({

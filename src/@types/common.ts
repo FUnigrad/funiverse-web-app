@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import React, { Dispatch } from 'react';
-import { Group } from './group';
+import { Group, GroupSearch } from './group';
 import { User } from './user';
 import { Post } from './post';
 
@@ -82,7 +82,7 @@ export interface SelectProps {
 }
 
 export interface WorkspaceSearchResponse {
-  groups: Group[];
+  groups: GroupSearch[];
   posts: Post[];
   users: User[];
 }

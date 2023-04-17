@@ -19,7 +19,7 @@ export function useSearchInGroupQuery(gid: string, params: { value: string }) {
 
 export function useSearchInChatQuery(params: { value: string }) {
   return useQuery({
-    queryKey: [QueryKeys.Search, QueryKeys.Workspace],
+    queryKey: [QueryKeys.Search, QueryKeys.Chats, params.value],
     queryFn: () => searchApis.searchInChat(params),
   });
 }

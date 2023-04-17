@@ -8,5 +8,6 @@ export const searchApis = {
     axiosClient.get<WorkspaceSearchResponse>('/search/workspace', { params }),
   searchInGroup: (groupId: string, params: SearchInParams) =>
     axiosClient.get<Post[]>(`/search/group/${groupId}`, { params }),
-  searchInChat: (params: SearchInParams) => axiosClient.get<any>('/search/chat', { params }),
+  searchInChat: (params: SearchInParams) =>
+    axiosClient.get<WorkspaceSearchResponse>('/search/chat', { params }),
 };

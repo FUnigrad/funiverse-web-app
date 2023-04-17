@@ -18,9 +18,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import Popover from '@mui/material/Popover';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -37,11 +39,13 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import { useRouter } from 'next/router';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import EventIcon from '@mui/icons-material/EventAvailable';
 import SearchInput from 'components/SearchInput';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useModalContext } from 'contexts/ModalContext';
@@ -54,6 +58,7 @@ import { useUserEventsQuery, useUserMeQuery } from 'queries';
 import HomeDrawerTab from '../DrawerTab/HomeDrawerTab';
 import NotificationsDrawerTab from '../DrawerTab/NotificationsDrawerTab';
 import ChatsDrawerTab from '../DrawerTab/ChatsDrawerTab';
+import { __DEV__, appCookies } from 'utils';
 
 enum TabDrawerIndexEnum {
   Home,
@@ -165,7 +170,9 @@ const DrawerTab = styled(MuiDrawer)(({ theme }) => ({
   },
 }));
 function Sidebar() {
-  const [tabIndex, setTabIndex] = React.useState<TabDrawerIndexEnum>(TabDrawerIndexEnum.Home);
+  const [tabIndex, setTabIndex] = useState<TabDrawerIndexEnum>(TabDrawerIndexEnum.Home);
+  const [profileAnchorEl, setProfileAnchorEl] = useState<HTMLElement | null>(null);
+
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
   const router = useRouter();
   const userEventsQuery = useUserEventsQuery({ enabled: false });
@@ -216,10 +223,65 @@ function Sidebar() {
           </IconButton>
         </Box>
         <Box>
-          <IconButton size="medium" onClick={() => router.push('/me')}>
+          <IconButton
+            size="medium"
+            //  onClick={() => router.push('/me')}
+            onClick={(e) => setProfileAnchorEl(e.currentTarget)}
+          >
             {/* <Avatar src={IMG_SRC} sx={{ width: 42, height: 42 }} /> */}
-            <UserAvatar sx={{ width: 42, height: 42 }} user={userMeQuery.data} />
+            <Avatar sx={{ width: 42, height: 42 }}>{userMeQuery.data?.name?.charAt(0)}</Avatar>
           </IconButton>
+          <Popover
+            open={Boolean(profileAnchorEl)}
+            anchorEl={profileAnchorEl}
+            onClose={() => setProfileAnchorEl(null)}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <List sx={{ p: 1 }}>
+              <ListItemButton
+                onClick={() => {
+                  router.push('/me');
+                  setProfileAnchorEl(null);
+                }}
+              >
+                <ListItemAvatar>
+                  <Avatar sx={{ width: 42, height: 42 }}>
+                    {userMeQuery.data?.name?.charAt(0)}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={`${userMeQuery.data?.name}`} secondary={'View Profile'} />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  router.push('/me?t=tb');
+                  setProfileAnchorEl(null);
+                }}
+              >
+                <ListItemIcon>
+                  <EventIcon />
+                </ListItemIcon>
+                <ListItemText primary={`Timetable`} />
+              </ListItemButton>
+              <Divider />
+              <ListItemButton
+                onClick={() => {
+                  window.location.href = __DEV__
+                    ? 'http://localhost:8000/verify'
+                    : process.env.NEXT_PUBLIC_LANDING_URL + 'verify';
+                  setProfileAnchorEl(null);
+                  appCookies.clearAll();
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary={`Log out`} />
+              </ListItemButton>
+            </List>
+          </Popover>
         </Box>
       </DrawerTab>
       <Drawer variant="permanent" open={sidebarOpen}>

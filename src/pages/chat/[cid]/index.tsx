@@ -21,8 +21,8 @@ function ChatsPage() {
   }, [cid, talkSession]);
 
   return (
-    <Box sx={{ minHeight: 'calc(100vh - 79px)' }}>
-      <Box sx={{ height: 'calc(100vh - 79px)' }} ref={chatboxRef}></Box>
+    <Box sx={{ minHeight: 'calc(100vh - 69px)' }}>
+      <Box sx={{ height: 'calc(100vh - 69px)' }} ref={chatboxRef}></Box>
     </Box>
   );
 }

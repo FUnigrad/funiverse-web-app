@@ -35,7 +35,7 @@ function Timetable() {
 
   if (isLoading) return <Scheduler events={[]} {...schedulerConfig} loading={isLoading} />;
 
-  const events: ProcessedEvent[] = data!.map((d) => {
+  const events: ProcessedEvent[] = (data || [])!.map((d) => {
     const startDate = dayjs(d.startDateTime).toDate();
     const endDate = dayjs(d.endDateTime).toDate();
     return {

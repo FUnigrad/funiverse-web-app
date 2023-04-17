@@ -1,5 +1,6 @@
 import { Curriculum } from './curriculum';
 import { Syllabus } from './syllabus';
+import { User } from './user';
 
 type Nullabel<T, K extends keyof T> = Omit<T, K> & { [P in K]: null };
 export enum GroupType {
@@ -31,6 +32,16 @@ export interface Group {
   syllabus: Syllabus;
   teacher: Teacher;
   private: boolean;
+  active: boolean;
+}
+
+export interface GroupSearch {
+  id: number;
+  name: string;
+  code: null;
+  numOfMembers: number;
+  type: string;
+  members: User[];
   active: boolean;
 }
 

@@ -1,5 +1,5 @@
 import { useUserMeQuery } from 'queries';
-import React, { startTransition, useState } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -10,6 +10,7 @@ import { User } from '@types';
 import Head from 'next/head';
 import Timetable from 'components/Timetable';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 enum UserTabs {
   Profile,
   Timetable,
@@ -20,13 +21,22 @@ const userTabs = Object.keys(UserTabs)
   .filter((uT) => isNaN(uT))
   .map((label) => ({ label }));
 function UserMePage() {
-  const userMeQuery = useUserMeQuery();
   const [tabIndex, setTabIndex] = useState(UserTabs.Profile);
+
+  const router = useRouter();
+  const tabQuery = router.query.t as string;
+  const userMeQuery = useUserMeQuery();
+
+  useEffect(() => {
+    setTabIndex(tabQuery === 'tb' ? UserTabs.Timetable : UserTabs.Profile);
+  }, [tabQuery]);
+
   function handleTabChange(event: unknown, value: number) {
     startTransition(() => {
       setTabIndex(value);
     });
   }
+
   if (userMeQuery.isLoading)
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
