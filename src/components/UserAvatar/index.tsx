@@ -22,7 +22,7 @@ function UserAvatar({ user, ...props }: UserAvatar) {
       sx={{ cursor: 'pointer', ...props.sx }}
       onClick={() => router.push(nameLinkHref)}
     >
-      {user?.name.charAt(0)}
+      {user?.name?.charAt(0)}
     </Avatar>
   );
 }

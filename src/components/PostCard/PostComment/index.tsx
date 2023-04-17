@@ -11,6 +11,7 @@ import Editor from 'components/Editor';
 import UserAvatar from 'components/UserAvatar';
 import dayjs from 'dayjs';
 import { useWindowValue } from 'hooks';
+import Link from 'next/link';
 import { useCreatePostCommentMutation, useUserMeQuery } from 'queries';
 import { useEffect, useRef, useState } from 'react';
 const defaultButtonStyle: ButtonProps = {
@@ -34,6 +35,11 @@ export default function PostComment({ data }: { data: Comment }) {
   const { owner, content, createdDateTime } = data;
   const formatCreatedDate = dayjs(createdDateTime).fromNow();
 
+  const userMeQuery = useUserMeQuery({ enabled: false });
+
+  const currentUserId = userMeQuery.data?.id;
+  const nameLinkHref = currentUserId === owner.id ? '/me' : `/user/${owner.id}`;
+
   return (
     <Box sx={{ marginTop: 2 }}>
       <Box sx={{ display: 'flex', gap: '0 8px' }}>
@@ -50,7 +56,13 @@ export default function PostComment({ data }: { data: Comment }) {
               borderRadius: 4,
             }}
           >
-            <Typography variant="body1" fontWeight={600}>
+            <Typography
+              variant="body1"
+              fontWeight={600}
+              component={Link}
+              href={nameLinkHref}
+              sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+            >
               {owner.name}
             </Typography>
             <Typography

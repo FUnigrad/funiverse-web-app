@@ -37,7 +37,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import { useRouter } from 'next/router';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -55,23 +55,78 @@ import CircularProgress from 'components/CircularProgress';
 import { BsPostcard } from 'react-icons/bs';
 import { MdOutlineGroups } from 'react-icons/md';
 
-const SIDE_BAR_MENU = [
-  { label: 'Posts', href: '/' },
-  // { label: 'Learning Path', href: '/learning-path' },
-  // { label: 'Courses', href: '/courses' },
-  // { label: 'Chats', href: '/chats' },
-];
-const SIDE_BAR_GROUPS = [
-  { label: 'Group 1', href: '/groups/1' },
-  { label: 'Group 2', href: '/groups/2' },
-  { label: 'Group 3', href: '/groups/3' },
-  { label: 'Group 4', href: '/groups/4' },
-];
+const SIDE_BAR_MENU = [{ label: 'Posts', href: '/' }];
+
 function HomeDrawerTab() {
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const groupsQuery = useGroupsQuery();
+
+  if (groupsQuery.isLoading) return <CircularProgress />;
+
+  return (
+    <>
+      <Box sx={{ p: 2 }}>
+        <SearchInput
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
+        />
+      </Box>
+      {isSearchFocused ? <HomeSearch /> : <HomeMain />}
+    </>
+  );
+}
+
+export default HomeDrawerTab;
+
+function HomeSearch() {
+  return (
+    <Box>
+      <List
+        subheader={
+          <ListSubheader
+            disableSticky
+            sx={{ mb: 0.5, fontSize: '17px', fontWeight: 500, color: 'rgba(34, 51, 84)' }}
+          >
+            Quick post access
+          </ListSubheader>
+        }
+      >
+        {/* {groupsQuery.data?.map(({ name, id }, index) => ( */}
+        <ListItem
+          // key={id}
+          disablePadding
+          sx={{ display: 'block' }}
+          component={ActiveLink}
+          href={`/groups/`}
+          activeClassName="active-link"
+        >
+          <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+            <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+              <MdOutlineGroups fontSize={24} color="#009198" />
+            </ListItemIcon>
+            <ListItemText
+              primary={'test'}
+              sx={{
+                opacity: 1,
+                '& .MuiTypography-root': {
+                  fontWeight: '600',
+                },
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+        {/* ))} */}
+      </List>
+    </Box>
+  );
+}
+
+function HomeMain() {
   const theme = useTheme();
   const { dispatch } = useModalContext();
-  const { sidebarOpen, setSidebarOpen } = useLayoutContext();
-  const groupsQuery = useGroupsQuery();
+
+  const groupsQuery = useGroupsQuery({ enabled: false });
   function handleCreateGroupClick() {
     dispatch({
       type: 'open',
@@ -83,12 +138,8 @@ function HomeDrawerTab() {
       onCreateOrSave: () => {},
     });
   }
-  if (groupsQuery.isLoading) return <CircularProgress />;
   return (
-    <>
-      <Box sx={{ p: 2 }}>
-        <SearchInput />
-      </Box>
+    <Box>
       <List
         component="div"
         subheader={
@@ -106,18 +157,14 @@ function HomeDrawerTab() {
             href={href}
             activeClassName="active-link"
           >
-            <ListItemButton
-              sx={{ minHeight: 48, justifyContent: sidebarOpen ? 'initial' : 'center', px: 2.5 }}
-            >
-              <ListItemIcon
-                sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
-              >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+              <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
                 <BsPostcard fontSize={24} color="#5569ff" />
               </ListItemIcon>
               <ListItemText
                 primary={label}
                 sx={{
-                  opacity: sidebarOpen ? 1 : 0,
+                  opacity: 1,
                   '& .MuiTypography-root': {
                     fontWeight: '600',
                   },
@@ -147,18 +194,14 @@ function HomeDrawerTab() {
             href={`/groups/${id}`}
             activeClassName="active-link"
           >
-            <ListItemButton
-              sx={{ minHeight: 48, justifyContent: sidebarOpen ? 'initial' : 'center', px: 2.5 }}
-            >
-              <ListItemIcon
-                sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
-              >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+              <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
                 <MdOutlineGroups fontSize={24} color="#009198" />
               </ListItemIcon>
               <ListItemText
                 primary={name}
                 sx={{
-                  opacity: sidebarOpen ? 1 : 0,
+                  opacity: 1,
                   '& .MuiTypography-root': {
                     fontWeight: '600',
                   },
@@ -175,31 +218,25 @@ function HomeDrawerTab() {
           <ListItemButton
             sx={{
               minHeight: 48,
-              justifyContent: sidebarOpen ? 'initial' : 'center',
+              justifyContent: 'initial',
               px: 2.5,
               width: '100%',
             }}
             component={Button}
             color="primary"
           >
-            <ListItemIcon
-              sx={{ minWidth: 0, mr: sidebarOpen ? 3 : 'auto', justifyContent: 'center' }}
-            >
+            <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
               <AddOutlined color="primary" />
             </ListItemIcon>
-            <ListItemText
-              primary={'Create group'}
-              sx={{ opacity: sidebarOpen ? 1 : 0, color: 'inherit' }}
-            />
+            <ListItemText primary={'Create group'} sx={{ opacity: 1, color: 'inherit' }} />
           </ListItemButton>
         </ListItem>
       </List>
-    </>
+    </Box>
   );
 }
 
-export default HomeDrawerTab;
-
+//////////////// FORM //////////////////////////
 interface CreateGroupFormProps {
   defaultValues?: any;
 }
@@ -209,28 +246,9 @@ const CreateGroupSchema = z.object({
 type GroupFormInputs = z.infer<typeof CreateGroupSchema>;
 type GroupFormBody = GroupFormInputs & { id?: number };
 function CreateGroupForm({ defaultValues }: CreateGroupFormProps) {
-  // const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
-  // const navigate = useNavigate();
-  // const queryClient = useQueryClient();
-
-  // const mutation = useMutation<Group, unknown, typeof defaultValues, unknown>({
-  //   mutationFn: (body) => (body.id ? groupApis.updateGroup(body) : groupApis.createGroup(body)),
-  //   onSuccess: () => {
-  //     toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Group successfully!`);
-  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Groups, 'slug'] });
-  //     if (!defaultValues?.id) {
-  //       queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
-  //     }
-  //     dispatch({ type: 'close' });
-  //   },
-  // });
   const {
     register,
     handleSubmit,
-    control,
-    watch,
-    unregister,
-    clearErrors,
     formState: { errors },
   } = useForm({
     mode: 'all',

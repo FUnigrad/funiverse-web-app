@@ -187,7 +187,13 @@ function Sidebar() {
               key={index}
               icon={
                 typeof Icon === 'function' ? (
-                  <Icon badgeContent={userEventsQuery.data?.filter((e) => !e.read).length} />
+                  <Icon
+                    badgeContent={
+                      Array.isArray(userEventsQuery.data)
+                        ? userEventsQuery.data?.filter((e) => !e.read).length
+                        : 0
+                    }
+                  />
                 ) : (
                   Icon
                 )

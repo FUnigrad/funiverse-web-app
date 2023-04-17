@@ -5,8 +5,8 @@ import { useModalContext } from 'contexts';
 import { useRouter } from 'next/router';
 import { QueryKeys } from 'queries';
 
-export function useGroupsQuery() {
-  return useQuery({ queryKey: [QueryKeys.Groups], queryFn: groupApis.getUserGroups });
+export function useGroupsQuery({ enabled = true }: { enabled?: boolean } = {}) {
+  return useQuery({ queryKey: [QueryKeys.Groups], queryFn: groupApis.getUserGroups, enabled });
 }
 
 export function useCreateGroupMutation() {
@@ -18,7 +18,7 @@ export function useCreateGroupMutation() {
     onSuccess: (groupId) => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups] });
       dispatch({ type: 'close' });
-      router.push(`${groupId}`);
+      router.push(`/groups/${groupId}`);
     },
   });
 }

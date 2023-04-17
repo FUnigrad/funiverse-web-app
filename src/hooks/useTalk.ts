@@ -45,12 +45,12 @@ export function useTalkSession(): [Session | undefined, User | undefined] {
       // welcomeMessage: 'Hello!',
       // role
     });
-
+    if (!currentUser) return;
     const session = talkInstance.createSession(currentUser);
     setTalkSession(session);
     setCurrentUser(currentUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => session.destroy();
+    return () => session?.destroy();
   }, [userMeQuery.data]);
 
   return [talkSession, currentUser];

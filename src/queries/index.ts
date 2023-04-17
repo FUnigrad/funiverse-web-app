@@ -1,4 +1,9 @@
 import { QueryClient } from '@tanstack/react-query';
+export * from './commentQueries';
+export * from './groupQueries';
+export * from './postQueries';
+export * from './searchQueries';
+export * from './userQueries';
 
 export const QueryKeys = {
   Groups: 'groups',
@@ -12,11 +17,10 @@ export const QueryKeys = {
   Events: 'events',
   Timetables: 'timetables',
   Slots: 'slots',
+  Search: 'search',
+  Workspace: 'workspace',
 };
-export * from './groupQueries';
-export * from './postQueries';
-export * from './userQueries';
-export * from './commentQueries';
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

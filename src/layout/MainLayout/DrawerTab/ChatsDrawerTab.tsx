@@ -9,9 +9,11 @@ import { UserMe } from '@types';
 import Talk from 'talkjs';
 import { useRouter } from 'next/router';
 import { useTalkContext } from 'contexts';
+import SearchInput from 'components/SearchInput';
 
 function ChatsDrawerTab() {
-  // const isTalkLoaded = useTalk();
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
   const inboxEle = useRef<HTMLElement>(null);
   const [talkSession] = useTalkSession();
   const router = useRouter();
@@ -39,7 +41,14 @@ function ChatsDrawerTab() {
       >
         Chats
       </Typography>
-      <Box ref={inboxEle} sx={{ height: 'calc(100% - 48px)' }}></Box>
+      <Box sx={{ px: 2 }}>
+        <SearchInput
+          placeholder="Search Workspace chat..."
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
+        />
+      </Box>
+      <Box ref={inboxEle} sx={{ height: 'calc(100% - 48px - 37px)' }}></Box>
     </Box>
   );
 }

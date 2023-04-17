@@ -4,6 +4,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Search from '@mui/icons-material/Search';
@@ -22,6 +23,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
@@ -30,6 +32,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Popper from '@mui/material/Popper';
 import MuiLink from '@mui/material/Link';
 import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
@@ -57,6 +60,10 @@ import { IoChatbubbleSharp } from 'react-icons/io5';
 import { useTalkSession } from 'hooks';
 import { User as TalkUser } from 'talkjs/all';
 import { talkInstance } from 'services';
+import SearchInput from 'components/SearchInput';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import SearchPopper from 'components/SearchPopper';
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -78,6 +85,8 @@ export function withGroupDetailLayout(Component: NextPageWithLayout) {
   return Component;
 }
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
+  const [tabIndex, setTabIndex] = useState<number | null>(0);
+
   const router = useRouter();
   const { dispatch } = useModalContext();
   const [isPending, startTransition] = useTransition();
@@ -105,11 +114,10 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           { href: '/groups/[gid]/members', label: 'Member' },
           { href: '/groups/[gid]/media', label: 'Media' },
         ];
-  const [tabIndex, setTabIndex] = React.useState(0);
 
   useEffect(() => {
     const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
-    setTabIndex(initialTabIndex);
+    setTabIndex(initialTabIndex > 0 ? initialTabIndex : null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   const [talkSession, currentUser] = useTalkSession();
@@ -136,7 +144,8 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
 
     const users: TalkUser[] = groupUsersQuery.data
       .map((u) => talkInstance.createUser({ id: u.id, name: u.name }))
-      .concat(currentUser);
+      .filter(Boolean)
+      .concat(currentUser) as TalkUser[];
     const { chatbox, conversationId } = talkInstance.createGroupConversation({
       users,
       talkSession,
@@ -145,6 +154,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
     chatbox.mount(chatboxEleRef.current);
     router.push(`/chat/${conversationId}`);
   }
+
   return (
     <>
       <Box sx={{ border: '1px solid #ccc' }}>
@@ -196,10 +206,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs
-              value={tabIndex > GROUP_TABS.length - 1 ? 0 : tabIndex}
-              onChange={handleTabChange}
-            >
+            <Tabs value={tabIndex} onChange={handleTabChange}>
               {GROUP_TABS.map(({ label, href }) => (
                 <Tab
                   key={label}
@@ -209,11 +216,7 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
                 />
               ))}
             </Tabs>
-            <Box>
-              <IconButton>
-                <Search />
-              </IconButton>
-            </Box>
+            <SearchPopper redirect={`/groups/${gid}/search`} />
           </Stack>
         </Box>
       </Paper>

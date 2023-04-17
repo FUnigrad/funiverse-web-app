@@ -29,14 +29,22 @@ export default class TalkService {
   }
 
   public createUser(options: UserOptions) {
-    return new Talk.User(options);
+    try {
+      return new Talk.User(options);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public createSession(user: User) {
-    return new Talk.Session({
-      appId: this.appId,
-      me: user,
-    });
+    try {
+      return new Talk.Session({
+        appId: this.appId,
+        me: user,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public createOneOnOneConversation({

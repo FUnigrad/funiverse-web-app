@@ -1,11 +1,17 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 
-function SearchInput({ placeholder = 'Search workspace', sx, ...props }: TextFieldProps) {
+const SearchInput = React.forwardRef<HTMLDivElement, TextFieldProps>(function SearchInput(
+  { placeholder = 'Search Workspace', sx, ...props },
+  forwardedRef,
+) {
   return (
     <TextField
+      ref={forwardedRef}
       sx={{
         width: '100%',
         '.MuiInputBase-root': { borderRadius: '24px', height: '36px' },
@@ -23,6 +29,11 @@ function SearchInput({ placeholder = 'Search workspace', sx, ...props }: TextFie
           </InputAdornment>
         ),
         // endAdornment: (
+        //   <IconButton sx={{ cursor: 'pointer' }} size="small">
+        //     <CloseIcon fontSize="small" />
+        //   </IconButton>
+        // ),
+        // endAdornment: (
         //   <InputAdornment
         //     position="end"
         //     style={{ display: showClearIcon }}
@@ -35,6 +46,6 @@ function SearchInput({ placeholder = 'Search workspace', sx, ...props }: TextFie
       {...props}
     />
   );
-}
+});
 
 export default SearchInput;
