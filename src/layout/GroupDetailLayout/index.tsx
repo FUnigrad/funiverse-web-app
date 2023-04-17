@@ -85,7 +85,7 @@ export function withGroupDetailLayout(Component: NextPageWithLayout) {
   return Component;
 }
 function GroupDetailLayout({ children }: { children: React.ReactNode }) {
-  const [tabIndex, setTabIndex] = useState<number | null>(0);
+  const [tabIndex, setTabIndex] = useState<number>(0);
 
   const router = useRouter();
   const { dispatch } = useModalContext();
@@ -115,9 +115,9 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           { href: '/groups/[gid]/media', label: 'Media' },
         ];
 
+  const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
   useEffect(() => {
-    const initialTabIndex = GROUP_TABS.findIndex((tab) => tab.href.includes(pathname));
-    setTabIndex(initialTabIndex > 0 ? initialTabIndex : null);
+    setTabIndex(initialTabIndex > 0 ? initialTabIndex : 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   const [talkSession, currentUser] = useTalkSession();
@@ -206,7 +206,17 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
           </Box>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Tabs value={tabIndex} onChange={handleTabChange}>
+            <Tabs
+              value={tabIndex > GROUP_TABS.length - 1 ? 0 : tabIndex}
+              onChange={handleTabChange}
+              sx={{
+                '.Mui-selected': {
+                  color: initialTabIndex === -1 ? 'rgba(34, 51, 84, 0.7) !important' : '#5569ff',
+                },
+              }}
+              // @ts-ignore: Know what is going on
+              indicatorColor={initialTabIndex === -1 ? '#fff' : 'primary'}
+            >
               {GROUP_TABS.map(({ label, href }) => (
                 <Tab
                   key={label}

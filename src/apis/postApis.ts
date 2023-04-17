@@ -5,6 +5,7 @@ import {
   User,
   Comment,
   NewFeedPost,
+  Post,
 } from '@types';
 import axiosClient from './axiosClient';
 
@@ -15,4 +16,5 @@ export const postApis = {
     axiosClient.post<Comment>(`/post/${postId}/comment`, body),
   getPostComments: (postId: string) => axiosClient.get<Comment[]>(`/post/${postId}/comment`),
   getNewFeed: () => axiosClient.get<NewFeedPost>('/workspace/post'),
+  getPostDetail: (postId: string) => axiosClient.get<Post>(`/post/${postId}`),
 };

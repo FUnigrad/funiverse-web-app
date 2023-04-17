@@ -41,3 +41,11 @@ export function useNewFeedQuery() {
     queryFn: () => postApis.getNewFeed(),
   });
 }
+
+export function usePostDetailQuery(pid: string) {
+  return useQuery({
+    queryKey: [QueryKeys.Posts, pid],
+    queryFn: () => postApis.getPostDetail(pid),
+    enabled: Boolean(pid),
+  });
+}

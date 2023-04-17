@@ -96,7 +96,7 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
         </Box>
         <Divider sx={{ margin: '4px 0' }} />
         {/* Comment */}
-        <PostCommentList data={postCommentsQuery.data as Comment[]} />
+        <PostCommentList data={postCommentsQuery.data || ([] as Comment[])} />
         <Box sx={{ display: 'flex', alignItems: 'flex-start', mt: 2 }}>
           <UserAvatar
             user={userMeQuery.data}

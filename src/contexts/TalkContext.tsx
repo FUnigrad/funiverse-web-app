@@ -28,7 +28,7 @@ function talkReducer(state: TalkReducerValue, action: TalkAction): TalkReducerVa
     case 'CREATE_SESSION':
       if (state.session) return state;
       const session = talkInstance.createSession(action.payload);
-      return { ...state, session };
+      return session ? { ...state, session } : { ...state };
     case 'SELECT_CONVERSATION':
       return { ...state, selectedConversation: action.payload };
     case 'DESTROY_SESSION':

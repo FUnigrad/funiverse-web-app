@@ -40,6 +40,7 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
       id: data.id,
       name: data.name,
     });
+    if (!otherUser) return;
     const { chatbox, conversationId } = talkInstance.createOneOnOneConversation({
       currentUser,
       otherUser,

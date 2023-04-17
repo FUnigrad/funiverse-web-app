@@ -24,6 +24,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Menu from '@mui/material/Menu';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -37,7 +38,7 @@ import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import ActiveLink from 'components/ActiveLink';
 import { useRouter } from 'next/router';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -50,36 +51,62 @@ import { useLayoutContext } from 'contexts';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useCreateGroupMutation, useGroupsQuery } from 'queries';
+import {
+  useCreateGroupMutation,
+  useGroupsQuery,
+  useSearchInWorkspaceQuery,
+  useUserMeQuery,
+} from 'queries';
 import CircularProgress from 'components/CircularProgress';
 import { BsPostcard } from 'react-icons/bs';
 import { MdOutlineGroups } from 'react-icons/md';
+import { WorkspaceSearchResponse } from '@types';
+import UserAvatar from 'components/UserAvatar';
+import { capitalizeAndOmitUnderscore } from 'utils';
 
 const SIDE_BAR_MENU = [{ label: 'Posts', href: '/' }];
 
 function HomeDrawerTab() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   const groupsQuery = useGroupsQuery();
+  const params = { value: searchValue };
+  const searchWorkspaceQuery = useSearchInWorkspaceQuery(params);
 
-  if (groupsQuery.isLoading) return <CircularProgress />;
+  if (groupsQuery.isLoading || (searchWorkspaceQuery.isLoading && isSearchFocused))
+    return <CircularProgress />;
 
   return (
     <>
       <Box sx={{ p: 2 }}>
         <SearchInput
           onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
+          onBlur={() => {
+            setTimeout(() => {
+              setIsSearchFocused(false);
+            }, 100);
+          }}
+          onChange={(e) => setSearchValue(e.target.value)}
+          value={searchValue}
         />
       </Box>
-      {isSearchFocused ? <HomeSearch /> : <HomeMain />}
+      {isSearchFocused ? (
+        <HomeSearch data={searchWorkspaceQuery!.data as WorkspaceSearchResponse} />
+      ) : (
+        <HomeMain />
+      )}
     </>
   );
 }
 
 export default HomeDrawerTab;
 
-function HomeSearch() {
+function HomeSearch({ data }: { data: WorkspaceSearchResponse }) {
+  const { groups, posts, users } = data;
+  const userMeQuery = useUserMeQuery({ enabled: false });
+  const currentUserId = userMeQuery.data?.id;
+  const router = useRouter();
   return (
     <Box>
       <List
@@ -88,35 +115,106 @@ function HomeSearch() {
             disableSticky
             sx={{ mb: 0.5, fontSize: '17px', fontWeight: 500, color: 'rgba(34, 51, 84)' }}
           >
-            Quick post access
+            Users
           </ListSubheader>
         }
       >
-        {/* {groupsQuery.data?.map(({ name, id }, index) => ( */}
-        <ListItem
-          // key={id}
-          disablePadding
-          sx={{ display: 'block' }}
-          component={ActiveLink}
-          href={`/groups/`}
-          activeClassName="active-link"
-        >
-          <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
-            <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-              <MdOutlineGroups fontSize={24} color="#009198" />
-            </ListItemIcon>
-            <ListItemText
-              primary={'test'}
-              sx={{
-                opacity: 1,
-                '& .MuiTypography-root': {
-                  fontWeight: '600',
-                },
-              }}
-            />
-          </ListItemButton>
-        </ListItem>
-        {/* ))} */}
+        {users.map((user) => (
+          <ListItem
+            key={user.id}
+            disablePadding
+            sx={{ display: 'block' }}
+            component={ActiveLink}
+            href={`/user/${currentUserId === user.id ? '/me' : user.id}`}
+            // onClick={() => router.push(`/user/${currentUserId === user.id ? '/me' : user.id}`)}
+            activeClassName="active-link"
+          >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+              <ListItemAvatar>
+                <UserAvatar user={user} />
+              </ListItemAvatar>
+
+              <ListItemText
+                primary={user.name}
+                secondary={capitalizeAndOmitUnderscore(user.role)}
+                sx={{
+                  opacity: 1,
+                  '& .MuiTypography-root': {
+                    fontWeight: '600',
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <List
+        subheader={
+          <ListSubheader
+            disableSticky
+            sx={{ mb: 0.5, fontSize: '17px', fontWeight: 500, color: 'rgba(34, 51, 84)' }}
+          >
+            Groups
+          </ListSubheader>
+        }
+      >
+        {groups.map((group) => (
+          <ListItem
+            key={group.id}
+            disablePadding
+            sx={{ display: 'block' }}
+            component={ActiveLink}
+            href={`/groups/${group.id}`}
+            activeClassName="active-link"
+          >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+              <ListItemAvatar>
+                <UserAvatar user={group} variant="square" />
+              </ListItemAvatar>
+              <ListItemText
+                primary={group.name}
+                sx={{
+                  opacity: 1,
+                  '& .MuiTypography-root': {
+                    fontWeight: '600',
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <List
+        subheader={
+          <ListSubheader
+            disableSticky
+            sx={{ mb: 0.5, fontSize: '17px', fontWeight: 500, color: 'rgba(34, 51, 84)' }}
+          >
+            Posts
+          </ListSubheader>
+        }
+      >
+        {posts.map((post) => (
+          <ListItem
+            key={post.id}
+            disablePadding
+            sx={{ display: 'block' }}
+            component={ActiveLink}
+            href={`/groups/${post.group.id}/post/${post.id}`}
+            activeClassName="active-link"
+          >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+              <ListItemAvatar>
+                <UserAvatar user={post.owner} />
+              </ListItemAvatar>
+              <Typography
+                // variant="body1"
+                // color="initial"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
     </Box>
   );

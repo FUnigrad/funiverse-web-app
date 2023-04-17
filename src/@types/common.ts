@@ -1,6 +1,9 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import React, { Dispatch } from 'react';
+import { Group } from './group';
+import { User } from './user';
+import { Post } from './post';
 
 export type Callback = (...args: any[]) => void;
 
@@ -76,4 +79,10 @@ export interface SelectProps {
   onChange?: Callback;
   value?: any;
   placeholder?: string;
+}
+
+export interface WorkspaceSearchResponse {
+  groups: Group[];
+  posts: Post[];
+  users: User[];
 }
