@@ -48,7 +48,9 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
     });
     // WARN: do a trick to make TalkJS work
     chatbox.mount(chatboxEleRef.current);
-    router.push(`/chat/${conversationId}`);
+    setTimeout(() => {
+      router.push(`/chat/${conversationId}`);
+    }, 0);
   }
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px', mb: 3 }}>

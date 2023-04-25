@@ -88,7 +88,9 @@ function ChatsSearch({ users, groups }: { users: User[]; groups: GroupSearch[] }
     });
     // WARN: do a trick to make TalkJS work
     chatbox.mount(chatboxEleRef.current);
-    router.push(`/chat/${conversationId}`);
+    setTimeout(() => {
+      router.push(`/chat/${conversationId}`);
+    }, 0);
   }
 
   function handleGroupSearchClick(group: GroupSearch) {
@@ -103,7 +105,9 @@ function ChatsSearch({ users, groups }: { users: User[]; groups: GroupSearch[] }
       groupDetail: group as any,
     });
     chatbox.mount(chatboxEleRef.current);
-    router.push(`/chat/${conversationId}`);
+    setTimeout(() => {
+      router.push(`/chat/${conversationId}`);
+    }, 0);
   }
   return (
     <Box

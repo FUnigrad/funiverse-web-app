@@ -152,7 +152,9 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
       groupDetail: groupDetailQuery.data,
     });
     chatbox.mount(chatboxEleRef.current);
-    router.push(`/chat/${conversationId}`);
+    setTimeout(() => {
+      router.push(`/chat/${conversationId}`);
+    }, 0);
   }
 
   return (

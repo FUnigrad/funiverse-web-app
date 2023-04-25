@@ -6,7 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { QueryKeys, useUpdateEventMutation, useUserEventsQuery } from 'queries';
 import dayjs from 'dayjs';
 import { Event, EventType, UserRole } from '@types';
@@ -24,6 +24,18 @@ function NotificationsDrawerTab() {
   const userEventsQuery = useUserEventsQuery({
     params: { unread: notificationsMode === NotificationsMode.Unread },
   });
+
+  // useEffect(() => {
+  //   const eventSource = new EventSource('http://api.dev.funiverse.world/user/notification');
+  //   eventSource.onmessage = (event) => {
+  //     console.log(event);
+  //   };
+  //   eventSource.onopen = (e) => console.log('open');
+  //   eventSource.onerror = (e) => {
+  //     console.log(e);
+  //   };
+  //   return () => {};
+  // }, []);
 
   return (
     <Box sx={{ pt: 1 }}>
