@@ -32,10 +32,14 @@ export function useUsersNotInGroupQuery(groupId: string) {
 }
 
 export function useGroupDetailQuery(groupId: string, { enabled }: { enabled?: boolean } = {}) {
+  const router = useRouter();
   return useQuery({
     queryKey: [QueryKeys.Groups, groupId],
     queryFn: () => groupApis.getGroupDetail(groupId),
     enabled: enabled ?? Boolean(groupId),
+    onError: () => {
+      router.push('/');
+    },
   });
 }
 

@@ -99,7 +99,7 @@ function AppLayout({ children }: LayoutProps) {
   const { sidebarOpen } = useLayoutContext();
   const isRenderAppBar = DONT_NEED_APPBAR_PATHS.some((p) => !pathname.includes(p));
   const isMarginBottomMainLayout = DONT_NEED_MARGIN_BOTTOM_PATHS.some((p) => !pathname.includes(p));
-  const groupsQuery = useGroupsQuery();
+  useGroupsQuery();
   const userMeQuery = useUserMeQuery();
   useUserEventsQuery();
   const { dispatchTalk } = useTalkContext();

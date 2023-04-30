@@ -9,33 +9,58 @@ import CircularProgress from 'components/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useWindowValue } from 'hooks';
 import { useEffect } from 'react';
+// function initListener(username: string) {
+//   const eventSource = new EventSource('https://api.dev.funiverse.world/user/notification');
+//   eventSource.onmessage = (event) => {
+//     console.log(event);
+//   };
+//   eventSource.onopen = (e) => console.log('open');
+
+//   eventSource.onerror = (e: any) => {
+//     if (e.readyState == EventSource.CLOSED) {
+//       console.log('close');
+//     } else {
+//       console.log(e);
+//     }
+//     initListener(username);
+//   };
+
+//   // eventSource.addEventListener(
+//   //   username,
+//   //   (e) => {
+//   //     console.log(e);
+//   //   },
+//   //   false,
+//   // );
+// }
 export default function HomePage() {
   const newfeedQuery = useNewFeedQuery();
   const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 1200 });
   const userMeQuery = useUserMeQuery();
-  useEffect(() => {
-    if (!userMeQuery.data) return;
-    const eventSource = new EventSource('http://api.dev.funiverse.world/user/notification');
-    eventSource.onmessage = (event) => {
-      console.log(event);
-    };
-    eventSource.onopen = (e) => console.log('open');
-    eventSource.onerror = (e) => {
-      if ((e.target as any).readyState == EventSource.CLOSED) {
-        console.log('close', e);
-      } else {
-        console.log(e);
-      }
-    };
-    eventSource.addEventListener(
-      userMeQuery.data!.username,
-      (e) => {
-        console.log(e);
-      },
-      false,
-    );
-    return () => {};
-  }, [userMeQuery.data]);
+  // useEffect(() => {
+  //   if (!userMeQuery.data) return;
+  // initListener(userMeQuery.data!.username);
+  // const eventSource = new EventSource('https://api.dev.funiverse.world/user/notification');
+  // eventSource.onmessage = (event) => {
+  //   console.log(event);
+  // };
+  // eventSource.onopen = (e) => console.log('open');
+  // eventSource.onerror = (e) => {
+  //   if ((e.target as any).readyState === EventSource.CLOSED) {
+  //     console.log('close', e);
+  //   } else {
+  //     console.log(e);
+  //   }
+  // };
+  // eventSource.addEventListener(
+  //   userMeQuery.data!.username,
+  //   (e) => {
+  //     console.log(e);
+  //   },
+  //   false,
+  // );
+  //   return () => {};
+  // }, [userMeQuery.data]);
   if (newfeedQuery.isLoading) return <PostSkeleton />;
   return (
     <>

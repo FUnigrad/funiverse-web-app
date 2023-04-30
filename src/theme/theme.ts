@@ -543,8 +543,8 @@ const PureLightTheme = createTheme({
           fontWeight: 'bold',
         },
         colorDefault: {
-          background: colors.alpha.black[30],
-          color: colors.alpha.white[100],
+          // background: colors.alpha.black[30],
+          // color: colors.alpha.white[100],
         },
       },
     },
@@ -554,15 +554,15 @@ const PureLightTheme = createTheme({
           alignItems: 'center',
         },
         avatar: {
-          background: colors.alpha.black[10],
+          // background: colors.alpha.black[10],
           fontSize: 13,
-          color: colors.alpha.black[70],
+          // color: 'rgba(34, 51, 84, 0.3)',
           fontWeight: 'bold',
 
-          '&:first-of-type': {
-            border: 0,
-            background: 'transparent',
-          },
+          // '&:first-of-type': {
+          //   border: 0,
+          //   background: 'transparent',
+          // },
         },
       },
     },

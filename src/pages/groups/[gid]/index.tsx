@@ -107,7 +107,7 @@ function GroupDetail() {
       <Head>
         <title>Group | FUniverse</title>
       </Head>
-      <Box sx={{ mb: 3, width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', p: 2, pb: 8 }}>
+      <Box sx={{ mb: 3, width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', pb: 8 }}>
         <PostWrite onPostWriteClick={handleWritePostClick} />
         {groupPostsQuery.data?.map((post, index) => (
           <PostCard key={post.id} data={post} />
@@ -148,7 +148,7 @@ function PostWrite({ onPostWriteClick }: { onPostWriteClick: Callback }) {
     onPostWriteClick();
   }
   return (
-    <Paper sx={{ p: 2 }}>
+    <Paper sx={{ p: 2, mb: 5 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}>
         <UserAvatar user={userMeQuery.data} />
         <Box

@@ -93,6 +93,11 @@ function NotificationItem({ data }: { data: Event }) {
     [EventType.REACTION]: 'reacted on your comment in',
   };
 
+  const adminActionMessage = {
+    [EventType.ADD_TO_GROUP]: 'You have been added into',
+    [EventType.SET_GROUP_ADMIN]: 'You have been set as Admin of',
+  };
+
   function handleNotificationClick() {
     if (read) {
       router.push(`/groups/${group.id}`);
@@ -148,9 +153,10 @@ function NotificationItem({ data }: { data: Event }) {
               lineHeight: 'inherit',
             }}
           >
-            {data.type === EventType.ADD_TO_GROUP && actor.role === UserRole.WorkspaceAdmin ? (
+            {actor.role === UserRole.WorkspaceAdmin ? (
               <>
-                You have been added into <strong>{group.name}</strong>
+                {adminActionMessage[data.type as keyof typeof adminActionMessage]}{' '}
+                <strong>{group.name}</strong>
               </>
             ) : (
               <>

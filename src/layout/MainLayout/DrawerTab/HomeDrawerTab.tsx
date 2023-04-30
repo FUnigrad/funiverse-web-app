@@ -92,7 +92,9 @@ function HomeDrawerTab() {
         />
       </Box>
       {isSearchFocused ? (
-        <HomeSearch data={searchWorkspaceQuery!.data as WorkspaceSearchResponse} />
+        <Box sx={{ overflowY: 'auto' }}>
+          <HomeSearch data={searchWorkspaceQuery!.data as WorkspaceSearchResponse} />
+        </Box>
       ) : (
         <HomeMain />
       )}

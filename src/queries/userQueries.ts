@@ -51,6 +51,7 @@ export function useUserEventsQuery({
     queryKey: [QueryKeys.Users, QueryKeys.Events, params],
     queryFn: () => userApis.getUserEvents(params),
     enabled,
+    refetchInterval: 3000,
   });
 }
 

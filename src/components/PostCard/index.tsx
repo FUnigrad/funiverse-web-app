@@ -22,7 +22,8 @@ import BaseReactQuill from 'react-quill';
 import PostComment from './PostComment';
 import PostCardHeader from './PostCardHeader';
 import { useQueryClient } from '@tanstack/react-query';
-
+import { AiOutlineLike } from 'react-icons/ai';
+import { TfiComment } from 'react-icons/tfi';
 interface PostCardProps {
   data: Post;
   visibleGroup?: boolean;
@@ -83,14 +84,14 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
             display: 'flex',
             alignItems: 'center',
             gap: '0 4px',
-            width: '50%',
+            width: '100%',
             margin: '0 auto',
           }}
         >
-          <Button variant="text" startIcon={<CameraAltOutlined />} sx={{ flex: 1 }}>
+          <Button variant="text" color="inherit" startIcon={<AiOutlineLike />} sx={{ flex: 1 }}>
             Like
           </Button>
-          <Button variant="text" startIcon={<CameraAltOutlined />} sx={{ flex: 1 }}>
+          <Button variant="text" color="inherit" startIcon={<TfiComment />} sx={{ flex: 1 }}>
             Comment
           </Button>
         </Box>

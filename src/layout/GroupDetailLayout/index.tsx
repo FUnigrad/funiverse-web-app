@@ -64,6 +64,16 @@ import SearchInput from 'components/SearchInput';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import SearchPopper from 'components/SearchPopper';
+import group1 from 'assets/images/group1.png';
+import group2 from 'assets/images/group2.png';
+import group3 from 'assets/images/group3.png';
+import group4 from 'assets/images/group4.png';
+const groupImage = {
+  [GroupType.Class]: group1,
+  [GroupType.Course]: group2,
+  [GroupType.Department]: group3,
+  [GroupType.Normal]: group4,
+};
 export const IMG_SRC =
   'https://images.unsplash.com/photo-1673908495930-aa64c3fd2638?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
@@ -162,8 +172,8 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
       <Box sx={{ border: '1px solid #ccc' }}>
         <Box sx={{ width: '100%', height: 400, position: 'relative' }}>
           <Image
-            src={IMG_SRC}
-            alt="Background of group"
+            src={groupImage[groupDetailQuery.data?.type as GroupType]}
+            alt=""
             fill={true}
             style={{ objectFit: 'cover', objectPosition: 'top' }}
           />
