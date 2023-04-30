@@ -74,7 +74,7 @@ function MembersPage() {
               <MemberCard
                 key={mem.id}
                 data={mem}
-                subContent={`Joined about ${dayjs().subtract(32, 'day').fromNow()}`}
+                // subContent={`Joined about ${dayjs().subtract(32, 'day').fromNow()}`}
               />
             ))}
           </Box>
@@ -99,7 +99,7 @@ function SectionHeader({
     <Box>
       <Typography variant="h4" color="initial" fontWeight={600}>
         {children}
-        {amount && (
+        {amount != null && (
           <span color="inherit" style={{ fontWeight: '500' }}>
             {' '}
             · {amount}

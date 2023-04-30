@@ -3,7 +3,7 @@ import { CreateGroupPayload, CreateGroupPostPayload } from '@types';
 import { groupApis } from 'apis';
 import { useModalContext } from 'contexts';
 import { useRouter } from 'next/router';
-import { QueryKeys } from 'queries';
+import { QueryKeys, useUserMeQuery } from 'queries';
 
 export function useGroupsQuery({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({ queryKey: [QueryKeys.Groups], queryFn: groupApis.getUserGroups, enabled });
@@ -85,6 +85,37 @@ export function useAddGroupUsersMutation(groupId: string) {
         queryKey: [QueryKeys.Groups, groupId, QueryKeys.UsersNotIn],
       });
       dispatch({ type: 'close' });
+    },
+  });
+}
+
+export function useRemoveGroupUserMutation(groupId: string, userId: number) {
+  const userMeQuery = useUserMeQuery({ enabled: false });
+  const router = useRouter();
+  const isCurrentUser = userMeQuery.data?.id === userId;
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => groupApis.removeGroupUser(groupId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, groupId, QueryKeys.Users] });
+      if (isCurrentUser) {
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups] });
+        router.push('/');
+      }
+    },
+  });
+}
+export function useSetAdminMutation(groupId: string, userId: number) {
+  // const userMeQuery = useUserMeQuery({ enabled: false });
+  // const router = useRouter();
+  // const isCurrentUser = userMeQuery.data?.id === userId;
+
+  const queryClient = useQueryClient();
+  return useMutation<unknown, unknown, { value: boolean }>({
+    mutationFn: (data) => groupApis.setAdmin(groupId, userId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, groupId, QueryKeys.Users] });
     },
   });
 }

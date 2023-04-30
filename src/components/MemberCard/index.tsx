@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import SearchInput from 'components/SearchInput';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
 import ChatBubble from '@mui/icons-material/ChatBubble';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
@@ -14,7 +15,13 @@ import Close from '@mui/icons-material/Close';
 import { IoChatbubbleSharp } from 'react-icons/io5';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useGroupUsersQuery, useUserMeQuery, useUsersQuery } from 'queries';
+import {
+  useGroupUsersQuery,
+  useRemoveGroupUserMutation,
+  useSetAdminMutation,
+  useUserMeQuery,
+  useUsersQuery,
+} from 'queries';
 import CircularProgress from 'components/CircularProgress';
 import { Callback, GroupUser } from '@types';
 import UserAvatar from 'components/UserAvatar';
@@ -22,18 +29,33 @@ import Link from 'next/link';
 import { talkInstance } from 'services';
 import { useTalkSession } from 'hooks';
 import Talk from 'talkjs';
-
+import Popper from '@mui/material/Popper';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListSubheader from '@mui/material/ListSubheader';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 interface MemberCardProps {
   data: GroupUser;
   subContent?: React.ReactNode;
   onCloseClick?: (data: GroupUser) => void;
 }
 function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
-  const userMeQuery = useUserMeQuery({ enabled: false });
-  const nameLinkHref = userMeQuery.data?.id === data.id ? '/me' : `/user/${data.id}`;
+  const [moreAnchorEle, setMoreAnchorEle] = useState<HTMLElement | null>(null);
   const router = useRouter();
+
+  const userMeQuery = useUserMeQuery({ enabled: false });
+  const removeMemberMutation = useRemoveGroupUserMutation(router.query.gid as string, data.id);
+  const setAdminMutation = useSetAdminMutation(router.query.gid as string, data.id);
+
+  const isCurrentUser = userMeQuery.data?.id === data.id;
+  const nameLinkHref = isCurrentUser ? '/me' : `/user/${data.id}`;
   const [talkSession, currentUser] = useTalkSession();
   const chatboxEleRef = useRef(null);
+
   function handleMessageClick() {
     if (!talkSession || !currentUser) return;
     const otherUser = talkInstance.createUser({
@@ -83,12 +105,20 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
           </Button>
         )}
         {!Boolean(onCloseClick) && (
-          <Button
-            sx={{ px: '0px', height: '36px', minWidth: '48px', '& .MuiButton-startIcon': { m: 0 } }}
-            startIcon={<MoreHoriz />}
-            variant="contained"
-            color="inherit"
-          />
+          <ClickAwayListener onClickAway={() => setMoreAnchorEle(null)}>
+            <Button
+              sx={{
+                px: '0px',
+                height: '36px',
+                minWidth: '48px',
+                '& .MuiButton-startIcon': { m: 0 },
+              }}
+              startIcon={<MoreHoriz />}
+              variant="contained"
+              color="inherit"
+              onClick={(e) => setMoreAnchorEle(e.currentTarget)}
+            />
+          </ClickAwayListener>
         )}
         {Boolean(onCloseClick) && (
           <IconButton onClick={() => onCloseClick!(data)} color="inherit">
@@ -96,6 +126,33 @@ function MemberCard({ data, subContent, onCloseClick }: MemberCardProps) {
           </IconButton>
         )}
       </Box>
+      <Popper
+        open={Boolean(moreAnchorEle)}
+        anchorEl={moreAnchorEle}
+        // onClose={() => setMoreAnchorEle(null)}
+        placement="bottom-start"
+      >
+        <Paper>
+          <List sx={{ p: 1 }}>
+            <ListItemButton
+              onClick={() => {
+                setMoreAnchorEle(null);
+                setAdminMutation.mutate({ value: !data.groupAdmin });
+              }}
+            >
+              {data.groupAdmin ? 'Unset admin' : 'Set admin'}
+            </ListItemButton>
+            <ListItemButton
+              onClick={() => {
+                setMoreAnchorEle(null);
+                removeMemberMutation.mutate();
+              }}
+            >
+              {isCurrentUser ? 'Leave group' : 'Remove member'}
+            </ListItemButton>
+          </List>
+        </Paper>
+      </Popper>
       <Box ref={chatboxEleRef} sx={{ display: 'none' }}></Box>
     </Box>
   );

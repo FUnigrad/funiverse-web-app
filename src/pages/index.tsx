@@ -13,29 +13,29 @@ export default function HomePage() {
   const newfeedQuery = useNewFeedQuery();
   const screenWidth = useWindowValue({ path: 'screen.width', initialValue: 1200 });
   const userMeQuery = useUserMeQuery();
-  // useEffect(() => {
-  //   if (!userMeQuery.data) return;
-  //   const eventSource = new EventSource('http://api.dev.funiverse.world/user/notification');
-  //   eventSource.onmessage = (event) => {
-  //     console.log(event);
-  //   };
-  //   eventSource.onopen = (e) => console.log('open');
-  //   eventSource.onerror = (e) => {
-  //     if ((e.target as any).readyState == EventSource.CLOSED) {
-  //       console.log('close', e);
-  //     } else {
-  //       console.log(e);
-  //     }
-  //   };
-  //   eventSource.addEventListener(
-  //     userMeQuery.data!.username,
-  //     (e) => {
-  //       console.log(e);
-  //     },
-  //     false,
-  //   );
-  //   return () => {};
-  // }, [userMeQuery.data]);
+  useEffect(() => {
+    if (!userMeQuery.data) return;
+    const eventSource = new EventSource('http://api.dev.funiverse.world/user/notification');
+    eventSource.onmessage = (event) => {
+      console.log(event);
+    };
+    eventSource.onopen = (e) => console.log('open');
+    eventSource.onerror = (e) => {
+      if ((e.target as any).readyState == EventSource.CLOSED) {
+        console.log('close', e);
+      } else {
+        console.log(e);
+      }
+    };
+    eventSource.addEventListener(
+      userMeQuery.data!.username,
+      (e) => {
+        console.log(e);
+      },
+      false,
+    );
+    return () => {};
+  }, [userMeQuery.data]);
   if (newfeedQuery.isLoading) return <PostSkeleton />;
   return (
     <>

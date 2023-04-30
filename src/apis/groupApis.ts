@@ -28,7 +28,10 @@ export const groupApis = {
   getGroupUsers: (groupId: string) => axiosClient.get<GroupUser[]>(`/group/${groupId}/users`),
   addGroupUsers: (groupId: string, userIds: number[]) =>
     axiosClient.post(`/group/${groupId}/members`, userIds),
-
+  removeGroupUser: (groupId: string, userId: number) =>
+    axiosClient.delete(`/group/${groupId}/user/${userId}`),
+  setAdmin: (groupId: string, userId: number, data: { value: boolean }) =>
+    axiosClient.put(`/group/${groupId}/users/${userId}/set-admin`, null, { params: data }),
   // Academic
   getGroupAcademic: (groupId: string) => axiosClient.get<Curriculum>(`/group/${groupId}/academic`),
   getGroupAcademicPlan: (groupId: string) =>
