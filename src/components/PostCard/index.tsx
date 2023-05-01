@@ -88,10 +88,21 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
             margin: '0 auto',
           }}
         >
-          <Button variant="text" color="inherit" startIcon={<AiOutlineLike />} sx={{ flex: 1 }}>
+          <Button
+            variant="text"
+            color="inherit"
+            startIcon={<AiOutlineLike size={24} />}
+            sx={{ flex: 1 }}
+          >
             Like
           </Button>
-          <Button variant="text" color="inherit" startIcon={<TfiComment />} sx={{ flex: 1 }}>
+          <Button
+            variant="text"
+            color="inherit"
+            startIcon={<TfiComment size={18} style={{ transform: 'translateY(2px)' }} />}
+            sx={{ flex: 1 }}
+            onClick={() => commentEditorRef.current?.focus()}
+          >
             Comment
           </Button>
         </Box>

@@ -1,3 +1,4 @@
+import { userApis } from 'apis';
 import dynamic from 'next/dynamic';
 // import { Quill } from 'react-quill';
 // const Delta = Quill.import('delta');
@@ -40,10 +41,17 @@ export const editorConfig = {
     mention: {
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
       mentionDenotationChars: ['@', '#'],
-      source: function (searchTerm: any, renderItem: any, mentionChar: any) {
+      source: async function (searchTerm: any, renderItem: any, mentionChar: any) {
         let values: any;
-        if (mentionChar === '@' || mentionChar === '#') {
-          values = atValues;
+        if (
+          mentionChar === '@'
+          // || mentionChar === '#'
+        ) {
+          const response = await userApis.getUsers();
+          const users = response
+            .filter(({ name }) => name.includes(searchTerm))
+            .map(({ id, name }) => ({ id, value: name }));
+          values = users;
         }
         if (searchTerm.length === 0) {
           renderItem(values, searchTerm);
