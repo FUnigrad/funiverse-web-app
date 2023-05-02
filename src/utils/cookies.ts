@@ -43,6 +43,9 @@ export const appCookies = (function () {
       };
       cookies.remove(CookieNames.AccessToken, defaultOption);
       cookies.remove(CookieNames.RefreshToken, defaultOption);
+      document.cookie = `${CookieNames.AccessToken}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=funiverse.world; path=/;`;
+      document.cookie = `${CookieNames.RefreshToken}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=funiverse.world; path=/;`;
+      document.cookie = `isWorkspaceActive=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=funiverse.world; path=/;`;
     },
   };
 })();
