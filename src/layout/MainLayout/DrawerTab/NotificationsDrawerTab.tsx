@@ -96,6 +96,7 @@ function NotificationItem({ data }: { data: Event }) {
   const adminActionMessage = {
     [EventType.ADD_TO_GROUP]: 'You have been added into',
     [EventType.SET_GROUP_ADMIN]: 'You have been set as Admin of',
+    [EventType.NEW_SEMESTER]: 'has started!',
   };
 
   function handleNotificationClick() {
@@ -155,12 +156,23 @@ function NotificationItem({ data }: { data: Event }) {
           >
             {actor.role === UserRole.WorkspaceAdmin ? (
               <>
-                {adminActionMessage[data.type as keyof typeof adminActionMessage]}{' '}
-                <strong>{group.name}</strong>
+                {data.type !== EventType.NEW_SEMESTER && (
+                  <>
+                    {adminActionMessage[data.type as keyof typeof adminActionMessage]}{' '}
+                    <strong>{group.name}</strong>
+                  </>
+                )}
+                {data.type === EventType.NEW_SEMESTER && (
+                  <>
+                    <strong>{data.term}</strong>{' '}
+                    {adminActionMessage[data.type as keyof typeof adminActionMessage]}
+                  </>
+                )}
               </>
             ) : (
               <>
-                <strong>{actor.name}</strong> {actionMessage[data.type]}{' '}
+                <strong>{actor.name}</strong>{' '}
+                {actionMessage[data.type as keyof typeof actionMessage]}{' '}
                 <strong>{group.name}</strong>
               </>
             )}

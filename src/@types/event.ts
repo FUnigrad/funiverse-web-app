@@ -8,6 +8,7 @@ export enum EventType {
   REACTION = 'REACTION',
   SET_GROUP_ADMIN = 'SET_GROUP_ADMIN',
   ADD_TO_GROUP = 'ADD_TO_GROUP',
+  NEW_SEMESTER = 'NEW_SEMESTER',
 }
 
 export enum EventSourceType {
@@ -26,6 +27,7 @@ export interface Event {
   createdTime: Date;
   read: boolean;
   group: Group;
+  term: string;
 }
 
 export interface Actor extends User {
