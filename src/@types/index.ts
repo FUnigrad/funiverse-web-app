@@ -9,3 +9,4 @@ export * from './syllabus';
 export * from './combo';
 export * from './comment';
 export * from './event';
+export * from './workspace';

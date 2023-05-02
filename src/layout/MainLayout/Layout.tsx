@@ -44,6 +44,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QueryKeys, useGroupsQuery, useUserEventsQuery, useUserMeQuery } from 'queries';
 import { groupApis } from 'apis';
 import { talkInstance } from 'services';
+import { useWorkspaceQuery } from 'queries/workspaceQueries';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -102,6 +103,7 @@ function AppLayout({ children }: LayoutProps) {
   useGroupsQuery();
   const userMeQuery = useUserMeQuery();
   useUserEventsQuery();
+  const workspaceQuery = useWorkspaceQuery();
   const { dispatchTalk } = useTalkContext();
   useEffect(() => {
     if (!userMeQuery.data) return;
@@ -129,7 +131,7 @@ function AppLayout({ children }: LayoutProps) {
         {isRenderAppBar && (
           <AppBar position="fixed" open={sidebarOpen}>
             <Typography variant="h6" color="black">
-              FUniverse
+              {workspaceQuery.data?.name}
             </Typography>
           </AppBar>
         )}
