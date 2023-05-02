@@ -18,6 +18,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import Popover from '@mui/material/Popover';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -33,6 +34,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import MuiLink from '@mui/material/Link';
 import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
@@ -60,10 +62,11 @@ import {
 import CircularProgress from 'components/CircularProgress';
 import { BsPostcard } from 'react-icons/bs';
 import { MdOutlineGroups } from 'react-icons/md';
-import { WorkspaceSearchResponse } from '@types';
+import { GroupType, WorkspaceSearchResponse } from '@types';
 import UserAvatar from 'components/UserAvatar';
 import { capitalizeAndOmitUnderscore } from 'utils';
-
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Checkbox from '@mui/material/Checkbox';
 const SIDE_BAR_MENU = [{ label: 'Posts', href: '/' }];
 
 function HomeDrawerTab() {
@@ -222,10 +225,20 @@ function HomeSearch({ data }: { data: WorkspaceSearchResponse }) {
   );
 }
 
+const GROUP_FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: GroupType.Class, label: 'Class' },
+  { id: GroupType.Course, label: 'Course' },
+  { id: GroupType.Department, label: 'Department' },
+  { id: GroupType.Normal, label: 'Normal' },
+];
+
 function HomeMain() {
+  const [filterAnchorEle, setFilterAnchorEle] = useState<HTMLElement | null>(null);
+  const [filters, setFilters] = useState<string[]>(() => GROUP_FILTERS.map((g) => g.id));
+
   const theme = useTheme();
   const { dispatch } = useModalContext();
-
   const groupsQuery = useGroupsQuery({ enabled: false });
   function handleCreateGroupClick() {
     dispatch({
@@ -276,62 +289,119 @@ function HomeMain() {
       </List>
       <Divider />
       <List
+        sx={{ height: '350px', overflowY: 'auto' }}
         subheader={
           <ListSubheader
             disableSticky
-            sx={{ mb: 1, fontSize: '16px', fontWeight: 500, color: 'rgba(34, 51, 84)' }}
+            sx={{
+              mb: 1,
+              fontSize: '16px',
+              fontWeight: 500,
+              color: 'rgba(34, 51, 84)',
+            }}
           >
             Groups
+            <IconButton
+              aria-label=""
+              onClick={(e) => setFilterAnchorEle(e.currentTarget)}
+              size="small"
+              sx={{ float: 'right', transform: 'translateY(8px)' }}
+            >
+              <FilterListIcon />
+            </IconButton>
           </ListSubheader>
         }
       >
-        {groupsQuery.data?.map(({ name, id }, index) => (
-          <ListItem
-            key={id}
-            disablePadding
-            sx={{ display: 'block' }}
-            component={ActiveLink}
-            href={`/groups/${id}`}
-            activeClassName="active-link"
-          >
-            <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
-              <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-                <MdOutlineGroups fontSize={24} color="#009198" />
-              </ListItemIcon>
-              <ListItemText
-                primary={name}
-                sx={{
-                  opacity: 1,
-                  '& .MuiTypography-root': {
-                    fontWeight: '600',
-                  },
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-        <ListItem
-          disablePadding
-          sx={{ display: 'block', color: theme.palette.primary.main }}
-          onClick={handleCreateGroupClick}
-        >
-          <ListItemButton
-            sx={{
-              minHeight: 48,
-              justifyContent: 'initial',
-              px: 2.5,
-              width: '100%',
-            }}
-            component={Button}
-            color="primary"
-          >
-            <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-              <AddOutlined color="primary" />
-            </ListItemIcon>
-            <ListItemText primary={'Create group'} sx={{ opacity: 1, color: 'inherit' }} />
-          </ListItemButton>
-        </ListItem>
+        {groupsQuery.data
+          ?.filter((g) => {
+            if (filters.includes('all')) return true;
+            else return filters.includes(g.type);
+          })
+          .map(({ name, id }, index) => (
+            <ListItem
+              key={id}
+              disablePadding
+              sx={{ display: 'block' }}
+              component={ActiveLink}
+              href={`/groups/${id}`}
+              activeClassName="active-link"
+            >
+              <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+                <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+                  <MdOutlineGroups fontSize={24} color="#009198" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={name}
+                  sx={{
+                    opacity: 1,
+                    '& .MuiTypography-root': {
+                      fontWeight: '600',
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
       </List>
+      <Popover
+        open={Boolean(filterAnchorEle)}
+        anchorEl={filterAnchorEle}
+        onClose={() => setFilterAnchorEle(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      >
+        <Paper sx={{ px: 2, py: 1 }}>
+          {GROUP_FILTERS.map(({ id, label }) => (
+            <Box key={id}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.includes(id)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      if (checked) {
+                        if (id === 'all') setFilters(GROUP_FILTERS.map((g) => g.id));
+                        else
+                          setFilters((prevFilter) =>
+                            prevFilter.filter((f) => f !== 'all').concat(id),
+                          );
+                      } else {
+                        if (id === 'all') setFilters([]);
+                        else setFilters(filters.filter((f) => f !== id).filter((f) => f !== 'all'));
+                      }
+                    }}
+                    size="small"
+                  />
+                }
+                label={label}
+              />
+            </Box>
+          ))}
+        </Paper>
+      </Popover>
+      <ListItem
+        disablePadding
+        sx={{ display: 'block', color: theme.palette.primary.main }}
+        onClick={handleCreateGroupClick}
+      >
+        <ListItemButton
+          sx={{
+            minHeight: 48,
+            justifyContent: 'initial',
+            px: 2.5,
+            width: '100%',
+          }}
+          component={Button}
+          color="primary"
+        >
+          <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+            <AddOutlined color="primary" />
+          </ListItemIcon>
+          <ListItemText primary={'Create group'} sx={{ opacity: 1, color: 'inherit' }} />
+        </ListItemButton>
+      </ListItem>
     </Box>
   );
 }

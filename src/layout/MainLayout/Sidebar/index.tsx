@@ -284,7 +284,11 @@ function Sidebar() {
           </Popover>
         </Box>
       </DrawerTab>
-      <Drawer variant="permanent" open={sidebarOpen}>
+      <Drawer
+        variant="permanent"
+        open={sidebarOpen}
+        sx={{ '& .MuiDrawer-paper': { overflow: 'hidden' } }}
+      >
         {/* <DrawerHeader>
       <IconButton onClick={handleDrawerClose}>
         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
