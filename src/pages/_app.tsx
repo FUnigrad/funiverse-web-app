@@ -17,6 +17,7 @@ import { queryClient, useGroupsQuery, useUserMeQuery } from 'queries';
 import 'quill-mention/dist/quill.mention.css';
 import React, { useCallback, useEffect } from 'react';
 import { CookiesProvider } from 'react-cookie';
+import { Toaster } from 'react-hot-toast';
 import 'react-quill/dist/quill.snow.css';
 import { TalkService } from 'services';
 import { theme } from 'theme';
@@ -68,6 +69,7 @@ function Providers({ children }: { children: React.ReactNode }) {
                     {children}
                     <ReactQueryDevtools initialIsOpen={false} />
                     <Modal />
+                    <Toaster />
                   </TalkProvider>
                 </AuthGuard>
               </AuthProvider>

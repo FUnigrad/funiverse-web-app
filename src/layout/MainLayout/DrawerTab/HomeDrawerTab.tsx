@@ -67,6 +67,8 @@ import UserAvatar from 'components/UserAvatar';
 import { capitalizeAndOmitUnderscore } from 'utils';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Checkbox from '@mui/material/Checkbox';
+import { FcDepartment, FcGraduationCap } from 'react-icons/fc';
+import { SiGitbook } from 'react-icons/si';
 const SIDE_BAR_MENU = [{ label: 'Posts', href: '/' }];
 
 function HomeDrawerTab() {
@@ -289,10 +291,9 @@ function HomeMain() {
       </List>
       <Divider />
       <List
-        sx={{ height: '350px', overflowY: 'auto' }}
+        sx={{ maxHeight: '400px', overflowY: 'auto' }}
         subheader={
           <ListSubheader
-            disableSticky
             sx={{
               mb: 1,
               fontSize: '16px',
@@ -317,7 +318,7 @@ function HomeMain() {
             if (filters.includes('all')) return true;
             else return filters.includes(g.type);
           })
-          .map(({ name, id }, index) => (
+          .map(({ name, id, type }, index) => (
             <ListItem
               key={id}
               disablePadding
@@ -328,7 +329,10 @@ function HomeMain() {
             >
               <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
                 <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-                  <MdOutlineGroups fontSize={24} color="#009198" />
+                  {type === GroupType.Class && <FcGraduationCap fontSize={24} color="#FF8D6F" />}
+                  {type === GroupType.Course && <SiGitbook fontSize={24} color="#FFC657" />}
+                  {type === GroupType.Department && <FcDepartment fontSize={24} color="#F9F871" />}
+                  {type === GroupType.Normal && <MdOutlineGroups fontSize={24} color="#6CBAA2" />}
                 </ListItemIcon>
                 <ListItemText
                   primary={name}

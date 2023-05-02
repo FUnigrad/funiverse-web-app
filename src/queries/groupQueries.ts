@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CreateGroupPayload, CreateGroupPostPayload } from '@types';
 import { groupApis } from 'apis';
+import { AxiosError } from 'axios';
 import { useModalContext } from 'contexts';
 import { useRouter } from 'next/router';
 import { QueryKeys, useUserMeQuery } from 'queries';
+import { toast } from 'react-hot-toast';
 
 export function useGroupsQuery({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({ queryKey: [QueryKeys.Groups], queryFn: groupApis.getUserGroups, enabled });
@@ -88,7 +90,14 @@ export function useAddGroupUsersMutation(groupId: string) {
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.Groups, groupId, QueryKeys.UsersNotIn],
       });
+      toast.success('Add people successfully!');
       dispatch({ type: 'close' });
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error.response?.data.message ||
+          'Oops! Something went wrong. Please try again later or contact support if the problem persists.',
+      );
     },
   });
 }
@@ -108,6 +117,12 @@ export function useRemoveGroupUserMutation(groupId: string, userId: number) {
         router.push('/');
       }
     },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error.response?.data.message ||
+          'Oops! Something went wrong. Please try again later or contact support if the problem persists.',
+      );
+    },
   });
 }
 export function useSetAdminMutation(groupId: string, userId: number) {
@@ -116,10 +131,17 @@ export function useSetAdminMutation(groupId: string, userId: number) {
   // const isCurrentUser = userMeQuery.data?.id === userId;
 
   const queryClient = useQueryClient();
-  return useMutation<unknown, unknown, { value: boolean }>({
+  return useMutation<unknown, AxiosError<{ message: string }>, { value: boolean }, unknown>({
     mutationFn: (data) => groupApis.setAdmin(groupId, userId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, groupId, QueryKeys.Users] });
+      toast.success('Set admin successfully!');
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data.message ||
+          'Oops! Something went wrong. Please try again later or contact support if the problem persists.',
+      );
     },
   });
 }
