@@ -81,6 +81,14 @@ export default function HomePage() {
       {newfeedQuery.data?.content.map((post) => (
         <PostCard key={post.id} data={post} visibleGroup />
       ))}
+      {/* <Stack sx={{ width: `calc((${screenWidth}px - 240px) / 2)`, mx: 'auto', mt: 4 }}>
+        <Typography variant="h3" color="initial">
+          That&apos;s All for Now
+        </Typography>
+        <Typography variant="h6" color="initial">
+          Keep checking back to find the latest posts from across your organization.
+        </Typography>
+      </Stack> */}
     </>
   );
 }

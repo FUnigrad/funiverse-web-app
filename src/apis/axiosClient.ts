@@ -40,7 +40,7 @@ axiosClient.interceptors.request.use(
             ? 'http://localhost:8000/verify'
             : process.env.NEXT_PUBLIC_LANDING_URL + 'verify';
         }
-        const baseURL = `https://api.${workspace}.funiverse.world`;
+        const baseURL = `http://api.${workspace}.funiverse.world`;
         axiosClient.defaults.baseURL = baseURL;
         config.baseURL = baseURL;
       }
@@ -84,7 +84,7 @@ async function handle401Error(error: AxiosError) {
   isRefreshing = true;
   const refreshToken = appCookies.getRefreshToken();
 
-  const authApiURL = 'https://authen.system.funiverse.world/auth/refresh-token';
+  const authApiURL = 'http://authen.system.funiverse.world/auth/refresh-token';
   try {
     const { accessToken } = await axios.post<{ accessToken: string }>(authApiURL, { refreshToken });
     appCookies.setAccessToken(accessToken);
