@@ -2,9 +2,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Comment, CreatePostCommentPayload } from '@types';
 // import { CreatePostPayload } from '@types';
 import { postApis } from 'apis';
+import { AxiosError } from 'axios';
 import { useModalContext } from 'contexts';
 import { useLazyQuery } from 'hooks';
+import { useRouter } from 'next/router';
 import { QueryKeys } from 'queries';
+import { toast } from 'react-hot-toast';
 
 export function useCreatePostCommentMutation() {
   const queryClient = useQueryClient();
@@ -47,5 +50,26 @@ export function usePostDetailQuery(pid: string) {
     queryKey: [QueryKeys.Posts, pid],
     queryFn: () => postApis.getPostDetail(pid),
     enabled: Boolean(pid),
+  });
+}
+
+export function useDeletePostMutation() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const gid = router.query?.gid;
+  return useMutation<unknown, AxiosError<{ message: string }>, number>({
+    mutationFn: (postId) => postApis.deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Posts] });
+      if (gid) {
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, gid, QueryKeys.Posts] });
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data.message ||
+          'Oops! Something went wrong. Please try again later or contact support if the problem persists.',
+      );
+    },
   });
 }

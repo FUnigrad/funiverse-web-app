@@ -17,4 +17,6 @@ export const postApis = {
   getPostComments: (postId: string) => axiosClient.get<Comment[]>(`/post/${postId}/comment`),
   getNewFeed: () => axiosClient.get<NewFeedPost>('/workspace/post'),
   getPostDetail: (postId: string) => axiosClient.get<Post>(`/post/${postId}`),
+
+  deletePost: (postId: number) => axiosClient.delete(`/post/${postId}`),
 };

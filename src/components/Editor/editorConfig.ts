@@ -1,5 +1,6 @@
 import { userApis } from 'apis';
 import dynamic from 'next/dynamic';
+import { removeAccents } from 'utils';
 // import { Quill } from 'react-quill';
 // const Delta = Quill.import('delta');
 // const Break = Quill.import('blots/break');
@@ -41,7 +42,7 @@ export const editorConfig = {
     mention: {
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
       mentionDenotationChars: ['@', '#'],
-      source: async function (searchTerm: any, renderItem: any, mentionChar: any) {
+      source: async function (searchTerm: string, renderItem: any, mentionChar: any) {
         let values: any;
         if (
           mentionChar === '@'
@@ -49,19 +50,14 @@ export const editorConfig = {
         ) {
           const response = await userApis.getUsers();
           const users = response
-            .filter(({ name }) => name.includes(searchTerm))
+            .filter(({ name }) =>
+              removeAccents(name.toLowerCase()).includes(removeAccents(searchTerm.toLowerCase())),
+            )
+            .slice(0, 5)
             .map(({ id, name }) => ({ id, value: name }));
           values = users;
         }
-        if (searchTerm.length === 0) {
-          renderItem(values, searchTerm);
-        } else {
-          const matches = [];
-          for (let i = 0; i < values.length; i++)
-            if (~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase()))
-              matches.push(values[i]);
-          renderItem(matches, searchTerm);
-        }
+        renderItem(values, searchTerm);
       },
     },
     keyboard: {

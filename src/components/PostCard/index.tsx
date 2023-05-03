@@ -108,7 +108,7 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
         </Box>
         <Divider sx={{ margin: '4px 0' }} />
         {/* Comment */}
-        <PostCommentList data={postCommentsQuery.data || ([] as Comment[])} />
+        <PostCommentList data={postCommentsQuery.data || ([] as Comment[])} postId={data.id} />
         <Box sx={{ display: 'flex', alignItems: 'flex-start', mt: 2 }}>
           <UserAvatar
             user={userMeQuery.data}
@@ -139,11 +139,11 @@ function PostCard({ data, visibleGroup }: PostCardProps) {
 
 export default PostCard;
 
-function PostCommentList({ data }: { data: Comment[] }) {
+function PostCommentList({ data, postId }: { data: Comment[]; postId: number }) {
   return (
     <>
       {data.map((comment) => (
-        <PostComment key={comment.id} data={comment} />
+        <PostComment key={comment.id} data={comment} postId={postId} />
       ))}
     </>
   );

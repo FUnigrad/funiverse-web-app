@@ -62,12 +62,15 @@ import { User as TalkUser } from 'talkjs/all';
 import { talkInstance } from 'services';
 import SearchInput from 'components/SearchInput';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import SearchPopper from 'components/SearchPopper';
 import group1 from 'assets/images/group1.png';
 import group2 from 'assets/images/group2.png';
 import group3 from 'assets/images/group3.png';
 import group4 from 'assets/images/group4.png';
+
 const groupImage = {
   [GroupType.Class]: group1,
   [GroupType.Course]: group2,
@@ -184,6 +187,14 @@ function GroupDetailLayout({ children }: { children: React.ReactNode }) {
         <Box sx={{ p: 2 }}>
           <Typography variant="h2" fontWeight={600} gutterBottom>
             {groupDetailQuery.data?.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="initial"
+            sx={{ display: 'flex', alignItems: 'center', gap: '0 4px', mb: 1 }}
+          >
+            {groupDetailQuery.data?.private ? <LockOutlinedIcon /> : <PublicOutlinedIcon />}
+            {groupDetailQuery.data?.private ? 'Closed group' : 'Open group'}
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <AvatarGroup max={6} total={groupUsersQuery.data?.length}>
