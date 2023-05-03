@@ -68,7 +68,7 @@ function NotificationsDrawerTab() {
           ))}
         </Tabs>
       </Box>
-      <Box>
+      <Box sx={{ height: 'calc(100vh - 118px)', overflowY: 'auto' }}>
         {userEventsQuery.data?.map((noti) => (
           <NotificationItem key={noti.id} data={noti} />
         ))}
