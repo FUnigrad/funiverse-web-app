@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import { useEffect, useRef, useState } from 'react';
-import { QueryKeys, useUpdateEventMutation, useUserEventsQuery } from 'queries';
+import { QueryKeys, queryClient, useUpdateEventMutation, useUserEventsQuery } from 'queries';
 import dayjs from 'dayjs';
 import { Event, EventType, UserRole } from '@types';
 import { useRouter } from 'next/router';
@@ -100,6 +100,7 @@ function NotificationItem({ data }: { data: Event }) {
   };
 
   function handleNotificationClick() {
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.Groups, `${group.id}`, QueryKeys.Posts] });
     if (read) {
       router.push(`/groups/${group.id}`);
       return;

@@ -54,11 +54,12 @@ import { useLayoutContext } from 'contexts';
 import { IoChatbubbleOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { AiOutlineHome } from 'react-icons/ai';
 import UserAvatar from 'components/UserAvatar';
-import { useUserEventsQuery, useUserMeQuery } from 'queries';
+import { QueryKeys, useUserEventsQuery, useUserMeQuery } from 'queries';
 import HomeDrawerTab from '../DrawerTab/HomeDrawerTab';
 import NotificationsDrawerTab from '../DrawerTab/NotificationsDrawerTab';
 import ChatsDrawerTab from '../DrawerTab/ChatsDrawerTab';
 import { __DEV__, appCookies } from 'utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 enum TabDrawerIndexEnum {
   Home,
@@ -175,6 +176,7 @@ function Sidebar() {
 
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const userEventsQuery = useUserEventsQuery({ enabled: false });
   const userMeQuery = useUserMeQuery({ enabled: false });
   function handleDrawerToggle() {
@@ -205,7 +207,10 @@ function Sidebar() {
                   Icon
                 )
               }
-              onClick={() => href && router.push(href)}
+              onClick={() => {
+                if (badge) queryClient.invalidateQueries({ queryKey: [QueryKeys.Posts] });
+                href && router.push(href);
+              }}
               sx={{
                 width: 86,
                 height: 60,
